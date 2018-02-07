@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="comf.example.tydia.cse_110_team_project_team_15_1.FlashbackActivity">
+    tools:context="comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_flashback" />
+    <include layout="@layout/content_songs" />
+
 
 </android.support.design.widget.CoordinatorLayout>

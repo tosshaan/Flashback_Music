@@ -10,36 +10,32 @@
         android:id="@+id/b_flashback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="447dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="265dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="28dp"
         android:text="Flashback"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button_albums"
         android:layout_width="299dp"
         android:layout_height="38dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="120dp"
         android:text="Albums"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/button_songs"
         android:layout_width="296dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="284dp"
+        android:layout_marginTop="204dp"
         android:text="All songs"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

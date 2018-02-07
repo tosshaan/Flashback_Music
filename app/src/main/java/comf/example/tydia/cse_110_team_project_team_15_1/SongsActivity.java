@@ -10,21 +10,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class FlashbackActivity extends AppCompatActivity {
+public class SongsActivity extends AppCompatActivity {
 
     ListView list;
     // Need to get list of song names from the database
-    String[] songNames = {"song1", "song2", "song3", "song4"};
+    String[] SongNames = {"song1", "song2", "song3", "song4", "song5", "song6", "song7", "song8", "song9"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flashback);
+        setContentView(R.layout.activity_songs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        Button switchScreen = (Button) findViewById(R.id.normal_mode);
+        Button switchScreen = (Button) findViewById(R.id.btn_back2);
 
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,9 +32,9 @@ public class FlashbackActivity extends AppCompatActivity {
             }
         });
 
-        list = (ListView) findViewById(R.id.list_listofsongs);
+        list = (ListView) findViewById(R.id.list_allsongs);
         // context, database structure, data
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,songNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,SongNames);
         list.setAdapter(adapter);
 
     }
