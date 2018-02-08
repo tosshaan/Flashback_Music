@@ -74,11 +74,11 @@
 
     <Button
         android:id="@+id/button_play"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
+        android:layout_width="51dp"
+        android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="168dp"
-        android:text="PLAY"
+        android:background="@drawable/play_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
