@@ -45,6 +45,15 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(this);
+
+        // launch flashback (temp)
+        final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_song);
+        launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchFlashback();
+            }
+        });
     }
 
     // Item click method
@@ -62,5 +71,12 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         Intent intent = new Intent (this, SongInfoActivity.class);
         startActivity(intent);
     }
+
+    public void launchFlashback() {
+        Intent intent = new Intent (this, FlashbackActivity.class);
+        startActivity(intent);
+    }
+
+
 
 }

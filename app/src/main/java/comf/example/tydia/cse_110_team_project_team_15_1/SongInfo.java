@@ -69,4 +69,6 @@ public class SongInfo {
     public boolean isDisliked() {
         return this.disliked;
     }
+
+
 }

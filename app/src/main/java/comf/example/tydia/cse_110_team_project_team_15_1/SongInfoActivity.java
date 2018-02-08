@@ -1,5 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,19 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
+        // launch flashback (temp)
+        final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_songinfo);
+        launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchFlashback();
+            }
+        });
+    }
+
+    public void launchFlashback() {
+        Intent intent = new Intent (this, FlashbackActivity.class);
+        startActivity(intent);
     }
 
 }

@@ -42,6 +42,15 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,AlbumNames);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
+
+        // launch flashback (temp)
+        final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_album_songs);
+        launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchFlashback();
+            }
+        });
     }
 
     // Item click method
@@ -56,6 +65,11 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
 
     public void launchSongInfoAct() {
         Intent intent = new Intent (this, SongInfoActivity.class);
+        startActivity(intent);
+    }
+
+    public void launchFlashback() {
+        Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
     }
 
