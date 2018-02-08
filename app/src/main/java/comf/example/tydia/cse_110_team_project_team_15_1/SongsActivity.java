@@ -6,11 +6,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class SongsActivity extends AppCompatActivity {
+import org.w3c.dom.Text;
+
+public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
     // Need to get list of song names from the database
@@ -37,6 +42,15 @@ public class SongsActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,SongNames);
         list.setAdapter(adapter);
 
+        list.setOnItemClickListener(this);
     }
 
+    // Item click method
+    // int i is the index of the item clicked
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+        TextView temp = (TextView) view;
+        Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
+    }
 }
