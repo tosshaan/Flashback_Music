@@ -1,6 +1,5 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,21 +13,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class AlbumSongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
-    // Need to get list of Album names from the comf.example.tydia.cse_110_team_project_team_15_1.database
-
-    String[] AlbumNames = {"album1", "album2", "album3"};
+    // Need to get list of Album names from the database
+    String[] AlbumNames = {"albumSong1", "albumSong2", "albumSong3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_albums);
+        setContentView(R.layout.activity_album_songs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Button switchScreen = (Button) findViewById(R.id.btn_back);
+
+        Button switchScreen = (Button) findViewById(R.id.btn_backAlbumSongs);
 
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,8 +36,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
             }
         });
 
-
-        list = (ListView) findViewById(R.id.list_allalbums);
+        list = (ListView) findViewById(R.id.list_AlbumSongs);
         // context, database structure, data
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,AlbumNames);
         list.setAdapter(adapter);
@@ -52,13 +50,6 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
 
         TextView temp = (TextView) view;
         Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
-
-        launchAlbumSongs();
-    }
-
-    public void launchAlbumSongs() {
-        Intent intent = new Intent (this, AlbumSongsActivity.class);
-        startActivity(intent);
     }
 
 }
