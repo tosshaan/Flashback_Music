@@ -13,6 +13,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        database db = new database();
+
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback);
 
         launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {

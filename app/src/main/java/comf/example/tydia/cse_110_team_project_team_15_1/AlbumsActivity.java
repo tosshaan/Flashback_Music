@@ -17,7 +17,8 @@ import android.widget.Toast;
 public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
-    // Need to get list of Album names from the database
+    // Need to get list of Album names from the comf.example.tydia.cse_110_team_project_team_15_1.database
+
     String[] AlbumNames = {"album1", "album2", "album3"};
 
     @Override
@@ -59,4 +60,5 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         Intent intent = new Intent (this, AlbumSongsActivity.class);
         startActivity(intent);
     }
+
 }

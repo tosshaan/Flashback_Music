@@ -17,6 +17,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
     ListView list;
     // Need to get list of song names from the database
+
     String[] songNames = {"song1", "song2", "song3", "song4"};
 
     @Override
@@ -50,6 +51,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
         TextView temp = (TextView) view;
         Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
+
     }
 
 }

@@ -19,6 +19,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
     ListView list;
     // Need to get list of song names from the database
+
     String[] SongNames = {"song1", "song2", "song3", "song4", "song5", "song6", "song7", "song8", "song9"};
 
     @Override
@@ -53,4 +54,5 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         TextView temp = (TextView) view;
         Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
     }
+
 }
