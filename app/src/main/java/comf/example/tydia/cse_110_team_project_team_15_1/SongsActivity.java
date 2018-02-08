@@ -1,5 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -53,6 +54,13 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
         TextView temp = (TextView) view;
         Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
+
+        launchSongInfoAct();
+    }
+
+    public void launchSongInfoAct() {
+        Intent intent = new Intent (this, SongInfoActivity.class);
+        startActivity(intent);
     }
 
 }
