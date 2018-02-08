@@ -4,5 +4,6 @@
     <string name="title_activity_albums">AlbumsActivity</string>
     <string name="title_activity_songs">songsActivity</string>
     <string name="title_activity_album_songs">AlbumSongsActivity</string>
+    <string name="title_activity_song_info">SongInfoActivity</string>
 
 </resources>
