@@ -9,12 +9,74 @@
     tools:context="comf.example.tydia.cse_110_team_project_team_15_1.SongInfoActivity"
     tools:showIn="@layout/activity_song_info">
 
+    <Button
+        android:id="@+id/button_like2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="59dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/b_thumbup_selector"
+        app:layout_constraintBottom_toBottomOf="@+id/button_dislike2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_dislike2"
+        app:layout_constraintTop_toTopOf="@+id/button_dislike2" />
+
+    <Button
+        android:id="@+id/button_dislike2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/b_thumbdown_selector"
+        app:layout_constraintBottom_toBottomOf="@+id/button_next2"
+        app:layout_constraintStart_toEndOf="@+id/button_next2"
+        app:layout_constraintTop_toTopOf="@+id/button_next2" />
+
+    <Button
+        android:id="@+id/button_next2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/b_skip_next"
+        app:layout_constraintBottom_toBottomOf="@+id/button_pause2"
+        app:layout_constraintStart_toEndOf="@+id/button_pause2"
+        app:layout_constraintTop_toTopOf="@+id/button_pause2" />
+
+    <Button
+        android:id="@+id/button_prev2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="83dp"
+        android:layout_marginStart="49dp"
+        android:layout_marginTop="108dp"
+        android:background="@drawable/b_skip_prev"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <Button
+        android:id="@+id/button_pause2"
+        android:layout_width="50dp"
+        android:layout_height="51dp"
+        android:background="@drawable/b_pause_selector"
+        app:layout_constraintBottom_toBottomOf="@+id/button_play2"
+        app:layout_constraintStart_toEndOf="@+id/button_play2"
+        app:layout_constraintTop_toTopOf="@+id/button_play2" />
+
+    <Button
+        android:id="@+id/button_play2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/b_play_selector"
+        app:layout_constraintBottom_toBottomOf="@+id/button_prev2"
+        app:layout_constraintStart_toEndOf="@+id/button_prev2"
+        app:layout_constraintTop_toTopOf="@+id/button_prev2" />
+
     <TextView
         android:id="@+id/text_SongName"
         android:layout_width="252dp"
         android:layout_height="43dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="96dp"
         android:text="Song Name:"
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,8 +86,8 @@
         android:id="@+id/text_timeAndDate"
         android:layout_width="250dp"
         android:layout_height="43dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="172dp"
         android:text="Time and Date:"
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,52 +97,13 @@
         android:id="@+id/textView4"
         android:layout_width="250dp"
         android:layout_height="41dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="244dp"
         android:text="Location: "
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_play"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="300dp"
-        android:text="PLAY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_pause"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="300dp"
-        android:text="PAUSE"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_prev"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="164dp"
-        android:layout_marginTop="300dp"
-        android:text="PREV"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_next"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="236dp"
-        android:layout_marginTop="300dp"
-        android:text="NEXT"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_songInfoBack"
@@ -92,15 +115,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_like"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="372dp"
-        android:text="LIKE"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/b_flashback_songinfo"
@@ -112,13 +126,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_dislike"
-        android:layout_width="77dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="164dp"
-        android:layout_marginTop="372dp"
-        android:text="DISLIKE"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
