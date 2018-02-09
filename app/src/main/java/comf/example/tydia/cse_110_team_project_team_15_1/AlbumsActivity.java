@@ -2,6 +2,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +15,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
     // Need to get list of Album names from the comf.example.tydia.cse_110_team_project_team_15_1.database
 
-    String[] AlbumNames = {"album1", "album2", "album3"};
+  //  File rawContents = Environment.getDataDirectory();
+  //  String path = "C:\\Users\\thapa\\AndroidStudioProjects\\cse-110-team-project-team-15-1\\app\\src\\main\\res\\raw";
+  //  File rawDir = new File(path);
+  //  ArrayList<String> AlbumNames = getAlbumNames(rawContents);
+
+    String[] AlbumNames = {"album1", "album2", "album3", "album4", "album5"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +83,15 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
+    }
+
+    public ArrayList<String> getAlbumNames(File dir ) {
+        ArrayList<String> albumNames = new ArrayList<String>();
+        for( File f : dir.listFiles() ) {
+            albumNames.add( f.getName() );
+        }
+        return albumNames;
+
     }
 
 }
