@@ -47,11 +47,9 @@
         android:layout_height="35dp"
         android:layout_marginBottom="83dp"
         android:layout_marginStart="49dp"
-        android:layout_marginTop="108dp"
         android:background="@drawable/b_skip_prev"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_pause2"
@@ -75,44 +73,48 @@
         android:id="@+id/text_SongName"
         android:layout_width="252dp"
         android:layout_height="43dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="136dp"
         android:text="Song Name:"
         android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_timeAndDate"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/text_timeAndDate"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_timeAndDate"
         android:layout_width="250dp"
         android:layout_height="43dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="180dp"
         android:text="Time and Date:"
         android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="250dp"
         android:layout_height="41dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="244dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="220dp"
         android:text="Location: "
         android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button_prev2"
         app:layout_constraintTop_toTopOf="parent" />
 
 
     <Button
         android:id="@+id/button_songInfoBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="280dp"
-        android:layout_marginTop="24dp"
-        android:text="GO BACK"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/b_back_selector"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -120,8 +122,8 @@
         android:id="@+id/b_flashback_songinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
         android:text="Flashback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -10,33 +10,37 @@
 
     <Button
         android:id="@+id/btn_back2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="GO BACK"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/b_back_selector"
+        app:layout_constraintBottom_toTopOf="@+id/list_allsongs"
+        app:layout_constraintEnd_toStartOf="@+id/b_flashback_song"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/b_flashback_song"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
         android:text="Flashback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/list_allsongs"
-        android:layout_width="368dp"
+        android:layout_width="385dp"
         android:layout_height="419dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="84dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
