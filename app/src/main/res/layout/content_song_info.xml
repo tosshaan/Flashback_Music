@@ -74,8 +74,8 @@
         android:layout_width="252dp"
         android:layout_height="43dp"
         android:layout_marginTop="136dp"
-        android:text="Song Name:"
-        android:textSize="15dp"
+        android:text="@string/song_name"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/text_timeAndDate"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/text_timeAndDate"
@@ -86,8 +86,8 @@
         android:layout_width="250dp"
         android:layout_height="43dp"
         android:layout_marginTop="180dp"
-        android:text="Time and Date:"
-        android:textSize="15dp"
+        android:text="@string/time_and_date"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/textView4"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView4"
@@ -99,8 +99,8 @@
         android:layout_height="41dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="220dp"
-        android:text="Location: "
-        android:textSize="15dp"
+        android:text="@string/location"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/button_prev2"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -124,7 +124,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="16dp"
-        android:text="Flashback"
+        android:text="@string/flashback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
