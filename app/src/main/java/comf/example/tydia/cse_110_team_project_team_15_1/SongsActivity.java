@@ -1,11 +1,15 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,10 +17,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.w3c.dom.Text;
-
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -24,9 +27,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     ListView list;
     // Need to get list of song names from the database
 
-    private String[] SongNames = {"mangalam"};
-
-    private int[] IDs = {R.raw.mangalam};
+    private String[] songNames;
+    private int[] IDs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +46,14 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
+        // Dynamically populating idList
+        IDs = getSongIDs();
+        songNames = getSongNames(IDs);
+
         list = (ListView) findViewById(R.id.list_allsongs);
         // context, database structure, data
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,SongNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,songNames);
         list.setAdapter(adapter);
-
         list.setOnItemClickListener(this);
 
         // launch flashback (temp)
@@ -68,24 +73,42 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
         TextView temp = (TextView) view;
         Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
-
         launchSongInfoAct(i);
     }
 
     public void launchSongInfoAct(int i) {
         Intent intent = new Intent (this, SongInfoActivity.class);
-        intent.putExtra("song1", IDs[i]);
-        intent.putExtra("songName", SongNames[i]);
+        intent.putExtra("songID", IDs[i]);
+        intent.putExtra("songName", songNames[i]);
         startActivity(intent);
     }
 
-    public ArrayList<String> getASongNames(File dir ) {
-        ArrayList<String> songNames = new ArrayList<String>();
-        for( File f : dir.listFiles() ) {
-            songNames.add( f.getName() );
+    // Method to get the IDs of all songs in raw folder
+    private int[] getSongIDs() {
+        Field[] ID_Fields = R.raw.class.getFields();
+        int[] songIDs = new int[ID_Fields.length];
+        for(int i = 0; i < ID_Fields.length; i++) {
+            try {
+                songIDs[i] = ID_Fields[i].getInt(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return songNames;
+        return songIDs;
+    }
 
+    // Method to get names of songs based on IDs
+    private String[] getSongNames( int[] IDs ) {
+
+        String[] songNames = new String[IDs.length];
+        for( int i = 0; i < songNames.length; i++ ) {
+            Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + IDs[i]);
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(this, path);
+            songNames[i] = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        }
+
+        return songNames;
     }
 
     public void launchFlashback() {

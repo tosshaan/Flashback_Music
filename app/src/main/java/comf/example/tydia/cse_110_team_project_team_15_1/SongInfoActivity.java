@@ -27,13 +27,11 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //MEDIA_RES_ID = getIntent().getIntExtra("song1", 0);
+        MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         String songName = getIntent().getStringExtra("songName");
-        MEDIA_RES_ID = getResources().getIdentifier(songName, "raw", getPackageName());
-
 
         // Creating metadata retriever
-        Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mangalam);
+        Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(this, path);
 
