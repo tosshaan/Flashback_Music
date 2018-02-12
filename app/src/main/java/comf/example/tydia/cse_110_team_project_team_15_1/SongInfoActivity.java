@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,8 +27,10 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MEDIA_RES_ID = getIntent().getIntExtra("song1", 0);
+        //MEDIA_RES_ID = getIntent().getIntExtra("song1", 0);
         String songName = getIntent().getStringExtra("songName");
+        MEDIA_RES_ID = getResources().getIdentifier(songName, "raw", getPackageName());
+
 
         // Creating metadata retriever
         Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mangalam);

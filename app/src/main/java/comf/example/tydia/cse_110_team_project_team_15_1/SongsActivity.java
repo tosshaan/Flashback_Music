@@ -16,12 +16,16 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
     // Need to get list of song names from the database
 
     private String[] SongNames = {"mangalam"};
+
     private int[] IDs = {R.raw.mangalam};
 
     @Override
@@ -73,6 +77,15 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         intent.putExtra("song1", IDs[i]);
         intent.putExtra("songName", SongNames[i]);
         startActivity(intent);
+    }
+
+    public ArrayList<String> getASongNames(File dir ) {
+        ArrayList<String> songNames = new ArrayList<String>();
+        for( File f : dir.listFiles() ) {
+            songNames.add( f.getName() );
+        }
+        return songNames;
+
     }
 
     public void launchFlashback() {
