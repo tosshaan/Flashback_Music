@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,19 +30,17 @@ public class SongInfoActivity extends AppCompatActivity {
         String songName = getIntent().getStringExtra("songName");
 
         // Creating metadata retriever
-  //      MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-  //      String path = "\\C:\\Users\\thapa\\AndroidStudioProjects\\cse-110-team-project-team-15-1\\app\\src\\main\\res\\raw\\" + songName + ".mp3";
-  //      retriever.setDataSource(path);
-
+        Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mangalam);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(this, path);
 
         loadMedia(MEDIA_RES_ID);
-   //     TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
-   //     showMetadata.setText("Title: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
-        // showMedata.setText("Song info: " + mediaPlayer.getTrackInfro().toString() );
+        TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
+        showMetadata.setText("Title: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
 
         mediaPlayer.start();
 
-        Button playButton = (Button) findViewById(R.id.button_play);
+        Button playButton = (Button) findViewById(R.id.button_play2);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +48,7 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
-        Button pauseButton = (Button) findViewById(R.id.button_pause);
+        Button pauseButton = (Button) findViewById(R.id.button_pause2);
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

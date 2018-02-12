@@ -21,9 +21,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     ListView list;
     // Need to get list of song names from the database
 
-    private String[] SongNames = {"everythingilove", "sweetsuejustyou", "heythere", "perdido", "whatsyourstorymorningglory", "allaboutronnie", "justintime", "igetackickoutofyou", "thisisalways", "whocares", "outofthisworld", "inthestillofthenight"};
-    private int[] IDs = {R.raw.everythingilove, R.raw.sweetsuejustyou , R.raw.heythere, R.raw.perdido, R.raw.whatsyourstorymorningglory, R.raw.allaboutronnie, R.raw.justintime, R.raw.igetakickoutofyou, R.raw.thisisalways,
-                         R.raw.whocares, R.raw.outofthisworld, R.raw.inthestillofthenight};
+    private String[] SongNames = {"mangalam"};
+    private int[] IDs = {R.raw.mangalam};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
