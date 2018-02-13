@@ -38,6 +38,10 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // hide action bar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         songIDs = getIntent().getIntArrayExtra("albumSongIDs");
         songNames = getSongNames(songIDs);
 

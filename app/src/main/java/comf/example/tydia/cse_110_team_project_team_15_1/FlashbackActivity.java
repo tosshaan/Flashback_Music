@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.ActionBar;
 
 public class FlashbackActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -26,6 +27,10 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         setContentView(R.layout.activity_flashback);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // hide action bar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);

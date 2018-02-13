@@ -27,6 +27,10 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // hide action bar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         String songName = getIntent().getStringExtra("songName");
 
