@@ -72,7 +72,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         TextView temp = (TextView) view;
-        Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, temp.getText()+ " row" + i, Toast.LENGTH_SHORT).show();
         launchSongInfoAct(i);
     }
 
