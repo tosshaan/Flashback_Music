@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="comf.example.tydia.cse_110_team_project_team_15_1.MainActivity">
 
     <Button
@@ -13,30 +14,32 @@
         android:layout_marginEnd="40dp"
         android:layout_marginTop="28dp"
         android:text="Flashback"
+        android:textColor="?attr/colorButtonNormal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_albums"
-        android:layout_width="299dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="403dp"
+        android:layout_height="48dp"
         android:layout_marginTop="120dp"
         android:text="Albums"
+        android:textColor="?attr/colorButtonNormal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_songs"
-        android:layout_width="296dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="204dp"
+        android:layout_width="403dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="1dp"
         android:text="All songs"
+        android:textColor="?attr/colorButtonNormal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/button_albums" />
 
 </android.support.constraint.ConstraintLayout>
 
