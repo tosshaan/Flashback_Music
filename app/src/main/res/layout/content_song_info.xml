@@ -18,14 +18,14 @@
         android:background="@drawable/b_thumbup_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_dislike2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_dislike2"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/button_dislike2" />
 
     <Button
         android:id="@+id/button_dislike2"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="50dp"
         android:background="@drawable/b_thumbdown_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_next2"
         app:layout_constraintStart_toEndOf="@+id/button_next2"
@@ -35,18 +35,20 @@
         android:id="@+id/button_next2"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="92dp"
         android:background="@drawable/b_skip_next"
-        app:layout_constraintBottom_toBottomOf="@+id/button_pause2"
-        app:layout_constraintStart_toEndOf="@+id/button_pause2"
-        app:layout_constraintTop_toTopOf="@+id/button_pause2" />
+        app:layout_constraintBottom_toBottomOf="@+id/button_prev2"
+        app:layout_constraintStart_toEndOf="@+id/button_prev2"
+        app:layout_constraintTop_toTopOf="@+id/button_prev2"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button_prev2"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="83dp"
-        android:layout_marginStart="49dp"
+        android:layout_marginBottom="84dp"
+        android:layout_marginStart="48dp"
         android:background="@drawable/b_skip_prev"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -55,19 +57,31 @@
         android:id="@+id/button_pause2"
         android:layout_width="50dp"
         android:layout_height="51dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/b_pause_selector"
-        app:layout_constraintBottom_toBottomOf="@+id/button_play2"
-        app:layout_constraintStart_toEndOf="@+id/button_play2"
-        app:layout_constraintTop_toTopOf="@+id/button_play2" />
+        app:layout_constraintBottom_toBottomOf="@+id/button_prev2"
+        app:layout_constraintEnd_toStartOf="@+id/button_next2"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toEndOf="@+id/button_prev2"
+        app:layout_constraintTop_toTopOf="@+id/button_prev2"
+        app:layout_constraintVertical_bias="0.64" />
 
     <Button
         android:id="@+id/button_play2"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/b_play_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_prev2"
+        app:layout_constraintEnd_toStartOf="@+id/button_next2"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toEndOf="@+id/button_prev2"
-        app:layout_constraintTop_toTopOf="@+id/button_prev2" />
+        app:layout_constraintTop_toTopOf="@+id/button_prev2"
+        app:layout_constraintVertical_bias="0.64" />
 
     <TextView
         android:id="@+id/text_SongName"
@@ -107,11 +121,9 @@
         android:id="@+id/button_songInfoBack"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="280dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/b_back_selector"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -120,7 +132,7 @@
         android:id="@+id/b_flashback_songinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/flashback"
         app:layout_constraintEnd_toEndOf="parent"
