@@ -19,6 +19,7 @@ public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private static int MEDIA_RES_ID = 0;
+    private boolean playFlag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +46,41 @@ public class SongInfoActivity extends AppCompatActivity {
 
         mediaPlayer.start();
 
-        Button playButton = (Button) findViewById(R.id.button_play2);
+        // play and pause music
+
+        final Button playButton = (Button) findViewById(R.id.button_play2);
+        final Button pauseButton = (Button) findViewById(R.id.button_pause2);
+        playButton.setVisibility(View.GONE);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mediaPlayer.start();
+                if (playFlag == true) {
+                    pauseButton.setVisibility(View.GONE);
+                    playFlag = false;
+                } else {
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                }
             }
         });
 
-        Button pauseButton = (Button) findViewById(R.id.button_pause2);
+
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mediaPlayer.pause();
+                playFlag = true;
+                playButton.setVisibility(View.VISIBLE);
+                System.out.println(playFlag);
+                if (playFlag == true) {
+                    pauseButton.setVisibility(View.GONE);
+                    playFlag = false;
+                } else {
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                }
+
             }
         });
 
