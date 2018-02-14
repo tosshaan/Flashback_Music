@@ -72,7 +72,7 @@
     <TextView
         android:id="@+id/text_SongName"
         android:layout_width="252dp"
-        android:layout_height="43dp"
+        android:layout_height="82dp"
         android:layout_marginTop="136dp"
         android:text="@string/song_name"
         android:textSize="15sp"
@@ -84,25 +84,23 @@
     <TextView
         android:id="@+id/text_timeAndDate"
         android:layout_width="250dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="180dp"
+        android:layout_height="35dp"
         android:text="@string/time_and_date"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/textView4"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/text_SongName" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="250dp"
-        android:layout_height="41dp"
+        android:layout_height="35dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="220dp"
         android:text="@string/location"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/button_prev2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/text_timeAndDate" />
 
 
     <Button
