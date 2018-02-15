@@ -14,12 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private static int MEDIA_RES_ID = 0;
     private boolean playFlag = true;
+    private int songIndex;
+    private int [] albumSongsIDs;
+    private boolean albumMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +38,25 @@ public class SongInfoActivity extends AppCompatActivity {
 
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         String songName = getIntent().getStringExtra("songName");
+        Bundle bundle = getIntent().getExtras();
+        albumMode = getIntent().getBooleanExtra("albumMode", false);
+        if (albumMode) {
+            albumSongsIDs = bundle.getIntArray("albumSongsIDs");
+            songIndex = getIntent().getIntExtra("songIndex", 0);
+        }
+
+        mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
+        mediaPlayer.start();
 
         // Creating metadata retriever
         Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(this, path);
 
-        loadMedia(MEDIA_RES_ID);
         TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
         showMetadata.setText("Title: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
 
-        mediaPlayer.start();
+        retriever.release();
 
         // play and pause music
 
@@ -54,6 +66,8 @@ public class SongInfoActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("tag", "index = " + songIndex + " // arraysize = " + albumSongsIDs.length );
+                Log.d("songid", "songid = " + albumSongsIDs[songIndex] );
                 mediaPlayer.start();
                 if (playFlag == true) {
                     pauseButton.setVisibility(View.GONE);
@@ -65,6 +79,69 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
+        // finish playing a song
+        if(albumMode) {
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayerX) {
+                    if (songIndex < (albumSongsIDs.length - 1)) {
+                        songIndex++;
+                        mediaPlayer.reset();
+                        MEDIA_RES_ID = albumSongsIDs[songIndex];
+
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                        mediaPlayer.start();
+
+                        //loadMedia(albumSongsIDs[songIndex]);
+                        Uri path2 = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
+
+                        MediaMetadataRetriever retriever2 = new MediaMetadataRetriever();
+                        retriever2.setDataSource(getApplicationContext(), path2);
+
+                        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+                        showMetadata2.setText("Title: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+
+                        retriever2.release();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "End of album", Toast.LENGTH_SHORT).show();
+                        mediaPlayer.reset();
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    }
+                }
+            });
+
+            Button nextButton = (Button) findViewById(R.id.button_next2);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (songIndex < (albumSongsIDs.length - 1)) {
+                        songIndex++;
+                        mediaPlayer.reset();
+                        MEDIA_RES_ID = albumSongsIDs[songIndex];
+
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                        mediaPlayer.start();
+
+                        //loadMedia(albumSongsIDs[songIndex]);
+                        Uri path2 = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
+
+                        MediaMetadataRetriever retriever2 = new MediaMetadataRetriever();
+                        retriever2.setDataSource(getApplicationContext(), path2);
+
+                        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+                        showMetadata2.setText("Title: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+
+                        retriever2.release();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "End of album", Toast.LENGTH_SHORT).show();
+                        mediaPlayer.reset();
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    }
+                }
+            });
+        }
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +160,16 @@ public class SongInfoActivity extends AppCompatActivity {
 
             }
         });
+
+        Button dislikeButton = (Button) findViewById(R.id.button_dislike2);
+        dislikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // dislike song
+                // stop song and skip song
+            }
+        });
+
 
 
         Button switchScreen = (Button) findViewById(R.id.button_songInfoBack);
