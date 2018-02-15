@@ -16,6 +16,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.location.Geocoder;
 
@@ -38,15 +39,26 @@ public class database {
         LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         currSongTime = new Timestamp(System.currentTimeMillis());
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        System.out.println("Current song time is " + currSongTime);
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     100);
+            System.out.println("Don't have permission");
             return;
         }
+        System.out.println("Now retrieving location");
         currSongLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Address currLocation = (Address) geocoder.getFromLocation(currSongLocation.getLatitude(),currSongLocation.getLongitude(),1);
-        String addressLine = currLocation.getAddressLine(0);
+        if (currSongLocation == null) {
+            System.out.println("Null reached");
+            return;
+        }
+        System.out.println(currSongLocation.getLatitude() + " , " + currSongLocation.getLongitude());
+        ArrayList<Address> currLocation = (ArrayList<Address>) geocoder.getFromLocation(currSongLocation.getLatitude(),currSongLocation.getLongitude(),1);
+        Address addressLine = currLocation.get(0);
+        String actualAddress = addressLine.getAddressLine(0);
+        System.out.println("StartSongInfoRequest is " + actualAddress);
     }
     public void finishSongInfoRequest(){
         SongInfo song = new SongInfo(currSongTime, currSongLocation, currSongName);
@@ -93,6 +105,7 @@ public class database {
             Location retLoc = SongsInformation.get(SongName).locGetter();
             Geocoder geocoder = new Geocoder(context);
             Address currLocation = (Address) geocoder.getFromLocation(retLoc.getLatitude(),retLoc.getLongitude(),1);
+            System.out.println("getting location is " + currLocation.getAddressLine(0));
             return currLocation.getAddressLine(0);
         }
     }
@@ -102,6 +115,7 @@ public class database {
             return null;
         }
         else {
+            System.out.println("Location does exist");
             ArrayList<String> songs = new ArrayList<String>(((HashMap) SongsAtLocation).keySet());
             return songs;
         }
@@ -128,6 +142,13 @@ public class database {
             SongsInformation.get(SongName).likeSong(isLiked);
         }
     }
+    public boolean isSongHere (String SongName) {
+        return SongsInformation.containsKey(SongName);
+    }
+    public boolean isLocation (Location location) {
+        return SongsAtLocation.containsKey(location);
+    }
 
 
 }
+
