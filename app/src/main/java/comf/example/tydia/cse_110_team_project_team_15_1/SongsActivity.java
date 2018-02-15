@@ -88,12 +88,13 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     // Method to get the IDs of all songs in raw folder
-    private int[] getSongIDs() {
+    public static int[] getSongIDs() {
         Field[] ID_Fields = R.raw.class.getFields();
         int[] songIDs = new int[ID_Fields.length];
         for(int i = 0; i < ID_Fields.length; i++) {
             try {
                 songIDs[i] = ID_Fields[i].getInt(null);
+               // Log.d("id number: " + i, "" + songIDs[i] );
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -102,7 +103,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     // Method to get names of songs based on IDs
-    private String[] getSongNames( int[] IDs ) {
+    public String[] getSongNames( int[] IDs ) {
 
         String[] songNames = new String[IDs.length];
         for( int i = 0; i < songNames.length; i++ ) {
