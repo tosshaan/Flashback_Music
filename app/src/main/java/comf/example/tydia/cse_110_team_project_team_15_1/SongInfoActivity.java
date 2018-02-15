@@ -15,11 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private static int MEDIA_RES_ID = 0;
     private boolean playFlag = true;
+    database myData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +31,24 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
+        //testing functionality below, can be deleted if needed
+        myData.testInsert();
+        myData.testPrint();
+
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         String songName = getIntent().getStringExtra("songName");
+
+        //this statement needs to stay, should work after Cory fixes the location issue
+        try {
+            myData.startSongInfoRequest(songName, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Creating metadata retriever
         Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
@@ -90,6 +105,7 @@ public class SongInfoActivity extends AppCompatActivity {
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                 finish();
             }
         });
@@ -99,6 +115,7 @@ public class SongInfoActivity extends AppCompatActivity {
         launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                 launchFlashback();
             }
         });
