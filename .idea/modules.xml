@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Flashback Music.iml" filepath="$PROJECT_DIR$/Flashback Music.iml" />
-       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
--      <module fileurl="file://C:\Users\Cadu\AndroidStudioProjects\cse-110-team-project-team-15-1\cse-110-team-project-team-15-1.iml" filepath="C:\Users\Cadu\AndroidStudioProjects\cse-110-team-project-team-15-1\cse-110-team-project-team-15-1.iml" />
--      <module fileurl="file://$PROJECT_DIR$/.idea/cse-110-team-project-team-15-1.iml" filepath="$PROJECT_DIR$/.idea/cse-110-team-project-team-15-1.iml" />
+      <module fileurl="file://C:\Users\thapa\AndroidStudioProjects\cse-110-team-project-team-15-1\Flashback Music.iml" filepath="C:\Users\thapa\AndroidStudioProjects\cse-110-team-project-team-15-1\Flashback Music.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cse-110-team-project-team-15-1.iml" filepath="$PROJECT_DIR$/cse-110-team-project-team-15-1.iml" />
+      <module fileurl="file://C:\Users\thapa\AndroidStudioProjects\cse-110-team-project-team-15-1\.idea\cse-110-team-project-team-15-1.iml" filepath="C:\Users\thapa\AndroidStudioProjects\cse-110-team-project-team-15-1\.idea\cse-110-team-project-team-15-1.iml" />
+      <module fileurl="file://C:\Users\Cadu\AndroidStudioProjects\cse-110-team-project-team-15-1\cse-110-team-project-team-15-1.iml" filepath="C:\Users\Cadu\AndroidStudioProjects\cse-110-team-project-team-15-1\cse-110-team-project-team-15-1.iml" />
+
     </modules>
   </component>
 </project>

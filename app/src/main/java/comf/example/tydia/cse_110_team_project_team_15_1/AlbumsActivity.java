@@ -41,7 +41,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        songIDs = getSongIDs();
+        songIDs = SongsActivity.getSongIDs();
         albumNames = getAlbumNames(songIDs);
 
         Button switchScreen = (Button) findViewById(R.id.btn_back);
@@ -82,22 +82,8 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         launchAlbumSongs(i);
     }
 
-    // Method to get the IDs of all songs in raw folder
-    private int[] getSongIDs() {
-        Field[] ID_Fields = R.raw.class.getFields();
-        int[] songIDs = new int[ID_Fields.length];
-        for(int i = 0; i < ID_Fields.length; i++) {
-            try {
-                songIDs[i] = ID_Fields[i].getInt(null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return songIDs;
-    }
-
     // Method to get names of albums based on IDs
-    private String[] getAlbumNames( int[] IDs ) {
+    public String[] getAlbumNames( int[] IDs ) {
 
         ArrayList<String> albumSet = new ArrayList<>();
 
@@ -120,6 +106,17 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
 
     public void launchAlbumSongs(int i) {
         Intent intent = new Intent (this, AlbumSongsActivity.class);
+        // Getting songs from selected album and placing on intent
+        int[] albumSongIDs = getAlbumSongs(i);
+        intent.putExtra("albumSongIDs", albumSongIDs);
+        startActivity(intent);
+    }
+
+    /**  Method to retrieve songs from a given album
+        @Param i: index of album that selected in the list view
+        @Return albumSongsIDs: an int array containing all the ids of the songs of the album clicked
+    */
+    public int[] getAlbumSongs(int i) {
         ArrayList<Integer> albumSongIDsArr = new ArrayList<>();
 
         for(int j = 0; j < songIDs.length; j++){
@@ -137,8 +134,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
             albumSongIDs[k] = albumSongIDsArr.get(k);
         }
 
-        intent.putExtra("albumSongIDs", albumSongIDs);
-        startActivity(intent);
+        return albumSongIDs;
     }
 
     public void launchFlashback() {

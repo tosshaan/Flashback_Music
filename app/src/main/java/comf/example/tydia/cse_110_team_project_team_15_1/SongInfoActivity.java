@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
@@ -25,12 +27,19 @@ public class SongInfoActivity extends AppCompatActivity {
     private int [] albumSongsIDs;
     private boolean albumMode = true;
 
+    database myData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
+        //testing functionality below, can be deleted if needed
+        myData.testInsert();
+        myData.testPrint();
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -47,6 +56,13 @@ public class SongInfoActivity extends AppCompatActivity {
 
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
+
+        //this statement needs to stay, should work after Cory fixes the location issue
+        try {
+            myData.startSongInfoRequest(songName, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Creating metadata retriever
         Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
@@ -177,6 +193,7 @@ public class SongInfoActivity extends AppCompatActivity {
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                 finish();
             }
         });
@@ -186,6 +203,7 @@ public class SongInfoActivity extends AppCompatActivity {
         launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                 launchFlashback();
             }
         });

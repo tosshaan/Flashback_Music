@@ -17,6 +17,7 @@ import android.app.ActionBar;
 public class FlashbackActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
+    database myData;
     // Need to get list of song names from the database
 
     String[] songNames = {"song1", "song2", "song3", "song4"};
@@ -32,12 +33,16 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
+        myData.testPrint();
+        myData.changeTime();
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
 
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                 finish();
             }
         });
