@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -17,52 +18,60 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class TestExistenceOfAlbumsList {
+public class UITestSongInfoIsDisplayed {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void testExistenceOfAlbumsList() {
-        ViewInteraction button = onView(
-                allOf(withId(R.id.button_albums),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        button.check(matches(isDisplayed()));
-
+    public void testSongInfoIsDisplayed() {
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.button_albums), withText("albums"),
+                allOf(withId(R.id.button_songs), withText("all songs"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                1),
+                                2),
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction listView = onView(
-                allOf(withId(R.id.list_allalbums),
+        DataInteraction appCompatTextView = onData(anything())
+                .inAdapterView(allOf(withId(R.id.list_allsongs),
+                        childAtPosition(
+                                withClassName(is("android.support.constraint.ConstraintLayout")),
+                                2)))
+                .atPosition(3);
+        appCompatTextView.perform(click());
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.button_pause2),
                         childAtPosition(
                                 childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
+                                        withClassName(is("android.support.design.widget.CoordinatorLayout")),
                                         1),
-                                2),
+                                4),
                         isDisplayed()));
-        listView.check(matches(isDisplayed()));
+        appCompatButton2.perform(click());
+
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.text_SongName), withText("Title: Back East\nArtist: null\nAlbum: I Will Not Be Afraid (A Sampler)"),
+
+                        isDisplayed()));
+        textView.check(matches(withText("Title: Back East\nArtist: null\nAlbum: I Will Not Be Afraid (A Sampler)")));
 
     }
 

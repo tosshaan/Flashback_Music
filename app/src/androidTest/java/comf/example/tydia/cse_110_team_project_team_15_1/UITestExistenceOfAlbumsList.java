@@ -12,6 +12,7 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,41 +27,42 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class TestExistenceOfSongList {
+public class UITestExistenceOfAlbumsList {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void testExistenceOfSongList() {
+    public void testExistenceOfAlbumsList() {
         ViewInteraction button = onView(
-                allOf(withId(R.id.button_songs),
+                allOf(withId(R.id.button_albums),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                2),
+                                1),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.button_songs), withText("all songs"),
+                allOf(withId(R.id.button_albums), withText("albums"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                2),
+                                1),
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction viewGroup = onView(
-                allOf(childAtPosition(
+        ViewInteraction listView = onView(
+                allOf(withId(R.id.list_allalbums),
                         childAtPosition(
-                                withId(android.R.id.content),
-                                0),
-                        1),
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
+                                        1),
+                                2),
                         isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
+        listView.check(matches(isDisplayed()));
 
     }
 
