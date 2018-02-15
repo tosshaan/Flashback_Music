@@ -43,12 +43,12 @@ public class SongInfoActivity extends AppCompatActivity {
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         String songName = getIntent().getStringExtra("songName");
 
-        /*this statement needs to stay, should work after Cory fixes the location issue
+        //this statement needs to stay, should work after Cory fixes the location issue
         try {
             myData.startSongInfoRequest(songName, this);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
         // Creating metadata retriever
         Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
