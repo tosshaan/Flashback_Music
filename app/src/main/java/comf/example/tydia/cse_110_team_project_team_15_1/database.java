@@ -32,6 +32,49 @@ public class database {
         SongsInformation = new HashMap<String, SongInfo>();
     }
 
+    public void testInsert(){
+        Location testLoc = new Location("testing");
+        testLoc.setLatitude(1.123d);
+        testLoc.setLongitude(1.123d);
+        Timestamp testTime = new Timestamp(System.currentTimeMillis());
+        SongInfo testInfo = new SongInfo(testTime, testLoc,"tester");
+        HashMap<String, SongInfo> songs = new HashMap<String, SongInfo>();
+        songs.put("tester", testInfo);
+        SongsAtLocation.put(testLoc, null);
+        SongsInformation.put("tester", testInfo);
+        System.out.println("Finished inserting");
+    }
+    public void testPrint(){
+        if(SongsInformation.containsKey("tester")){
+            System.out.println("tester was found, Timestamp: " + SongsInformation.get("tester").timeGetter());
+            System.out.println("Trying to find location now");
+            Location findLoc = new Location("hi");
+            findLoc.setLongitude(1.123d);
+            findLoc.setLatitude(1.123d);
+            if(SongsAtLocation.containsKey(findLoc)){
+                System.out.println("Found location, printing song information:");
+                ArrayList<String> songsAtLoc = getSongsPlayedAtLocation(findLoc);
+                for(String s : songsAtLoc){
+                    System.out.println("In loop" + s);
+                }
+            }
+        }
+        else{
+            System.out.println("tester not found");
+        }
+    }
+    public void changeTime(){
+        if(SongsInformation.containsKey("tester")){
+            System.out.println("Should be changing now");
+            Timestamp testTime = new Timestamp(System.currentTimeMillis());
+            SongsInformation.get("tester").timeSetter(testTime);
+            System.out.println("time should have been set");
+        }
+        else{
+            System.out.println("failed to change");
+        }
+    }
+
     public void startSongInfoRequest(String SongName, Context context) throws IOException {
         Geocoder geocoder = new Geocoder(context);
         currSongName = SongName;
@@ -53,17 +96,17 @@ public class database {
         if(SongsAtLocation.containsKey(currSongLocation)){
             if(((HashMap)SongsAtLocation.get(currSongLocation)).containsKey(currSongName)){
                 ((HashMap)SongsAtLocation.get(currSongLocation)).remove(currSongName);
-                ((HashMap)SongsAtLocation.get(currSongLocation)).put(currSongName, song);
+                ((HashMap)SongsAtLocation.get(currSongLocation)).put(currSongName, null);
             }
             else {
-                ((HashMap)SongsAtLocation.get(currSongLocation)).put(currSongName, song);
+                ((HashMap)SongsAtLocation.get(currSongLocation)).put(currSongName, null);
             }
 
         }
         else {
             HashMap<String, SongInfo> songs = new HashMap<String, SongInfo>();
             songs.put(currSongName, song);
-            SongsAtLocation.put(currSongLocation,songs);
+            SongsAtLocation.put(currSongLocation,null);
         }
         if (SongsInformation.containsKey(currSongName)) {
             SongsInformation.remove(currSongName);
