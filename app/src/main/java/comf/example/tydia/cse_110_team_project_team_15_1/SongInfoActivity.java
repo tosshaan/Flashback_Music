@@ -54,7 +54,7 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
 
-        // Storing info from song to database, testing
+        // Storing info from song to database
         try {
             myData.startSongInfoRequest(songName, this);
         } catch (IOException e) {
