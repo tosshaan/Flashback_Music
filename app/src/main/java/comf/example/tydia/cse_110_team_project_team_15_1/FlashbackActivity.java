@@ -34,7 +34,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         actionBar.hide();
 
         myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
-        myData.testPrint();
+        //myData.testPrint();
         myData.changeTime();
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
