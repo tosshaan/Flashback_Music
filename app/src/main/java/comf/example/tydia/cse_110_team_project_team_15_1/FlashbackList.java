@@ -8,6 +8,7 @@ import android.test.mock.MockContext;
 import android.util.Log;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -17,49 +18,65 @@ import java.util.HashMap;
 
 public class FlashbackList {
     database db;
-    Location currLocation;
+    String currAddress;
     Timestamp currTime;
+    Context context;
     int[] flashbackSongIDs;
     HashMap<String, Integer> allSongIDs;
+    MetadataGetter metadataGetter;
 
-    public FlashbackList(Location loc, Timestamp time, database db ) {
+    public FlashbackList(String address, Timestamp time, database db, Context context ) {
         this.db = db;
         currTime = time;
-        currLocation = loc;
+        currAddress = address;
+        this.context = context;
         // Getting IDs of all songs in storage
+        allSongIDs = new HashMap<String, Integer>();
+        metadataGetter = new MetadataGetter(context);
         populateallSongs();
     }
 
     //Method to populate list
     public void generateList() {
+        // Temp ArrayList to hold flashbackSongs
+        ArrayList<Integer> tempList = new ArrayList<>();
+        // Getting all songs in currentLocation
+        ArrayList<String> songsAtLoc = db.getSongsPlayedAtLocation(currAddress);
+        for( int i = 0; i < songsAtLoc.size(); i++ ) {
+            tempList.add(allSongIDs.get(songsAtLoc.get(i)));
+        }
+        // TODO: time of day and day of week
 
+        // Copying tempArrayList to final array
+        flashbackSongIDs = new int[tempList.size()];
+        for( int k = 0; k < flashbackSongIDs.length; k++ ) {
+            flashbackSongIDs[k] = tempList.get(k);
+        }
     }
 
-    /*
-    Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(this, path);
-
-     */
 
     // Method to populate song's hashMap
     public void populateallSongs() {
         int[] songIDs = SongsActivity.getSongIDs();
-        Uri path;
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         for( int i = 0; i < songIDs.length; i++ ) {
             // Pushing song's name and ID to HashMap
-            path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + songIDs[i]);
-            retriever.setDataSource(new MockContext(), path);
-            //String songName = retriever.
-            // Log.d("Name is: ", );
+            allSongIDs.put(metadataGetter.getName(songIDs[i]), songIDs[i]);
         }
-
     }
 
     // Getter for list
     public int[] getFlashbackSongIDs() {
         return flashbackSongIDs;
+    }
+
+    // Setter for address
+    public void setCurAddress(String newAddress) {
+        currAddress = newAddress;
+    }
+
+    // Setter for time
+    public void setCurrTime(Timestamp newTime ) {
+        currTime = newTime;
     }
 
 
