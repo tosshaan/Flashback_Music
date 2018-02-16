@@ -33,7 +33,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
+        myData = MainActivity.data;
         //myData.testPrint();
         //myData.changeTime();
 

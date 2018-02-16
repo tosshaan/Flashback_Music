@@ -39,7 +39,7 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
+        myData = MainActivity.data;
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();

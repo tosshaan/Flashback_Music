@@ -41,15 +41,20 @@ public class FlashbackList {
     public void generateList() {
         // Temp ArrayList to hold flashbackSongs
         ArrayList<Integer> tempList = new ArrayList<>();
+
         // Getting all songs in currentLocation
         ArrayList<String> songsAtLoc = db.getSongsPlayedAtLocation(currAddress);
         for( int i = 0; i < songsAtLoc.size(); i++ ) {
-            tempList.add(allSongIDs.get(songsAtLoc.get(i)));
+            if(!db.getSongDislikedStatus(songsAtLoc.get(i))) {
+                tempList.add(allSongIDs.get(songsAtLoc.get(i)));
+            }
         }
         // Getting all songs at this time of day
         ArrayList<String> songsAtTime = db.getSongsAtTime(currTime.getHours());
         for(int i = 0; i < songsAtTime.size(); i++){
-            tempList.add(allSongIDs.get(songsAtTime.get(i)));
+            if(!db.getSongDislikedStatus(songsAtTime.get(i))) {
+                tempList.add(allSongIDs.get(songsAtTime.get(i)));
+            }
         }
 
         // Getting all songs on this day of the week
@@ -57,7 +62,9 @@ public class FlashbackList {
         cal.setTime(currTime);
         ArrayList<String> songsOnDay = db.getSongsByDay(cal.get(GregorianCalendar.DAY_OF_WEEK));
         for(int i = 0; i < songsOnDay.size(); i++){
-            tempList.add(allSongIDs.get(songsOnDay.get(i)));
+            if(!db.getSongDislikedStatus(songsOnDay.get(i))) {
+                tempList.add(allSongIDs.get(songsOnDay.get(i)));
+            }
         }
 
         // Copying tempArrayList to final array
