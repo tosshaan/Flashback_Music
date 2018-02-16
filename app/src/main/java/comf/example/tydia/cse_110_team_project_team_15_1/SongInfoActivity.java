@@ -21,6 +21,7 @@ import java.io.IOException;
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+    MetadataGetter metadataGetter;
     private static int MEDIA_RES_ID = 0;
     private boolean playFlag = true;
     private int songIndex;
@@ -37,9 +38,6 @@ public class SongInfoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
-        //testing functionality below, can be deleted if needed
-        //myData.testInsert();
-        //myData.testPrint();
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -57,22 +55,20 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
 
-        //this statement needs to stay, should work after Cory fixes the location issue
+        // Storing info from song to database
         try {
             myData.startSongInfoRequest(songName, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Creating metadata retriever
-        Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(this, path);
+        // Creating metadatagetter
+        metadataGetter = new MetadataGetter(this);
 
         TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
-        showMetadata.setText("Title: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+        showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-        retriever.release();
+        metadataGetter.release();
 
         // play and pause music
 
@@ -82,8 +78,8 @@ public class SongInfoActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("tag", "index = " + songIndex + " // arraysize = " + albumSongsIDs.length );
-                Log.d("songid", "songid = " + albumSongsIDs[songIndex] );
+            //    Log.d("tag", "index = " + songIndex + " // arraysize = " + albumSongsIDs.length );
+            //    Log.d("songid", "songid = " + albumSongsIDs[songIndex] );
                 mediaPlayer.start();
                 if (playFlag == true) {
                     pauseButton.setVisibility(View.GONE);
