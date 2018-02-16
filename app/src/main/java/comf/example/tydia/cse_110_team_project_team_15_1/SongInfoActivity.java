@@ -38,8 +38,8 @@ public class SongInfoActivity extends AppCompatActivity {
 
         myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
         //testing functionality below, can be deleted if needed
-        myData.testInsert();
-        myData.testPrint();
+        //myData.testInsert();
+        //myData.testPrint();
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
