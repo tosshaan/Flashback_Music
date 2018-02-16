@@ -24,6 +24,7 @@
         android:layout_height="94dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="80dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="210dp"
         android:background="@color/true_transparent"
         android:fontFamily="sans-serif-condensed"
@@ -36,6 +37,7 @@
         android:typeface="serif"
         app:layout_constraintBottom_toTopOf="@+id/button_songs"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button

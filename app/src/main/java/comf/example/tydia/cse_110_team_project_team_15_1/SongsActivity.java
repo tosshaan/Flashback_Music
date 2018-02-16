@@ -2,6 +2,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
+import android.media.RemoteController;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.test.mock.MockContext;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private String[] songNames;
     private int[] IDs;
+    MetadataGetter metadataGetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        metadataGetter = new MetadataGetter(this);
 
         Button switchScreen = (Button) findViewById(R.id.btn_back2);
 
@@ -108,12 +113,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
         String[] songNames = new String[IDs.length];
         for( int i = 0; i < songNames.length; i++ ) {
-            Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + IDs[i]);
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(this, path);
-            songNames[i] = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            songNames[i] = metadataGetter.getName(IDs[i]);
         }
-
         return songNames;
     }
 

@@ -54,7 +54,7 @@ public class UITestSongInfoIsDisplayed {
                         childAtPosition(
                                 withClassName(is("android.support.constraint.ConstraintLayout")),
                                 2)))
-                .atPosition(3);
+                .atPosition(9);
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatButton2 = onView(
@@ -68,10 +68,10 @@ public class UITestSongInfoIsDisplayed {
         appCompatButton2.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.text_SongName), withText("Title: Back East\nArtist: null\nAlbum: I Will Not Be Afraid (A Sampler)"),
+                allOf(withId(R.id.text_SongName), withText("Title: Crane City\nArtist: Keaton Simons\nAlbum: New & Best of Keaton Simons"),
 
                         isDisplayed()));
-        textView.check(matches(withText("Title: Back East\nArtist: null\nAlbum: I Will Not Be Afraid (A Sampler)")));
+        textView.check(matches(withText("Title: Crane City\nArtist: Keaton Simons\nAlbum: New & Best of Keaton Simons")));
 
     }
 
