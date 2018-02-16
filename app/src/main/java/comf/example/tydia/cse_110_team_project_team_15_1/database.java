@@ -27,11 +27,22 @@ public class database {
     private String currSongAddress;
     private HashMap<String, HashMap<String, SongInfo>> SongsAtLocation;
     private HashMap<String, SongInfo> SongsInformation;
+    ArrayList<String> morning, noon, evening, mon, tue, wed, thur, fri, sat, sun;
 
 
     public database() {
         SongsAtLocation = new HashMap<String, HashMap<String, SongInfo>>();
         SongsInformation = new HashMap<String, SongInfo>();
+        morning = new ArrayList<String>();
+        noon = new ArrayList<String>();
+        evening = new ArrayList<String>();
+        mon = new ArrayList<String>();
+        tue = new ArrayList<String>();
+        wed = new ArrayList<String>();
+        thur = new ArrayList<String>();
+        fri = new ArrayList<String>();
+        sat = new ArrayList<String>();
+        sun = new ArrayList<String>();
     }
     /*
     public void testInsert(){
@@ -46,6 +57,7 @@ public class database {
         SongsInformation.put("tester", testInfo);
         System.out.println("Finished inserting");
     }
+
     public void testPrint(){
         if(SongsInformation.containsKey("tester")){
             System.out.println("tester was found, Timestamp: " + SongsInformation.get("tester").timeGetter());
@@ -102,8 +114,10 @@ public class database {
         currSongAddress = getAddress(currSongLocation, context);
         System.out.println("StartSongInfoRequest is " + currSongAddress);
     }
+
     public void finishSongInfoRequest(){
         SongInfo song = new SongInfo(currSongTime, currSongLocation, currSongName);
+        //update location song list
         if(SongsAtLocation.containsKey(currSongAddress)){
             if(((HashMap)SongsAtLocation.get(currSongAddress)).containsKey(currSongName)){
                 ((HashMap)SongsAtLocation.get(currSongAddress)).remove(currSongName);
@@ -119,6 +133,7 @@ public class database {
             songs.put(currSongName, null);
             SongsAtLocation.put(currSongAddress,songs);
         }
+        //update information on the song
         if (SongsInformation.containsKey(currSongName)) {
             SongsInformation.remove(currSongName);
             SongsInformation.put(currSongName, song);
@@ -126,7 +141,65 @@ public class database {
         else {
             SongsInformation.put(currSongName, song);
         }
+        //update day song list
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(currSongTime);
+        int day = cal.get(GregorianCalendar.DAY_OF_WEEK);
+        if(day == GregorianCalendar.MONDAY){
+            if(!mon.contains(currSongName)){
+                mon.add(currSongName);
+            }
+        }
+        else if( day == GregorianCalendar.TUESDAY){
+            if(!tue.contains(currSongName)){
+                tue.add(currSongName);
+            }
+        }
+        else if(day == GregorianCalendar.WEDNESDAY){
+            if(!wed.contains(currSongName)){
+                wed.add(currSongName);
+            }
+        }
+        else if(day == GregorianCalendar.THURSDAY){
+            if(!thur.contains(currSongName)){
+                thur.add(currSongName);
+            }
+        }
+        else if(day == GregorianCalendar.FRIDAY){
+            if(!fri.contains(currSongName)){
+                fri.add(currSongName);
+            }
+        }
+        else if(day == GregorianCalendar.SATURDAY){
+            if(!sat.contains(currSongName)){
+                sat.add(currSongName);
+            }
+        }
+        else if(day == GregorianCalendar.SUNDAY){
+            if(!sun.contains(currSongName)){
+                sun.add(currSongName);
+            }
+        }
+        else{
+            System.out.println("Error trying to add to day of week list");
+        }
 
+        //add to time of day lists
+        if(currSongTime.getHours() < 8){
+            if(!morning.contains(currSongName)){
+                morning.add(currSongName);
+            }
+        }
+        else if(currSongTime.getHours() <= 16){
+            if(!noon.contains(currSongName)){
+                noon.add(currSongName);
+            }
+        }
+        else{
+            if(!evening.contains(currSongName)){
+                noon.add(currSongName);
+            }
+        }
     }
 
     public Timestamp getCurrentSongTimestamp ( String SongName){
@@ -138,6 +211,7 @@ public class database {
             return SongsInformation.get(SongName).timeGetter();
         }
     }
+
     public String getCurrentSongLastLocation ( String SongName, Context context) throws IOException {
         if (SongsInformation.containsKey(SongName) == false) {
             System.out.println("Song hasn't been played before!");
@@ -148,6 +222,7 @@ public class database {
             return getAddress(retLoc,context);
         }
     }
+
     public ArrayList <String> getSongsPlayedAtLocation ( String address){
         System.out.println("Checking for " + address);
         if (SongsAtLocation.containsKey(address) == false) {
@@ -159,12 +234,55 @@ public class database {
             return songs;
         }
     }
+
+    public ArrayList<String> getSongsAtTime(int time){
+        if(time == 0){
+            return morning;
+        }
+        else if(time == 1){
+            return noon;
+        }
+        else if(time == 2){
+            return evening;
+        }
+        System.out.println("Incorrect time");
+        return new ArrayList<String>();
+    }
+
+    public ArrayList<String> getSongsByDay(int day){
+        if(day == GregorianCalendar.MONDAY){
+            return mon;
+        }
+        else if( day == GregorianCalendar.TUESDAY){
+            return tue;
+        }
+        else if(day == GregorianCalendar.WEDNESDAY){
+            return wed;
+        }
+        else if(day == GregorianCalendar.THURSDAY){
+            return thur;
+        }
+        else if(day == GregorianCalendar.FRIDAY){
+            return fri;
+        }
+        else if(day == GregorianCalendar.SATURDAY){
+            return sat;
+        }
+        else if(day == GregorianCalendar.SUNDAY){
+            return sun;
+        }
+        System.out.println("Incorrect day");
+        return new ArrayList<String>();
+    }
+
     public boolean getSongDislikedStatus ( String SongName){
         return SongsInformation.get(SongName).isDisliked();
     }
+
     public boolean getSongLikedStatus ( String SongName){
         return SongsInformation.get(SongName).isLiked();
     }
+
     public void setDislikedStatus ( String SongName, boolean isDisliked) {
         if (SongsInformation.containsKey(SongName) == false) {
             System.out.println("Song doesn't exist");
@@ -173,6 +291,7 @@ public class database {
             SongsInformation.get(SongName).dislikeSong(isDisliked);
         }
     }
+
     public void setLikedStatus (String SongName, boolean isLiked) {
         if (SongsInformation.containsKey(SongName) == false) {
             System.out.println("Song doesn't exist");
@@ -181,6 +300,7 @@ public class database {
             SongsInformation.get(SongName).likeSong(isLiked);
         }
     }
+
     public boolean isSongHere (String SongName) {
         return SongsInformation.containsKey(SongName);
     }
