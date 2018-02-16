@@ -81,7 +81,7 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
     }
 
     // Method to get names of songs based on IDs
-    private String[] getSongNames( int[] IDs ) {
+    public String[] getSongNames( int[] IDs ) {
 
         String[] songNames = new String[IDs.length];
         for( int i = 0; i < songNames.length; i++ ) {
@@ -98,6 +98,11 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         Intent intent = new Intent (this, SongInfoActivity.class);
         intent.putExtra("songID", songIDs[i]);
         intent.putExtra("songName", songNames[i]);
+        intent.putExtra("songIndex", i);
+        intent.putExtra("albumMode", true);
+        Bundle bundle = new Bundle();
+        bundle.putIntArray("albumSongsIDs", songIDs);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 

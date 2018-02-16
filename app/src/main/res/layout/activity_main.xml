@@ -11,8 +11,8 @@
         android:id="@+id/b_flashback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
         android:text="Flashback"
         android:textColor="?attr/colorButtonNormal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,26 +20,45 @@
 
     <Button
         android:id="@+id/button_albums"
-        android:layout_width="403dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="120dp"
-        android:text="Albums"
+        android:layout_width="300dp"
+        android:layout_height="94dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="210dp"
+        android:background="@color/true_transparent"
+        android:fontFamily="sans-serif-condensed"
+        android:text="albums"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
         android:textColor="?attr/colorButtonNormal"
+        android:textSize="72sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        app:layout_constraintBottom_toTopOf="@+id/button_songs"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_songs"
-        android:layout_width="403dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="1dp"
-        android:text="All songs"
+        android:layout_width="300dp"
+        android:layout_height="94dp"
+        android:layout_marginBottom="199dp"
+        android:background="@color/true_transparent"
+        android:fontFamily="sans-serif-condensed"
+        android:text="all songs"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
         android:textColor="?attr/colorButtonNormal"
+        android:textSize="72sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_albums" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button_albums"
+        app:layout_constraintTop_toBottomOf="@+id/button_albums"
+        app:layout_constraintVertical_bias="0
+" />
 
 </android.support.constraint.ConstraintLayout>
 
