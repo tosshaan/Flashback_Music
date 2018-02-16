@@ -3,14 +3,14 @@ package comf.example.tydia.cse_110_team_project_team_15_1; /**
  */
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.*;
 import java.sql.Timestamp;
 import java.lang.*;
 
-public class SongInfo {
+public class SongInfo implements Serializable{
     private Timestamp time;
     private String songName;
-    private String albumName;
     private Location location;
     private boolean liked;
     private boolean disliked;
@@ -18,7 +18,13 @@ public class SongInfo {
         this.time = t;
         this.location = l;
         this.songName = songName;
-        this.albumName = albumName;
+    }
+    public SongInfo(Timestamp t, String s, Location l, boolean li, boolean di){
+        time = t;
+        songName = s;
+        location = l;
+        liked = li;
+        disliked = di;
     }
     public Timestamp timeGetter() {
         return this.time;
@@ -35,15 +41,8 @@ public class SongInfo {
     public String songGetter() {
         return this.songName;
     }
-    public String albumGetter() {
-        return this.albumName;
-
-    }
     public void songSetter( String songName) {
         this.songName = songName;
-    }
-    public void albumName(String albumName) {
-        this.albumName = albumName;
     }
     public void likeSong(boolean l) {
         if (l == true) {

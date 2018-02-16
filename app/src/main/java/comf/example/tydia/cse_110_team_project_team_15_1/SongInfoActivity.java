@@ -58,8 +58,10 @@ public class SongInfoActivity extends AppCompatActivity {
         try {
             myData.startSongInfoRequest(songName, this);
         } catch (IOException e) {
+            System.out.println("Its this shit");
             e.printStackTrace();
         }
+        //myData.finishSongInfoRequest();*/
 
         // Creating metadata retriever
         Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
