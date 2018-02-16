@@ -44,51 +44,6 @@ public class database {
         sat = new ArrayList<String>();
         sun = new ArrayList<String>();
     }
-    /*
-    public void testInsert(){
-        Location testLoc = new Location("testing");
-        testLoc.setLatitude(1.123d);
-        testLoc.setLongitude(1.123d);
-        Timestamp testTime = new Timestamp(System.currentTimeMillis());
-        SongInfo testInfo = new SongInfo(testTime, testLoc,"tester");
-        HashMap<String, SongInfo> songs = new HashMap<String, SongInfo>();
-        songs.put("tester", testInfo);
-        SongsAtLocation.put(testLoc, null);
-        SongsInformation.put("tester", testInfo);
-        System.out.println("Finished inserting");
-    }
-
-    public void testPrint(){
-        if(SongsInformation.containsKey("tester")){
-            System.out.println("tester was found, Timestamp: " + SongsInformation.get("tester").timeGetter());
-            System.out.println("Trying to find location now");
-            Location findLoc = new Location("hi");
-            findLoc.setLongitude(1.123d);
-            findLoc.setLatitude(1.123d);
-            if(SongsAtLocation.containsKey(findLoc)){
-                System.out.println("Found location, printing song information:");
-                ArrayList<String> songsAtLoc = getSongsPlayedAtLocation(findLoc);
-                for(String s : songsAtLoc){
-                    System.out.println("In loop" + s);
-                }
-            }
-        }
-        else{
-            System.out.println("tester not found");
-        }
-    }
-    */
-    public void changeTime(){
-        if(SongsInformation.containsKey("tester")){
-            System.out.println("Should be changing now");
-            Timestamp testTime = new Timestamp(System.currentTimeMillis());
-            SongsInformation.get("tester").timeSetter(testTime);
-            System.out.println("time should have been set");
-        }
-        else{
-            System.out.println("failed to change");
-        }
-    }
 
     public void startSongInfoRequest(String SongName, Context context) throws IOException {
         currSongName = SongName;
@@ -135,8 +90,8 @@ public class database {
         }
         //update information on the song
         if (SongsInformation.containsKey(currSongName)) {
-            SongsInformation.remove(currSongName);
-            SongsInformation.put(currSongName, song);
+            SongsInformation.get(currSongName).LocationSetter(currSongLocation);
+            SongsInformation.get(currSongName).timeSetter(currSongTime);
         }
         else {
             SongsInformation.put(currSongName, song);
@@ -198,13 +153,14 @@ public class database {
         else{
             if(!evening.contains(currSongName)){
                 noon.add(currSongName);
+                System.out.println("added right time");
             }
         }
     }
 
     public Timestamp getCurrentSongTimestamp ( String SongName){
-        if (SongsInformation.containsKey(SongName) == false) {
-            System.out.println("Song hasn't been player before!");
+        if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null) {
+            System.out.println("Song hasn't finished playing before!");
             return null;
         }
         else {
@@ -213,8 +169,8 @@ public class database {
     }
 
     public String getCurrentSongLastLocation ( String SongName, Context context) throws IOException {
-        if (SongsInformation.containsKey(SongName) == false) {
-            System.out.println("Song hasn't been played before!");
+        if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).locGetter() == null) {
+            System.out.println("Song hasn't finished playing before!");
             return null;
         }
         else {
@@ -236,13 +192,13 @@ public class database {
     }
 
     public ArrayList<String> getSongsAtTime(int time){
-        if(time == 0){
+        if(time < 8){
             return morning;
         }
-        else if(time == 1){
+        else if(time <= 16){
             return noon;
         }
-        else if(time == 2){
+        else if(time <= 24){
             return evening;
         }
         System.out.println("Incorrect time");
@@ -286,6 +242,9 @@ public class database {
     public void setDislikedStatus ( String SongName, boolean isDisliked) {
         if (SongsInformation.containsKey(SongName) == false) {
             System.out.println("Song doesn't exist");
+            SongInfo curr = new SongInfo(null, null, SongName);
+            curr.dislikeSong(isDisliked);
+            SongsInformation.put(SongName, curr);
         }
         else {
             SongsInformation.get(SongName).dislikeSong(isDisliked);
@@ -295,6 +254,9 @@ public class database {
     public void setLikedStatus (String SongName, boolean isLiked) {
         if (SongsInformation.containsKey(SongName) == false) {
             System.out.println("Song doesn't exist");
+            SongInfo curr = new SongInfo(null, null, SongName);
+            curr.likeSong(isLiked);
+            SongsInformation.put(SongName, curr);
         }
         else {
             SongsInformation.get(SongName).likeSong(isLiked);
