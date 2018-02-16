@@ -12,22 +12,21 @@
         android:id="@+id/btn_backAlbumSongs"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/b_back_selector"
-        app:layout_constraintBottom_toTopOf="@+id/list_AlbumSongs"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/b_flashback_album_songs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
+        android:background="@color/dark_transparent"
         android:text="@string/flashback"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_backAlbumSongs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
