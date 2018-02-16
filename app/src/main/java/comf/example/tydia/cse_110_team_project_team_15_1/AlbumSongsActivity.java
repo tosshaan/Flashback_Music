@@ -29,6 +29,7 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
     // Need to get list of Album names from the database
     String[] songNames;
     int[] songIDs;
+    MetadataGetter metadataGetter;
 
 
     @Override
@@ -37,6 +38,9 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_album_songs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Creating metadataGtter
+        metadataGetter = new MetadataGetter(this);
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -85,12 +89,8 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
 
         String[] songNames = new String[IDs.length];
         for( int i = 0; i < songNames.length; i++ ) {
-            Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + IDs[i]);
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(this, path);
-            songNames[i] = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            songNames[i] = metadataGetter.getName(IDs[i]);
         }
-
         return songNames;
     }
 
