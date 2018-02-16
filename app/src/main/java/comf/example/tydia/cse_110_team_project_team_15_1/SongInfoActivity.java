@@ -37,9 +37,6 @@ public class SongInfoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
-        //testing functionality below, can be deleted if needed
-        //myData.testInsert();
-        //myData.testPrint();
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -57,7 +54,7 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
 
-        //this statement needs to stay, should work after Cory fixes the location issue
+        // Storing info from song to database
         try {
             myData.startSongInfoRequest(songName, this);
         } catch (IOException e) {
@@ -82,8 +79,8 @@ public class SongInfoActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("tag", "index = " + songIndex + " // arraysize = " + albumSongsIDs.length );
-                Log.d("songid", "songid = " + albumSongsIDs[songIndex] );
+            //    Log.d("tag", "index = " + songIndex + " // arraysize = " + albumSongsIDs.length );
+            //    Log.d("songid", "songid = " + albumSongsIDs[songIndex] );
                 mediaPlayer.start();
                 if (playFlag == true) {
                     pauseButton.setVisibility(View.GONE);

@@ -118,11 +118,13 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
     */
     public int[] getAlbumSongs(int i) {
         ArrayList<Integer> albumSongIDsArr = new ArrayList<>();
+        Uri path;
+        MediaMetadataRetriever retriever;
 
         for(int j = 0; j < songIDs.length; j++){
 
-            Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + songIDs[j]);
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            path = Uri.parse("android.resource://" + getPackageName() + "/" + songIDs[j]);
+            retriever = new MediaMetadataRetriever();
             retriever.setDataSource(this, path);
             if(albumNames[i].equals(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM))){
                 albumSongIDsArr.add(songIDs[j]);
@@ -130,6 +132,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         }
 
         int[] albumSongIDs = new int[albumSongIDsArr.size()];
+
         for( int k = 0; k < albumSongIDsArr.size(); k++ ) {
             albumSongIDs[k] = albumSongIDsArr.get(k);
         }
