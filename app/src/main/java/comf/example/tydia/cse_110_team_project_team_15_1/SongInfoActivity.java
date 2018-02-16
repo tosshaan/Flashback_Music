@@ -21,6 +21,7 @@ import java.io.IOException;
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+    MetadataGetter metadataGetter;
     private static int MEDIA_RES_ID = 0;
     private boolean playFlag = true;
     private int songIndex;
@@ -61,15 +62,13 @@ public class SongInfoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Creating metadata retriever
-        Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(this, path);
+        // Creating metadatagetter
+        metadataGetter = new MetadataGetter(this);
 
         TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
-        showMetadata.setText("Title: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+        showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-        retriever.release();
+        metadataGetter.release();
 
         // play and pause music
 
