@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 /**
@@ -40,12 +41,31 @@ public class FlashbackList {
     public void generateList() {
         // Temp ArrayList to hold flashbackSongs
         ArrayList<Integer> tempList = new ArrayList<>();
+
         // Getting all songs in currentLocation
         ArrayList<String> songsAtLoc = db.getSongsPlayedAtLocation(currAddress);
         for( int i = 0; i < songsAtLoc.size(); i++ ) {
-            tempList.add(allSongIDs.get(songsAtLoc.get(i)));
+            if(!db.getSongDislikedStatus(songsAtLoc.get(i))) {
+                tempList.add(allSongIDs.get(songsAtLoc.get(i)));
+            }
         }
-        // TODO: time of day and day of week
+        // Getting all songs at this time of day
+        ArrayList<String> songsAtTime = db.getSongsAtTime(currTime.getHours());
+        for(int i = 0; i < songsAtTime.size(); i++){
+            if(!db.getSongDislikedStatus(songsAtTime.get(i))) {
+                tempList.add(allSongIDs.get(songsAtTime.get(i)));
+            }
+        }
+
+        // Getting all songs on this day of the week
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(currTime);
+        ArrayList<String> songsOnDay = db.getSongsByDay(cal.get(GregorianCalendar.DAY_OF_WEEK));
+        for(int i = 0; i < songsOnDay.size(); i++){
+            if(!db.getSongDislikedStatus(songsOnDay.get(i))) {
+                tempList.add(allSongIDs.get(songsOnDay.get(i)));
+            }
+        }
 
         // Copying tempArrayList to final array
         flashbackSongIDs = new int[tempList.size()];

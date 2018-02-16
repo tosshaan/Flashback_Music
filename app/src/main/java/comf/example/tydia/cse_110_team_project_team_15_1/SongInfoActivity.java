@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 public class SongInfoActivity extends AppCompatActivity {
 
@@ -25,6 +26,7 @@ public class SongInfoActivity extends AppCompatActivity {
     private static int MEDIA_RES_ID = 0;
     private boolean playFlag = true;
     private int songIndex;
+    private String songName;
     private int [] albumSongsIDs;
     private boolean albumMode = true;
 
@@ -37,14 +39,14 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myData = DatabaseStorageFunctions.retreiveDatabase(getApplicationContext());
+        myData = MainActivity.data;
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
-        String songName = getIntent().getStringExtra("songName");
+        songName = getIntent().getStringExtra("songName");
         Bundle bundle = getIntent().getExtras();
         albumMode = getIntent().getBooleanExtra("albumMode", false);
         if (albumMode) {
@@ -55,12 +57,33 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
 
+        //setting information on screen
+        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
+        TextView lastLoc = (TextView) findViewById((R.id.textView4));
+        try {
+            if(myData.getCurrentSongLastLocation(songName, this)!= null){
+                lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
+            }
+            else{
+                lastLoc.setText("");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(myData.getCurrentSongTimestamp(songName) != null){
+            lastTime.setText(myData.getCurrentSongTimestamp(songName).toString());
+        }
+        else{
+            lastTime.setText("Song has not been played before");
+        }
+
         // Storing info from song to database
         try {
             myData.startSongInfoRequest(songName, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        myData.finishSongInfoRequest();
 
         // Creating metadatagetter
         metadataGetter = new MetadataGetter(this);
@@ -177,8 +200,8 @@ public class SongInfoActivity extends AppCompatActivity {
         dislikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // dislike song
-                // stop song and skip song
+                // dislike song - Method used will be myData.setDislikedStatus(songName, whether or not the song needs to be disliked or undisliked
+                // stop song and skip song if it has not already been disliked, keep playing if the button was hit to remove a previous dislike
             }
         });
 

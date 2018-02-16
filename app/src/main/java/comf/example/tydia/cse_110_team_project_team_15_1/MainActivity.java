@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static String PACKAGE_NAME;
+    public static database data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 launchFlashback();
             }
         });
+
+        data = DatabaseStorageFunctions.retreiveDatabase(this);
 
         final Button launchAlbums = (Button) findViewById(R.id.button_albums);
         launchAlbums.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     /*
     public void databaseTester() throws IOException {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
