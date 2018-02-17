@@ -93,7 +93,7 @@ public class SongInfoActivity extends AppCompatActivity {
                 } else {
                     pauseButton.setVisibility(View.VISIBLE);
                     playButton.setVisibility(View.GONE);
-                }
+            }
             }
         });
 
@@ -149,6 +149,10 @@ public class SongInfoActivity extends AppCompatActivity {
                         songIndex++;
                         mediaPlayer.reset();
                         MEDIA_RES_ID = albumSongsIDs[songIndex];
+
+                        //reset the visibility of pause button
+                        pauseButton.setVisibility(View.VISIBLE);
+                        playButton.setVisibility(View.GONE);
 
                         mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                         mediaPlayer.start();
