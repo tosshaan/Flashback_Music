@@ -3,6 +3,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.util.Log;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 
@@ -26,6 +27,7 @@ public class MetadataGetter {
     // Get song name based on ID
     public String getName(int id) {
         path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + id);
+        Log.d("CONTEXT AND PATH: ", "The context is " + context + " The path is " + path);
         retriever.setDataSource(context, path);
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
     }

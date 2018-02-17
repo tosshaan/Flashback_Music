@@ -28,6 +28,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
     ListView list;
     // Need to get list of song names from the database
+    public static String PACKAGE_NAME;
+
 
     private String[] songNames;
     private int[] IDs;
@@ -44,6 +46,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        MainActivity.PACKAGE_NAME = getPackageName();
         metadataGetter = new MetadataGetter(this);
 
         Button switchScreen = (Button) findViewById(R.id.btn_back2);
