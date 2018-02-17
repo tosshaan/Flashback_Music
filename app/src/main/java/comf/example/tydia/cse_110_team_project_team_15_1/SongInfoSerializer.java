@@ -18,9 +18,7 @@ public class SongInfoSerializer implements JsonSerializer<SongInfo>{
         JsonObject obj = new JsonObject();
         obj.addProperty("time", src.timeGetter().getTime());
         obj.addProperty("name", src.songGetter());
-        obj.addProperty("Provider", src.locGetter().getProvider());
-        obj.addProperty("Lat", src.locGetter().getLatitude());
-        obj.addProperty("Long", src.locGetter().getLongitude());
+        obj.addProperty("location", src.locGetter());
         obj.addProperty("liked", src.isLiked());
         obj.addProperty("disliked", src.isDisliked());
         return obj;

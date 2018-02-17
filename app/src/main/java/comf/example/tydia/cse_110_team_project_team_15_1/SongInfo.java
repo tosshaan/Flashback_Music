@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1; /**
  * Created by Cory Liang on 2/7/2018.
  */
+import android.location.Address;
 import android.location.Location;
 
 import java.io.Serializable;
@@ -11,15 +12,15 @@ import java.lang.*;
 public class SongInfo implements Serializable{
     private Timestamp time;
     private String songName;
-    private Location location;
+    private String location;
     private boolean liked;
     private boolean disliked;
-    public SongInfo(Timestamp t, Location l, String songName){
+    public SongInfo(Timestamp t, String l, String songName){
         this.time = t;
         this.location = l;
         this.songName = songName;
     }
-    public SongInfo(Timestamp t, String s, Location l, boolean li, boolean di){
+    public SongInfo(Timestamp t, String s, String l, boolean li, boolean di){
         time = t;
         songName = s;
         location = l;
@@ -32,10 +33,10 @@ public class SongInfo implements Serializable{
     public void timeSetter(Timestamp time) {
         this.time = time;
     }
-    public Location locGetter() {
+    public String locGetter() {
         return this.location;
     }
-    public void LocationSetter(Location location) {
+    public void LocationSetter(String location) {
         this.location = location;
     }
     public String songGetter() {
