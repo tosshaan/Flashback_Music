@@ -47,6 +47,10 @@ public class database {
     public void startSongInfoRequest(String SongName, Context context) throws IOException {
         currSongName = SongName;
 
+        //Getting time
+        currSongTime = new Timestamp(System.currentTimeMillis());
+        System.out.println("Current song time is " + currSongTime);
+
         //Getting location
         LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = manager.getProviders(true);
@@ -75,10 +79,6 @@ public class database {
             System.out.println("Null reached");
             return;
         }
-
-        //Getting time
-        currSongTime = new Timestamp(System.currentTimeMillis());
-        System.out.println("Current song time is " + currSongTime);
 
         //might just throw all request permission into method here
         System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
@@ -114,9 +114,10 @@ public class database {
             SongsInformation.put(currSongName, song);
         }
         //update day song list
-        GregorianCalendar cal = new GregorianCalendar();
+        Calendar cal = Calendar.getInstance();
+        System.out.println(currSongTime.toString());
         cal.setTime(currSongTime);
-        int day = cal.get(GregorianCalendar.DAY_OF_WEEK);
+        int day = cal.get(Calendar.DAY_OF_WEEK);
         if(day == GregorianCalendar.MONDAY){
             if(!mon.contains(currSongName)){
                 mon.add(currSongName);
