@@ -4,5 +4,8 @@
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorAccent">#FF4081</color>
     <color name="transparent">#32ffffff</color>
+    <color name="dark_transparent">#35717171</color>
+    <color name="light_transparent">#26747474</color>
     <color name="true_transparent">#00ffffff</color>
+    <color name="biased_grey">#b5d4d4d4</color>
 </resources>

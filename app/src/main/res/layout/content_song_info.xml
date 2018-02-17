@@ -9,24 +9,24 @@
     tools:context="comf.example.tydia.cse_110_team_project_team_15_1.SongInfoActivity"
     tools:showIn="@layout/activity_song_info">
 
-    <Button
+    <ToggleButton
         android:id="@+id/button_like2"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="59dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/b_thumbup_selector"
+        android:background="@drawable/toggle_b_thumb_up_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_dislike2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/button_dislike2" />
 
-    <Button
+    <ToggleButton
         android:id="@+id/button_dislike2"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="50dp"
-        android:background="@drawable/b_thumbdown_selector"
+        android:background="@drawable/toggle_b_thumb_down_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_next2"
         app:layout_constraintStart_toEndOf="@+id/button_next2"
         app:layout_constraintTop_toTopOf="@+id/button_next2" />
@@ -130,11 +130,13 @@
 
     <Button
         android:id="@+id/b_flashback_songinfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
+        android:background="@color/dark_transparent"
         android:text="@string/flashback"
+        app:layout_constraintBottom_toBottomOf="@+id/button_songInfoBack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

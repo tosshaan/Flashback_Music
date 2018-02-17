@@ -10,10 +10,11 @@
 
     <Button
         android:id="@+id/normal_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
+        android:background="@color/dark_transparent"
         android:text="@string/normalmode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,13 +49,12 @@
         android:id="@+id/text_timeAndDateFlashback"
         android:layout_width="252dp"
         android:layout_height="22dp"
-        android:layout_marginStart="16dp"
         android:text="@string/time_and_date"
         android:textAlignment="center"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/textView4"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/text_locationFlashback"
         app:layout_constraintTop_toBottomOf="@+id/text_SongNameFlashback" />
 
     <TextView
@@ -106,24 +106,24 @@
         app:layout_constraintStart_toEndOf="@+id/button_pause"
         app:layout_constraintTop_toTopOf="@+id/button_pause" />
 
-    <Button
+    <ToggleButton
         android:id="@+id/button_like"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/b_thumbup_selector"
+        android:background="@drawable/toggle_b_thumb_up_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_next"
         app:layout_constraintEnd_toStartOf="@+id/button_dislike"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_next"
         app:layout_constraintTop_toTopOf="@+id/button_next" />
 
-    <Button
+    <ToggleButton
         android:id="@+id/button_dislike"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/b_thumbdown_selector"
+        android:background="@drawable/toggle_b_thumb_down_selector"
         app:layout_constraintBottom_toBottomOf="@+id/button_like"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
