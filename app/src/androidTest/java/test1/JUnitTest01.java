@@ -18,8 +18,8 @@ import static org.junit.Assert.assertEquals;
 
 public class JUnitTest01 {
 
-    @Rule
-    public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
+    //@Rule
+    //public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
 
     int[] idsTest;
 
@@ -37,6 +37,7 @@ public class JUnitTest01 {
         assertEquals(45, idsTest.length );
     }
 
+    /*
     @Test
     public void testGetSongNames() {
         String[] songNames = songsActivity.getActivity().getSongNames(idsTest);
@@ -45,6 +46,7 @@ public class JUnitTest01 {
         assertEquals("Windows Are The Eyes To The House", songNames[idsTest.length -1]);
         assertEquals(45, songNames.length);
     }
+    */
 
     @Rule
     public ActivityTestRule<AlbumsActivity> albumsActivity = new ActivityTestRule<>(AlbumsActivity.class);
