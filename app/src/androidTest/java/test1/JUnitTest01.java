@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.AlbumsActivity;
+import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
 import comf.example.tydia.cse_110_team_project_team_15_1.R;
 import comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity;
@@ -19,16 +20,19 @@ import static org.junit.Assert.assertEquals;
 
 public class JUnitTest01 {
 
+    //@Rule
+    //public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
+
     @Rule
     public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
 
     int[] idsTest;
-    // MetadataGetter metadataGetter;
+    MetadataGetter metadataGetter;
 
     @Before
     public void setup() {
         idsTest = SongsActivity.getSongIDs();
-      //  metadataGetter = new MetadataGetter(albumsActivity.getActivity());
+        metadataGetter = new MetadataGetter(albumsActivity.getActivity());
     }
 
     @Test
@@ -40,10 +44,27 @@ public class JUnitTest01 {
         assertEquals(45, idsTest.length );
     }
 
-    //@Test
-    //public void tesGetSongName() {
-    //    assertEquals(metadataGetter.getName(idsTest[1]), "After The Storm");
-    //}
+    @Test
+    public void tesGetSongName() {
+        assertEquals(metadataGetter.getName(idsTest[1]), "After The Storm");
+        assertEquals(metadataGetter.getName(idsTest[5]), "Beautiful-Pain");
+        assertEquals(metadataGetter.getName(idsTest[11]), "Dead Dove Do Not Eat");
+        assertEquals(metadataGetter.getName(idsTest[12]), "Dreamatorium");
+    }
+
+    @Test
+    public void testGetAlbum() {
+        assertEquals(metadataGetter.getAlbum(idsTest[5]), "New & Best of Keaton Simons");
+        assertEquals(metadataGetter.getAlbum(idsTest[2]), "I Will Not Be Afraid (A Sampler)");
+        assertEquals(metadataGetter.getAlbum(idsTest[idsTest.length -1 ]), "Take Yourself Too Seriously");
+    }
+
+    @Test
+    public void testGetArtist() {
+        assertEquals(metadataGetter.getArtist(idsTest[3]),"Unknown");
+        assertEquals(metadataGetter.getArtist(idsTest[7]),"Stacy Jones");
+        assertEquals(metadataGetter.getArtist(idsTest[9]),"Keaton Simons");
+    }
 
 
     @Test

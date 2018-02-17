@@ -29,6 +29,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
 
     String[] albumNames;
     int[] songIDs;
+    MetadataGetter metadataGetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+        MainActivity.PACKAGE_NAME = getPackageName();
+        metadataGetter = new MetadataGetter(this);
 
         songIDs = SongsActivity.getSongIDs();
         albumNames = getAlbumNames(songIDs);
@@ -88,11 +91,9 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         ArrayList<String> albumSet = new ArrayList<>();
 
         for( int i = 0; i < IDs.length; i++ ) {
-            Uri path = Uri.parse("android.resource://" + getPackageName() + "/" + IDs[i]);
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(this, path);
-            if(!albumSet.contains(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)))
-                albumSet.add(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+            String album = metadataGetter.getAlbum(IDs[i]);
+            if(!albumSet.contains( album ))
+                albumSet.add(album);
         }
         String[] albumNames = new String[albumSet.size()];
         for(int i = 0; i < albumSet.size(); i++){
@@ -118,15 +119,10 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
     */
     public int[] getAlbumSongs(int i) {
         ArrayList<Integer> albumSongIDsArr = new ArrayList<>();
-        Uri path;
-        MediaMetadataRetriever retriever;
 
         for(int j = 0; j < songIDs.length; j++){
 
-            path = Uri.parse("android.resource://" + getPackageName() + "/" + songIDs[j]);
-            retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(this, path);
-            if(albumNames[i].equals(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM))){
+            if(albumNames[i].equals(metadataGetter.getAlbum(songIDs[j]))){
                 albumSongIDsArr.add(songIDs[j]);
             }
         }

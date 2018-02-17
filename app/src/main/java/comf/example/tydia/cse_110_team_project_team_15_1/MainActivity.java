@@ -20,15 +20,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String PACKAGE_NAME;
     public static database data;
+    public static String PACKAGE_NAME;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PACKAGE_NAME = getPackageName();
         database db = new database();
+        PACKAGE_NAME = getPackageName();
 
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback);
 
