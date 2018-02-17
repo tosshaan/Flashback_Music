@@ -232,10 +232,16 @@ public class database {
     }
 
     public boolean getSongDislikedStatus ( String SongName){
+        if(!SongsInformation.containsKey(SongName)){
+            return false;
+        }
         return SongsInformation.get(SongName).isDisliked();
     }
 
     public boolean getSongLikedStatus ( String SongName){
+        if(!SongsInformation.containsKey(SongName)){
+            return false;
+        }
         return SongsInformation.get(SongName).isLiked();
     }
 
