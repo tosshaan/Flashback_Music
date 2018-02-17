@@ -22,9 +22,7 @@ public class SongInfoDeserializer implements JsonDeserializer<SongInfo>{
     @Override
     public SongInfo deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject o = json.getAsJsonObject();
-        Location loc = new Location(o.getAsJsonPrimitive("Provider").getAsString());
-        loc.setLatitude(o.getAsJsonPrimitive("Lat").getAsDouble());
-        loc.setLongitude(o.getAsJsonPrimitive("Long").getAsDouble());
+        String loc = o.getAsJsonPrimitive("location").getAsString();
         Timestamp time = new Timestamp(o.getAsJsonPrimitive("time").getAsLong());
         String name = o.getAsJsonPrimitive("name").getAsString();
         boolean liked = o.getAsJsonPrimitive("liked").getAsBoolean();

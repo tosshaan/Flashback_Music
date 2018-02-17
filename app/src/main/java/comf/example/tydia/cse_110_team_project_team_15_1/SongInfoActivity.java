@@ -61,7 +61,7 @@ public class SongInfoActivity extends AppCompatActivity {
 
         // Storing info from song to database
         try {
-            myData.startSongInfoRequest(songName, this);
+            myData.startSongInfoRequest(songName, getApplicationContext());
         } catch (IOException e) {
             e.printStackTrace();
         }

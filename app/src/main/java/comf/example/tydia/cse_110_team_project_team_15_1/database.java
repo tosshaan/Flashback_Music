@@ -23,15 +23,14 @@ public class database {
 
     private String currSongName;
     private Timestamp currSongTime;
-    private Location currSongLocation;
     private String currSongAddress;
-    private HashMap<String, HashMap<String, SongInfo>> SongsAtLocation;
+    private HashMap<String, ArrayList<String>> SongsAtLocation;
     private HashMap<String, SongInfo> SongsInformation;
     ArrayList<String> morning, noon, evening, mon, tue, wed, thur, fri, sat, sun;
 
 
     public database() {
-        SongsAtLocation = new HashMap<String, HashMap<String, SongInfo>>();
+        SongsAtLocation = new HashMap<String, ArrayList<String>>();
         SongsInformation = new HashMap<String, SongInfo>();
         morning = new ArrayList<String>();
         noon = new ArrayList<String>();
@@ -47,10 +46,13 @@ public class database {
 
     public void startSongInfoRequest(String SongName, Context context) throws IOException {
         currSongName = SongName;
-        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-        currSongTime = new Timestamp(System.currentTimeMillis());
-        System.out.println("Current song time is " + currSongTime);
+        //Getting location
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = manager.getProviders(true);
+        Location myLoc = null;
+
+        //Checking permissions
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context,
@@ -59,38 +61,53 @@ public class database {
             return;
         }
         System.out.println("Now retrieving location");
-        currSongLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (currSongLocation == null) {
+        for(int i = 0; i < providers.size(); i++){
+            Location guess = manager.getLastKnownLocation(providers.get(i));
+            if(guess == null){
+                continue;
+            }
+            if(myLoc == null || guess.getAccuracy() < myLoc.getAccuracy()){
+                myLoc = guess;
+            }
+        }
+
+        if (myLoc == null) {
             System.out.println("Null reached");
             return;
         }
+
+        //Getting time
+        currSongTime = new Timestamp(System.currentTimeMillis());
+        System.out.println("Current song time is " + currSongTime);
+
         //might just throw all request permission into method here
-        System.out.println(currSongLocation.getLatitude() + " , " + currSongLocation.getLongitude());
-        currSongAddress = getAddress(currSongLocation, context);
+        System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
+        currSongAddress = getAddress(myLoc, context);
         System.out.println("StartSongInfoRequest is " + currSongAddress);
     }
 
     public void finishSongInfoRequest(){
-        SongInfo song = new SongInfo(currSongTime, currSongLocation, currSongName);
+        SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);
+        System.out.println(currSongAddress);
         //update location song list
         if(SongsAtLocation.containsKey(currSongAddress)){
-            if(((HashMap)SongsAtLocation.get(currSongAddress)).containsKey(currSongName)){
-                ((HashMap)SongsAtLocation.get(currSongAddress)).remove(currSongName);
-                ((HashMap)SongsAtLocation.get(currSongAddress)).put(currSongName, null);
+            if((SongsAtLocation.get(currSongAddress)).contains(currSongName)){
+                (SongsAtLocation.get(currSongAddress)).remove(currSongName);
+                (SongsAtLocation.get(currSongAddress)).add(currSongName);
             }
             else {
-                ((HashMap)SongsAtLocation.get(currSongAddress)).put(currSongName, null);
+                (SongsAtLocation.get(currSongAddress)).add(currSongName);
             }
 
         }
         else {
-            HashMap<String, SongInfo> songs = new HashMap<String, SongInfo>();
-            songs.put(currSongName, null);
+            ArrayList<String> songs = new ArrayList<String>();
+            songs.add(currSongName);
             SongsAtLocation.put(currSongAddress,songs);
         }
         //update information on the song
         if (SongsInformation.containsKey(currSongName)) {
-            SongsInformation.get(currSongName).LocationSetter(currSongLocation);
+            SongsInformation.get(currSongName).LocationSetter(currSongAddress);
             SongsInformation.get(currSongName).timeSetter(currSongTime);
         }
         else {
@@ -174,8 +191,7 @@ public class database {
             return null;
         }
         else {
-            Location retLoc = SongsInformation.get(SongName).locGetter();
-            return getAddress(retLoc,context);
+            return SongsInformation.get(SongName).locGetter();
         }
     }
 
@@ -186,7 +202,7 @@ public class database {
             return null;
         }
         else {
-            ArrayList<String> songs = new ArrayList<String>(SongsAtLocation.get(address).keySet());
+            ArrayList<String> songs = new ArrayList<String>(SongsAtLocation.get(address));
             return songs;
         }
     }
