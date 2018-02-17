@@ -99,9 +99,9 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         intent.putExtra("songID", songIDs[i]);
         intent.putExtra("songName", songNames[i]);
         intent.putExtra("songIndex", i);
-        intent.putExtra("albumMode", true);
+        //intent.putExtra("albumMode", true);
         Bundle bundle = new Bundle();
-        bundle.putIntArray("albumSongsIDs", songIDs);
+        bundle.putIntArray("SongsIDs", songIDs);
         intent.putExtras(bundle);
         startActivity(intent);
     }

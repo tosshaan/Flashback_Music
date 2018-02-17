@@ -92,7 +92,11 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         Intent intent = new Intent (this, SongInfoActivity.class);
         intent.putExtra("songID", IDs[i]);
         intent.putExtra("songName", songNames[i]);
-        intent.putExtra("albumMode", false);
+        //intent.putExtra("albumMode", false);
+        intent.putExtra("songIndex", i);
+        Bundle bundle = new Bundle();
+        bundle.putIntArray("SongsIDs", IDs);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
