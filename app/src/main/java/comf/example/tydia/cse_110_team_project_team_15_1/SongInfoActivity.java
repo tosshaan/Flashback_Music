@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -203,41 +204,61 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
-        //Initial Setup of Dislike Button
-        Button dislikeButton = (Button) findViewById(R.id.button_dislike2);
+        // like and dislike functionality
+        final ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike2);
+        final ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like2);
+        likeButton.setText(null);
+        likeButton.setTextOn(null);
+        likeButton.setTextOff(null);
+        dislikeButton.setText(null);
+        dislikeButton.setTextOn(null);
+        dislikeButton.setTextOff(null);
+
+        // DISLIKE
         if(myData.getSongDislikedStatus(songName)){
-            //TODO: set dislike button to be in highlighted state (because the song was already disliked at a previous time). Please do the same in the methods at the bottom of file
+            //set dislike button to be in highlighted state (because the song was already disliked at a previous time). Please do the same in the methods at the bottom of file
+            dislikeButton.setChecked(true);
+            likeButton.setChecked(false);
         }
         dislikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(myData.getSongDislikedStatus(songName)){
                     myData.setDislikedStatus(songName, false);
-                    // TODO: set button back to unhighlighted version
+                    // set button back to unhighlighted version
+                    dislikeButton.setChecked(false);
                 }
                 else{
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
+
+                    dislikeButton.setChecked(true);
+                    likeButton.setChecked(false);
+
                     // TODO: Skip song
                 }
             }
         });
 
-        //Initial Setup of Like Button
-        Button likeButton = (Button) findViewById(R.id.button_like2);
+        // LIKE
         if(myData.getSongLikedStatus(songName)){
-            //TODO: set like button to be in highlighted state because the song was already liked previously. Please do the same in the methods at the bottom of the file
+            //set like button to be in highlighted state because the song was already liked previously. Please do the same in the methods at the bottom of the file
+            likeButton.setChecked(true);
+            dislikeButton.setChecked(false);
         }
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(myData.getSongLikedStatus(songName)){
                     myData.setLikedStatus(songName, false);
-                    // TODO: set button back to unhighlighted state
+                    // set button back to unhighlighted state
+                    likeButton.setChecked(false);
                 }
                 else{
                     myData.setLikedStatus(songName, true);
-                    // TODO: change to highlighted state
+                    // change to highlighted state
+                    likeButton.setChecked(true);
+                    dislikeButton.setChecked(false);
                 }
             }
         });
