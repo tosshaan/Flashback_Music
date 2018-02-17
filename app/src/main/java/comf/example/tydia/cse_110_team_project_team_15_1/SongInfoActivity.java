@@ -28,8 +28,8 @@ public class SongInfoActivity extends AppCompatActivity {
     private boolean playFlag = true;
     private int songIndex;
     private String songName;
-    private int [] albumSongsIDs;
-    private boolean albumMode = true;
+    private int [] SongsIDs;
+    //private boolean albumMode = true;
 
     database myData;
 
@@ -49,11 +49,11 @@ public class SongInfoActivity extends AppCompatActivity {
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         songName = getIntent().getStringExtra("songName");
         Bundle bundle = getIntent().getExtras();
-        albumMode = getIntent().getBooleanExtra("albumMode", false);
-        if (albumMode) {
-            albumSongsIDs = bundle.getIntArray("albumSongsIDs");
+        //albumMode = getIntent().getBooleanExtra("albumMode", false);
+        //if (albumMode) {
+            SongsIDs = bundle.getIntArray("SongsIDs");
             songIndex = getIntent().getIntExtra("songIndex", 0);
-        }
+        //}
 
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
@@ -96,88 +96,90 @@ public class SongInfoActivity extends AppCompatActivity {
         });
 
         // finish playing a song
-        if(albumMode) {
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayerX) {
-                    if (songIndex < (albumSongsIDs.length - 1)) {
-                        songIndex++;
-                        mediaPlayer.reset();
-                        MEDIA_RES_ID = albumSongsIDs[songIndex];
+        setFinishListener();
 
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
-                        mediaPlayer.start();
+        Button prevButton = (Button) findViewById(R.id.button_prev2);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (songIndex > 0) {
+                    songIndex--;
+                    mediaPlayer.reset();
+                    MEDIA_RES_ID = SongsIDs[songIndex];
 
-                        //loadMedia(albumSongsIDs[songIndex]);
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
 
-                        updateLastPlayedInfo();
-                        updateDislikedButton();
-                        updateLikedButton();
+                    mediaPlayer.start();
 
-                        //get current information to update song if needed
-                        try {
-                            myData.startSongInfoRequest(songName, getApplicationContext());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-                        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+                    updateLastPlayedInfo();
+                    updateDislikedButton();
+                    updateLikedButton();
 
-                        metadataGetter.release();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "End of album", Toast.LENGTH_SHORT).show();
-                        mediaPlayer.reset();
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    //get current information to update song if needed
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
+                    mediaPlayer.reset();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                 }
-            });
+
+            }
+        });
+
+        Button nextButton = (Button) findViewById(R.id.button_next2);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (songIndex < (SongsIDs.length - 1)) {
+                    songIndex++;
+                    mediaPlayer.reset();
+                    MEDIA_RES_ID = SongsIDs[songIndex];
+
+                    //reset the visibility of pause button
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mediaPlayer.start();
+
+                    //loadMedia(albumSongsIDs[songIndex]);
+
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
 
-            Button nextButton = (Button) findViewById(R.id.button_next2);
-            nextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (songIndex < (albumSongsIDs.length - 1)) {
-                        songIndex++;
-                        mediaPlayer.reset();
-                        MEDIA_RES_ID = albumSongsIDs[songIndex];
+                    updateLastPlayedInfo();
+                    updateDislikedButton();
+                    updateLikedButton();
 
-                        //reset the visibility of pause button
-                        pauseButton.setVisibility(View.VISIBLE);
-                        playButton.setVisibility(View.GONE);
 
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
-                        mediaPlayer.start();
-
-                        //loadMedia(albumSongsIDs[songIndex]);
-
-                        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                        songName = metadataGetter.getName(MEDIA_RES_ID);
-                        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
-
-                        updateLastPlayedInfo();
-                        updateDislikedButton();
-                        updateLikedButton();
-
-                        //get current information to update song if needed
-                        try {
-                            myData.startSongInfoRequest(songName, getApplicationContext());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        myData.finishSongInfoRequest();
-
-                        metadataGetter.release();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "End of album", Toast.LENGTH_SHORT).show();
-                        mediaPlayer.reset();
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    //get current information to update song if needed
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                }
-            });
+                    myData.finishSongInfoRequest();
 
-        }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+                    mediaPlayer.reset();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                }
+            }
+        });
+
 
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -356,5 +358,46 @@ public class SongInfoActivity extends AppCompatActivity {
         if(myData.getSongLikedStatus(songName)){
             //TODO: set like button to be in highlighted state because the song was already liked previously
         }
+    }
+    private void setFinishListener() {
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                if (songIndex < (SongsIDs.length - 1)) {
+                    songIndex++;
+                    mediaPlayer.reset();
+                    MEDIA_RES_ID = SongsIDs[songIndex];
+
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mediaPlayer.start();
+
+                    //loadMedia(albumSongsIDs[songIndex]);
+
+
+                    updateLastPlayedInfo();
+                    updateDislikedButton();
+                    updateLikedButton();
+
+                    //get current information to update song if needed
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+                    mediaPlayer.reset();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                }
+                setFinishListener();
+            }
+        });
+
     }
 }
