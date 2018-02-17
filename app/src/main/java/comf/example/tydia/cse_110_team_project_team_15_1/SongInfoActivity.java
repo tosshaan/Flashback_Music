@@ -57,25 +57,7 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
 
-        //setting information on screen
-        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
-        TextView lastLoc = (TextView) findViewById((R.id.textView4));
-        try {
-            if(myData.getCurrentSongLastLocation(songName, this)!= null){
-                lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
-            }
-            else{
-                lastLoc.setText("");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(myData.getCurrentSongTimestamp(songName) != null){
-            lastTime.setText(myData.getCurrentSongTimestamp(songName).toString());
-        }
-        else{
-            lastTime.setText("Song has not been played before");
-        }
+        updateLastPlayedInfo();
 
         // Storing info from song to database
         try {
@@ -133,8 +115,20 @@ public class SongInfoActivity extends AppCompatActivity {
                         MediaMetadataRetriever retriever2 = new MediaMetadataRetriever();
                         retriever2.setDataSource(getApplicationContext(), path2);
 
+                        songName = retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                        updateLastPlayedInfo();
+                        updateDislikedButton();
+                        updateLikedButton();
+
+                        //get current information to update song if needed
+                        try {
+                            myData.startSongInfoRequest(songName, getApplicationContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                        showMetadata2.setText("Title: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+                        showMetadata2.setText("Title: " + songName + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
 
                         retriever2.release();
                     }
@@ -165,7 +159,20 @@ public class SongInfoActivity extends AppCompatActivity {
                         retriever2.setDataSource(getApplicationContext(), path2);
 
                         TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                        showMetadata2.setText("Title: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+                        songName = retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                        showMetadata2.setText("Title: " + songName + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+
+                        updateLastPlayedInfo();
+                        updateDislikedButton();
+                        updateLikedButton();
+
+                        //get current information to update song if needed
+                        try {
+                            myData.startSongInfoRequest(songName, getApplicationContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        myData.finishSongInfoRequest();
 
                         retriever2.release();
                     }
@@ -196,16 +203,44 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
+        //Initial Setup of Dislike Button
         Button dislikeButton = (Button) findViewById(R.id.button_dislike2);
+        if(myData.getSongDislikedStatus(songName)){
+            //TODO: set dislike button to be in highlighted state (because the song was already disliked at a previous time). Please do the same in the methods at the bottom of file
+        }
         dislikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // dislike song - Method used will be myData.setDislikedStatus(songName, whether or not the song needs to be disliked or undisliked
-                // stop song and skip song if it has not already been disliked, keep playing if the button was hit to remove a previous dislike
+                if(myData.getSongDislikedStatus(songName)){
+                    myData.setDislikedStatus(songName, false);
+                    // TODO: set button back to unhighlighted version
+                }
+                else{
+                    myData.setDislikedStatus(songName, true);
+                    myData.setLikedStatus(songName, false);
+                    // TODO: Skip song
+                }
             }
         });
 
-
+        //Initial Setup of Like Button
+        Button likeButton = (Button) findViewById(R.id.button_like2);
+        if(myData.getSongLikedStatus(songName)){
+            //TODO: set like button to be in highlighted state because the song was already liked previously. Please do the same in the methods at the bottom of the file
+        }
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(myData.getSongLikedStatus(songName)){
+                    myData.setLikedStatus(songName, false);
+                    // TODO: set button back to unhighlighted state
+                }
+                else{
+                    myData.setLikedStatus(songName, true);
+                    // TODO: change to highlighted state
+                }
+            }
+        });
 
         Button switchScreen = (Button) findViewById(R.id.button_songInfoBack);
 
@@ -264,5 +299,47 @@ public class SongInfoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mediaPlayer.release();
+    }
+
+    /*
+     * Call whenever a song changes within the same activity
+     * Updates the Last Play Location and Last Played Time
+     */
+    private void updateLastPlayedInfo(){
+        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
+        TextView lastLoc = (TextView) findViewById((R.id.textView4));
+        try {
+            if(myData.getCurrentSongLastLocation(songName, this)!= null){
+                lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
+            }
+            else{
+                lastLoc.setText("");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(myData.getCurrentSongTimestamp(songName) != null){
+            lastTime.setText(myData.getCurrentSongTimestamp(songName).toString());
+        }
+        else{
+            lastTime.setText("Song has not been played before");
+        }
+    }
+
+    /*
+     * Update methods to change the look of the like and dislike buttons whenever the song changes, as we are not starting a new activity
+     * Call only after the new song has started playing and the songName field has been updated
+     */
+    private void updateDislikedButton(){
+        Button dislikeButton = (Button) findViewById(R.id.button_dislike2);
+        if(myData.getSongDislikedStatus(songName)){
+            //TODO: set dislike button to be in highlighted state (because the song was already disliked at a previous time)
+        }
+    }
+    private void updateLikedButton(){
+        Button likeButton = (Button) findViewById(R.id.button_like2);
+        if(myData.getSongLikedStatus(songName)){
+            //TODO: set like button to be in highlighted state because the song was already liked previously
+        }
     }
 }
