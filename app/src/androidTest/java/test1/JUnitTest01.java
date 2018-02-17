@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.AlbumsActivity;
+import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
 import comf.example.tydia.cse_110_team_project_team_15_1.R;
 import comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity;
 import static org.junit.Assert.assertEquals;
@@ -18,14 +19,16 @@ import static org.junit.Assert.assertEquals;
 
 public class JUnitTest01 {
 
-    //@Rule
-    //public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
+    @Rule
+    public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
 
     int[] idsTest;
+    // MetadataGetter metadataGetter;
 
     @Before
     public void setup() {
         idsTest = SongsActivity.getSongIDs();
+      //  metadataGetter = new MetadataGetter(albumsActivity.getActivity());
     }
 
     @Test
@@ -37,7 +40,12 @@ public class JUnitTest01 {
         assertEquals(45, idsTest.length );
     }
 
-    /*
+    //@Test
+    //public void tesGetSongName() {
+    //    assertEquals(metadataGetter.getName(idsTest[1]), "After The Storm");
+    //}
+
+
     @Test
     public void testGetSongNames() {
         String[] songNames = songsActivity.getActivity().getSongNames(idsTest);
@@ -46,7 +54,7 @@ public class JUnitTest01 {
         assertEquals("Windows Are The Eyes To The House", songNames[idsTest.length -1]);
         assertEquals(45, songNames.length);
     }
-    */
+
 
     @Rule
     public ActivityTestRule<AlbumsActivity> albumsActivity = new ActivityTestRule<>(AlbumsActivity.class);

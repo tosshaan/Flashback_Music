@@ -74,8 +74,6 @@ public class SongInfoActivity extends AppCompatActivity {
         TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
         showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-        metadataGetter.release();
-
         // play and pause music
 
         final Button playButton = (Button) findViewById(R.id.button_play2);
@@ -111,12 +109,7 @@ public class SongInfoActivity extends AppCompatActivity {
                         mediaPlayer.start();
 
                         //loadMedia(albumSongsIDs[songIndex]);
-                        Uri path2 = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
 
-                        MediaMetadataRetriever retriever2 = new MediaMetadataRetriever();
-                        retriever2.setDataSource(getApplicationContext(), path2);
-
-                        songName = retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
                         updateLastPlayedInfo();
                         updateDislikedButton();
                         updateLikedButton();
@@ -129,17 +122,17 @@ public class SongInfoActivity extends AppCompatActivity {
                         }
 
                         TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                        showMetadata2.setText("Title: " + songName + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+                        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-                        retriever2.release();
-                    }
-                    else {
+                        metadataGetter.release();
+                    } else {
                         Toast.makeText(getApplicationContext(), "End of album", Toast.LENGTH_SHORT).show();
                         mediaPlayer.reset();
                         mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                     }
                 }
             });
+
 
             Button nextButton = (Button) findViewById(R.id.button_next2);
             nextButton.setOnClickListener(new View.OnClickListener() {
@@ -158,14 +151,10 @@ public class SongInfoActivity extends AppCompatActivity {
                         mediaPlayer.start();
 
                         //loadMedia(albumSongsIDs[songIndex]);
-                        Uri path2 = Uri.parse("android.resource://" + getPackageName() + "/" + MEDIA_RES_ID);
-
-                        MediaMetadataRetriever retriever2 = new MediaMetadataRetriever();
-                        retriever2.setDataSource(getApplicationContext(), path2);
 
                         TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                        songName = retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                        showMetadata2.setText("Title: " + songName + "\nArtist: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) + "\nAlbum: " + retriever2.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+                        songName = metadataGetter.getName(MEDIA_RES_ID);
+                        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
                         updateLastPlayedInfo();
                         updateDislikedButton();
@@ -179,16 +168,17 @@ public class SongInfoActivity extends AppCompatActivity {
                         }
                         myData.finishSongInfoRequest();
 
-                        retriever2.release();
-                    }
-                    else {
+                        metadataGetter.release();
+                    } else {
                         Toast.makeText(getApplicationContext(), "End of album", Toast.LENGTH_SHORT).show();
                         mediaPlayer.reset();
                         mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                     }
                 }
             });
+
         }
+
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
