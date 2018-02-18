@@ -76,7 +76,6 @@ public class JUnitTest01 {
         assertEquals(45, songNames.length);
     }
 
-
     @Rule
     public ActivityTestRule<AlbumsActivity> albumsActivity = new ActivityTestRule<>(AlbumsActivity.class);
 
