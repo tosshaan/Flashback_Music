@@ -16,15 +16,20 @@ import android.app.ActionBar;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 public class FlashbackActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
     database myData;
-    String songName; //currently playing song
+    String songName;
+    FlashbackList flashbackList;
+    MetadataGetter metadataGetter;
+    //currently playing song
     // Need to get list of song names from the database
 
-    String[] songNames = {"song1", "song2", "song3", "song4"};
+    String[] songNames;
+    int[] flashBackSongIDs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +37,20 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         setContentView(R.layout.activity_flashback);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Timestamp currTime = new Timestamp( System.currentTimeMillis() );
+        metadataGetter = new MetadataGetter(this);
+
+        myData = MainActivity.data;
+        //need to get currently playing song
+
+        flashbackList = new FlashbackList("TODO", currTime, myData, this);
+        flashbackList.generateList();
+        flashBackSongIDs = flashbackList.getFlashbackSongIDs();
+        songNames = getFlasbackSongNames(flashBackSongIDs);
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
-        myData = MainActivity.data;
-        //need to get currently playing song
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
 
@@ -155,6 +167,16 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         else{
             lastTime.setText("Song has not been played before");
         }
+    }
+
+    // Method to get names of songs based on IDs
+    public String[] getFlasbackSongNames( int[] IDs ) {
+
+        String[] songNames = new String[IDs.length];
+        for( int i = 0; i < songNames.length; i++ ) {
+            songNames[i] = metadataGetter.getName(IDs[i]);
+        }
+        return songNames;
     }
 
     /*
