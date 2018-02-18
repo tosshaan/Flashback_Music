@@ -1,5 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -62,6 +63,9 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
 
         flashBackSongIDs = flashbackList.getFlashbackSongIDs();
+        if (flashBackSongIDs.length == 0) {
+            Toast.makeText(getApplicationContext(), "Play some songs to use flashback mode.", Toast.LENGTH_SHORT).show();
+        }
 
 
         switchScreen.setOnClickListener(new View.OnClickListener() {
