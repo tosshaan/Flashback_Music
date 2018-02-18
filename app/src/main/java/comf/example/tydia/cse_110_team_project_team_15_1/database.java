@@ -83,7 +83,12 @@ public class database {
         Location myLoc = MainActivity.getCurrLoc();
 
         //might just throw all request permission into method here
-        System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
+        //System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
+        if(myLoc == null) {
+            myLoc = new Location(LocationManager.GPS_PROVIDER);
+            myLoc.setLatitude(32.715738);
+            myLoc.setLongitude(-117.16108400000002);
+        }
         currSongAddress = getAddress(myLoc, context);
         System.out.println("StartSongInfoRequest is " + currSongAddress);
     }
