@@ -91,7 +91,7 @@ public class SongInfoActivity extends AppCompatActivity {
                 } else {
                     pauseButton.setVisibility(View.VISIBLE);
                     playButton.setVisibility(View.GONE);
-            }
+                }
             }
         });
 
@@ -348,15 +348,21 @@ public class SongInfoActivity extends AppCompatActivity {
      * Call only after the new song has started playing and the songName field has been updated
      */
     private void updateDislikedButton(){
-        Button dislikeButton = (Button) findViewById(R.id.button_dislike2);
+        ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike2);
         if(myData.getSongDislikedStatus(songName)){
-            //TODO: set dislike button to be in highlighted state (because the song was already disliked at a previous time)
+            dislikeButton.setChecked(true);
+        }
+        else {
+            dislikeButton.setChecked(false);
         }
     }
     private void updateLikedButton(){
-        Button likeButton = (Button) findViewById(R.id.button_like2);
+        ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like2);
         if(myData.getSongLikedStatus(songName)){
-            //TODO: set like button to be in highlighted state because the song was already liked previously
+            likeButton.setChecked(true);
+        }
+        else {
+            likeButton.setChecked(false);
         }
     }
     private void setFinishListener() {
