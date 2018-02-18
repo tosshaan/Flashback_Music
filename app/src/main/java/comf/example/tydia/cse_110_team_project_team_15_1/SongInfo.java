@@ -17,13 +17,23 @@ public class SongInfo implements Serializable{
     private boolean disliked;
     public SongInfo(Timestamp t, String l, String songName){
         this.time = t;
-        this.location = l;
+        if( l != null) {
+            this.location = l;
+        }
+        else{
+            this.location = "";
+        }
         this.songName = songName;
     }
     public SongInfo(Timestamp t, String s, String l, boolean li, boolean di){
         time = t;
         songName = s;
-        location = l;
+        if( l != null) {
+            this.location = l;
+        }
+        else{
+            this.location = "";
+        }
         liked = li;
         disliked = di;
     }
@@ -37,7 +47,12 @@ public class SongInfo implements Serializable{
         return this.location;
     }
     public void LocationSetter(String location) {
-        this.location = location;
+        if( location != null) {
+            this.location = location;
+        }
+        else{
+            this.location = "";
+        }
     }
     public String songGetter() {
         return this.songName;
