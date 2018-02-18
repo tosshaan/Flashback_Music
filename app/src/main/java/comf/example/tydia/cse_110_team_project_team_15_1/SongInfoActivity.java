@@ -47,14 +47,8 @@ public class SongInfoActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
-        SharedPreferences.Editor edit = lastScreen.edit();
-        edit.putString("Activity", "SongInfo");
-        edit.apply();
-
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         songName = getIntent().getStringExtra("songName");
-        edit.putString("SongName", songName);
         Bundle bundle = getIntent().getExtras();
         //albumMode = getIntent().getBooleanExtra("albumMode", false);
         //if (albumMode) {
@@ -73,7 +67,7 @@ public class SongInfoActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myData.finishSongInfoRequest();
+        myData.finishSongInfoRequest(true);
 
         // Creating metadatagetter
         metadataGetter = new MetadataGetter(this);
@@ -132,7 +126,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myData.finishSongInfoRequest();
+                    myData.finishSongInfoRequest(true);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
@@ -177,7 +171,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myData.finishSongInfoRequest();
+                    myData.finishSongInfoRequest(true);
 
 
                 } else {
@@ -243,6 +237,13 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateLikedButton();
                     // TODO: Skip song
                 }
+                //get current information to update song if needed
+                try {
+                    myData.startSongInfoRequest(songName, getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myData.finishSongInfoRequest();
             }
         });
 
@@ -266,6 +267,13 @@ public class SongInfoActivity extends AppCompatActivity {
                     likeButton.setChecked(true);
                     dislikeButton.setChecked(false);
                 }
+                //get current information to update song if needed
+                try {
+                    myData.startSongInfoRequest(songName, getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myData.finishSongInfoRequest();
             }
         });
 
@@ -275,6 +283,13 @@ public class SongInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
+
+                //Set up to restore to previous screen when back button is hit
+                SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
+                SharedPreferences.Editor edit = lastScreen.edit();
+                edit.putBoolean("currentState", false);
+                edit.apply();
+
                 finish();
             }
         });
@@ -406,13 +421,6 @@ public class SongInfoActivity extends AppCompatActivity {
             //loadMedia(albumSongsIDs[songIndex]);
 
 
-
-            //get current information to update song if needed
-            try {
-                myData.startSongInfoRequest(songName, getApplicationContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
             songName = metadataGetter.getName(MEDIA_RES_ID);
             showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));

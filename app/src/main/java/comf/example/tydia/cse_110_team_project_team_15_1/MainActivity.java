@@ -39,26 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
-        if(last.equals("Albums")){
-            Intent intent = new Intent(this, AlbumsActivity.class);
-            startActivity(intent);
-        }
-        else if(last.equals("AlbumSpecific")){
-            String lastAlbum = lastScreen.getString("AlbumName", "NoAlbum"); //name of album that was being looked at before closing
-            Intent intent = new Intent(this, AlbumSongsActivity.class);
-            //TODO: Launch back to the specific album
-        }
-        else if(last.equals("Flashback")){
+        if(last.equals("Flashback")){
             Intent intent = new Intent(this, FlashbackActivity.class);
-            startActivity(intent);
-        }
-        else if(last.equals("SongInfo")){
-            String lastSong = lastScreen.getString("SongName", "NoSong"); // name of song that was being played before closing
-            Intent intent = new Intent(this, SongInfo.class);
-            //TODO: Launch back to the song directly
-        }
-        else if(last.equals("Songs")){
-            Intent intent = new Intent(this, SongsActivity.class);
             startActivity(intent);
         }
         else{
@@ -102,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
+
     }
 
     private ServiceConnection serviceChecker = new ServiceConnection(){
@@ -123,40 +106,6 @@ public class MainActivity extends AppCompatActivity {
     public static Location getCurrLoc(){
         return locationService.getCurrLoc();
     }
-
-    /*
-    public void databaseTester() throws IOException {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    100);
-            System.out.println("Don't have permission");
-            return;
-        }
-        LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        Location loc = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        database testData = new database();
-        String address = testData.getAddress(loc,this);
-        System.out.println("Adding a song now!");
-        testData.startSongInfoRequest("Graham Mosbrucker's doesn't matter album", this);
-        testData.finishSongInfoRequest();
-        boolean check = testData.isSongHere("Graham Mosbrucker's doesn't matter album");
-        System.out.println("Song is " + check);
-        ArrayList<String> getSong = testData.getSongsPlayedAtLocation(address);
-        System.out.println(loc.getLatitude() + " , " + loc.getLongitude());
-
-        if (getSong.size() != 0 ) {
-            for (int i = 0; i < getSong.size(); i++) {
-                System.out.println(getSong.get(i));
-            }
-        }
-
-
-    }
-    */
 
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
