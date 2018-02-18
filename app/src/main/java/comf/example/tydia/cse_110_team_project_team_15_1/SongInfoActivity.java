@@ -228,9 +228,11 @@ public class SongInfoActivity extends AppCompatActivity {
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
 
-                    dislikeButton.setChecked(true);
-                    likeButton.setChecked(false);
-
+                    //dislikeButton.setChecked(true);
+                    //likeButton.setChecked(false);
+                    skipSong();
+                    updateDislikedButton();
+                    updateLikedButton();
                     // TODO: Skip song
                 }
             }
@@ -370,40 +372,43 @@ public class SongInfoActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
-                if (songIndex < (SongsIDs.length - 1)) {
-                    songIndex++;
-                    mediaPlayer.reset();
-                    MEDIA_RES_ID = SongsIDs[songIndex];
-
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
-                    mediaPlayer.start();
-
-                    //loadMedia(albumSongsIDs[songIndex]);
-
-
-                    updateLastPlayedInfo();
-                    updateDislikedButton();
-                    updateLikedButton();
-
-                    //get current information to update song if needed
-                    try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                    songName = metadataGetter.getName(MEDIA_RES_ID);
-                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
-                    mediaPlayer.reset();
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
-                }
+                skipSong();
                 setFinishListener();
+                updateLastPlayedInfo();
+                updateDislikedButton();
+                updateLikedButton();
             }
         });
 
+    }
+
+    public void skipSong() {
+        if (songIndex < (SongsIDs.length - 1)) {
+            songIndex++;
+            mediaPlayer.reset();
+            MEDIA_RES_ID = SongsIDs[songIndex];
+
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+            mediaPlayer.start();
+
+            //loadMedia(albumSongsIDs[songIndex]);
+
+
+
+            //get current information to update song if needed
+            try {
+                myData.startSongInfoRequest(songName, getApplicationContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+            songName = metadataGetter.getName(MEDIA_RES_ID);
+            showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
+        } else {
+            Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+            mediaPlayer.reset();
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+        }
     }
 }

@@ -54,16 +54,20 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
 
+        flashBackSongIDs = flashbackList.getFlashbackSongIDs();
+
+
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
-                mp.stop();
+                if (flashBackSongIDs.length != 0) {
+                    DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
+                    mp.release();
+                }
                 finish();
             }
         });
 
-        flashBackSongIDs = flashbackList.getFlashbackSongIDs();
         if (flashBackSongIDs.length == 0) {
             return;
         }
@@ -123,6 +127,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         });
 
         updateLastPlayedInfo();
+        setFinishListener();
 
 
         // like and dislike functionality
@@ -154,10 +159,41 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
 
-                    dislikeButton.setChecked(true);
-                    likeButton.setChecked(false);
 
-                    // TODO: Skip song
+                    Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                    if (songIndex < (flashBackSongIDs.length - 1)) {
+                        songIndex++;
+                        mp.reset();
+                        MEDIA_RES_ID = flashBackSongIDs[songIndex];
+
+                        mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                        mp.start();
+
+                        //loadMedia(albumSongsIDs[songIndex]);
+
+
+                        updateLastPlayedInfo();
+                        updateDislikedButton();
+                        updateLikedButton();
+
+                        //get current information to update song if needed
+                        try {
+                            myData.startSongInfoRequest(songName, getApplicationContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+                        songName = metadataGetter.getName(MEDIA_RES_ID);
+                        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+                        mp.reset();
+                        mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    }
+                    setFinishListener();
+
                 }
             }
         });
@@ -217,12 +253,14 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
                     //get current information to update song if needed
 
+                    /*
                     try {
                         myData.startSongInfoRequest(songName, getApplicationContext());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     myData.finishSongInfoRequest();
+                    */
 
 
 
@@ -231,6 +269,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     mp.reset();
                     mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                 }
+                setFinishListener();
             }
         });
 
@@ -308,5 +347,48 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
             likeButton.setChecked(false);
         }
     }
+
+    private void setFinishListener() {
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp2) {
+                Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                if (songIndex < (flashBackSongIDs.length - 1)) {
+                    songIndex++;
+                    mp.reset();
+                    MEDIA_RES_ID = flashBackSongIDs[songIndex];
+
+                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp.start();
+
+                    //loadMedia(albumSongsIDs[songIndex]);
+
+
+                    updateLastPlayedInfo();
+                    updateDislikedButton();
+                    updateLikedButton();
+
+                    //get current information to update song if needed
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+                    mp.reset();
+                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                }
+                setFinishListener();
+            }
+        });
+
+    }
+
 
 }
