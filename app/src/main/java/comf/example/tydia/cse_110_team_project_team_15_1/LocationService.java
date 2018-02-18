@@ -26,6 +26,7 @@ public class LocationService extends Service {
 
             @Override
             public void onLocationChanged(Location location) {
+                System.out.println("Changed location");
                 currLoc = location;
             }
 

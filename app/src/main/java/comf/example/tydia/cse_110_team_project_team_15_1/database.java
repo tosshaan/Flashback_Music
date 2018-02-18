@@ -26,6 +26,7 @@ public class database {
     private String currSongAddress;
     private HashMap<String, ArrayList<String>> SongsAtLocation;
     private HashMap<String, SongInfo> SongsInformation;
+    private boolean finishCheck;
     ArrayList<String> morning, noon, evening, mon, tue, wed, thur, fri, sat, sun;
 
 
@@ -84,101 +85,93 @@ public class database {
 
         //might just throw all request permission into method here
         //System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
-        if(myLoc == null) {
-            myLoc = new Location(LocationManager.GPS_PROVIDER);
-            myLoc.setLatitude(32.715738);
-            myLoc.setLongitude(-117.16108400000002);
+        if(myLoc != null) {
+            finishCheck = true;
+
+            currSongAddress = getAddress(myLoc, context);
+            System.out.println("StartSongInfoRequest is " + currSongAddress);
         }
-        currSongAddress = getAddress(myLoc, context);
-        System.out.println("StartSongInfoRequest is " + currSongAddress);
+        else {
+            finishCheck = false;
+        }
     }
 
     public void finishSongInfoRequest(){
-        SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);
-        System.out.println(currSongAddress);
-        //update location song list
-        if(SongsAtLocation.containsKey(currSongAddress)){
-            if((SongsAtLocation.get(currSongAddress)).contains(currSongName)){
-                (SongsAtLocation.get(currSongAddress)).remove(currSongName);
-                (SongsAtLocation.get(currSongAddress)).add(currSongName);
+        if (finishCheck != false) {
+            SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);
+            System.out.println(currSongAddress);
+            //update location song list
+            if (SongsAtLocation.containsKey(currSongAddress)) {
+                if ((SongsAtLocation.get(currSongAddress)).contains(currSongName)) {
+                    (SongsAtLocation.get(currSongAddress)).remove(currSongName);
+                    (SongsAtLocation.get(currSongAddress)).add(currSongName);
+                } else {
+                    (SongsAtLocation.get(currSongAddress)).add(currSongName);
+                }
+
+            } else {
+                ArrayList<String> songs = new ArrayList<String>();
+                songs.add(currSongName);
+                SongsAtLocation.put(currSongAddress, songs);
             }
-            else {
-                (SongsAtLocation.get(currSongAddress)).add(currSongName);
+            //update information on the song
+            if (SongsInformation.containsKey(currSongName)) {
+                SongsInformation.get(currSongName).LocationSetter(currSongAddress);
+                SongsInformation.get(currSongName).timeSetter(currSongTime);
+            } else {
+                SongsInformation.put(currSongName, song);
+            }
+            //update day song list
+            Calendar cal = Calendar.getInstance();
+            System.out.println(currSongTime.toString());
+            cal.setTime(currSongTime);
+            int day = cal.get(Calendar.DAY_OF_WEEK);
+            if (day == GregorianCalendar.MONDAY) {
+                if (!mon.contains(currSongName)) {
+                    mon.add(currSongName);
+                }
+            } else if (day == GregorianCalendar.TUESDAY) {
+                if (!tue.contains(currSongName)) {
+                    tue.add(currSongName);
+                }
+            } else if (day == GregorianCalendar.WEDNESDAY) {
+                if (!wed.contains(currSongName)) {
+                    wed.add(currSongName);
+                }
+            } else if (day == GregorianCalendar.THURSDAY) {
+                if (!thur.contains(currSongName)) {
+                    thur.add(currSongName);
+                }
+            } else if (day == GregorianCalendar.FRIDAY) {
+                if (!fri.contains(currSongName)) {
+                    fri.add(currSongName);
+                }
+            } else if (day == GregorianCalendar.SATURDAY) {
+                if (!sat.contains(currSongName)) {
+                    sat.add(currSongName);
+                }
+            } else if (day == GregorianCalendar.SUNDAY) {
+                if (!sun.contains(currSongName)) {
+                    sun.add(currSongName);
+                }
+            } else {
+                System.out.println("Error trying to add to day of week list");
             }
 
-        }
-        else {
-            ArrayList<String> songs = new ArrayList<String>();
-            songs.add(currSongName);
-            SongsAtLocation.put(currSongAddress,songs);
-        }
-        //update information on the song
-        if (SongsInformation.containsKey(currSongName)) {
-            SongsInformation.get(currSongName).LocationSetter(currSongAddress);
-            SongsInformation.get(currSongName).timeSetter(currSongTime);
-        }
-        else {
-            SongsInformation.put(currSongName, song);
-        }
-        //update day song list
-        Calendar cal = Calendar.getInstance();
-        System.out.println(currSongTime.toString());
-        cal.setTime(currSongTime);
-        int day = cal.get(Calendar.DAY_OF_WEEK);
-        if(day == GregorianCalendar.MONDAY){
-            if(!mon.contains(currSongName)){
-                mon.add(currSongName);
-            }
-        }
-        else if( day == GregorianCalendar.TUESDAY){
-            if(!tue.contains(currSongName)){
-                tue.add(currSongName);
-            }
-        }
-        else if(day == GregorianCalendar.WEDNESDAY){
-            if(!wed.contains(currSongName)){
-                wed.add(currSongName);
-            }
-        }
-        else if(day == GregorianCalendar.THURSDAY){
-            if(!thur.contains(currSongName)){
-                thur.add(currSongName);
-            }
-        }
-        else if(day == GregorianCalendar.FRIDAY){
-            if(!fri.contains(currSongName)){
-                fri.add(currSongName);
-            }
-        }
-        else if(day == GregorianCalendar.SATURDAY){
-            if(!sat.contains(currSongName)){
-                sat.add(currSongName);
-            }
-        }
-        else if(day == GregorianCalendar.SUNDAY){
-            if(!sun.contains(currSongName)){
-                sun.add(currSongName);
-            }
-        }
-        else{
-            System.out.println("Error trying to add to day of week list");
-        }
-
-        //add to time of day lists
-        if(currSongTime.getHours() < 8){
-            if(!morning.contains(currSongName)){
-                morning.add(currSongName);
-            }
-        }
-        else if(currSongTime.getHours() <= 16){
-            if(!noon.contains(currSongName)){
-                noon.add(currSongName);
-            }
-        }
-        else{
-            if(!evening.contains(currSongName)){
-                noon.add(currSongName);
-                System.out.println("added right time");
+            //add to time of day lists
+            if (currSongTime.getHours() < 8) {
+                if (!morning.contains(currSongName)) {
+                    morning.add(currSongName);
+                }
+            } else if (currSongTime.getHours() <= 16) {
+                if (!noon.contains(currSongName)) {
+                    noon.add(currSongName);
+                }
+            } else {
+                if (!evening.contains(currSongName)) {
+                    noon.add(currSongName);
+                    System.out.println("added right time");
+                }
             }
         }
     }
