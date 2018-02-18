@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         database db = new database();
         PACKAGE_NAME = getPackageName();
+        Intent intent2 = new Intent(this, LocationService.class);
+        bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
@@ -82,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent(this, LocationService.class);
-        bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
-
     }
 
     private ServiceConnection serviceChecker = new ServiceConnection(){
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             LocationService.Local local = (LocationService.Local)iBinder;
             locationService = local.getService();
             locationService.setUp();
+            Log.d("THIS HAS HAPPENED: ", "OH YEAH");
             bound = true;
         }
 
@@ -104,7 +104,18 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public static Location getCurrLoc(){
-        return locationService.getCurrLoc();
+        if( locationService != null ) {
+            Log.d("I AM HERE NOW:", locationService.toString());
+            return locationService.getCurrLoc();
+        }
+        else {
+            // Initialize
+          //  LocationService.Local local = (LocationService.Local) BIND_AUTO_CREATE;
+          //  locationService = local.getService();
+          //  locationService.setUp();
+            Log.d("OOPS!", "Location was NULL");
+            return null;
+        }
     }
 
     public void launchFlashback() {
