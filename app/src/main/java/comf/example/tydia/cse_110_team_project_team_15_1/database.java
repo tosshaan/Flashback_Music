@@ -4,6 +4,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1; /**
 //get API key for official google maps server https://developers.google.com/maps/documentation/android-api/start
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 
@@ -85,6 +86,7 @@ public class database {
         currSongAddress = getAddress(myLoc, context);
         System.out.println("StartSongInfoRequest is " + currSongAddress);
     }
+
 
     public void finishSongInfoRequest(){
         SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);

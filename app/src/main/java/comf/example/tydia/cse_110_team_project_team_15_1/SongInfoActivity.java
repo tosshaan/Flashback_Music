@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -19,6 +20,12 @@ import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Arrays;
 
 public class SongInfoActivity extends AppCompatActivity {
 
@@ -30,7 +37,6 @@ public class SongInfoActivity extends AppCompatActivity {
     private String songName;
     private int [] SongsIDs;
     //private boolean albumMode = true;
-
     database myData;
 
     @Override
@@ -49,14 +55,15 @@ public class SongInfoActivity extends AppCompatActivity {
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         songName = getIntent().getStringExtra("songName");
         Bundle bundle = getIntent().getExtras();
-        //albumMode = getIntent().getBooleanExtra("albumMode", false);
-        //if (albumMode) {
-            SongsIDs = bundle.getIntArray("SongsIDs");
-            songIndex = getIntent().getIntExtra("songIndex", 0);
-        //}
+
+        SongsIDs = bundle.getIntArray("SongsIDs");
+        songIndex = getIntent().getIntExtra("songIndex", 0);
 
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
+
+        // finish playing a song
+        setFinishListener();
 
         updateLastPlayedInfo();
 
@@ -95,8 +102,7 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
-        // finish playing a song
-        setFinishListener();
+
 
         Button prevButton = (Button) findViewById(R.id.button_prev2);
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +251,17 @@ public class SongInfoActivity extends AppCompatActivity {
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sharedPreferences = getSharedPreferences("history", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                int n = sharedPreferences.getInt("Number", 0);
+                String name = sharedPreferences.getString((n-1)+"Name", "");
+                String time = sharedPreferences.getString((n-1)+"Time", "");
+                String loc = sharedPreferences.getString((n-1)+"Loc", "");
+
+
+                Toast.makeText(getApplicationContext(), "NUM "+ n + " " + name + time + loc, Toast.LENGTH_SHORT).show();
+                finishSongStoreInfo();
+                /*
                 if(myData.getSongLikedStatus(songName)){
                     myData.setLikedStatus(songName, false);
                     // set button back to unhighlighted state
@@ -256,6 +273,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     likeButton.setChecked(true);
                     dislikeButton.setChecked(false);
                 }
+                */
             }
         });
 
@@ -398,6 +416,28 @@ public class SongInfoActivity extends AppCompatActivity {
                 setFinishListener();
             }
         });
+
+    }
+
+    public void finishSongStoreInfo() {
+        SharedPreferences sharedPreferences = getSharedPreferences("history", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int n;
+        n = sharedPreferences.getInt("Number", 0);
+
+        editor.putInt("Number", n+1);
+        String name = songName;
+        editor.putString(n+"Name", name);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        String time = simpleDateFormat.format(new Date());
+        editor.putString(n+"Time", time);
+
+        String location = "LOC";
+        editor.putString(n+"Location", location);
+
+
+        editor.apply();
 
     }
 }
