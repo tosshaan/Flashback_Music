@@ -40,11 +40,6 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
-        SharedPreferences.Editor edit = lastScreen.edit();
-        edit.putString("Activity", "AlbumSpecific");
-        edit.apply();
-
         // Creating metadataGtter
         metadataGetter = new MetadataGetter(this);
 
@@ -54,8 +49,6 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
 
         songIDs = getIntent().getIntArrayExtra("albumSongIDs");
         songNames = getSongNames(songIDs);
-        edit.putString("AlbumName", metadataGetter.getAlbum(songIDs[0]));
-        edit.apply();
 
         Button switchScreen = (Button) findViewById(R.id.btn_backAlbumSongs);
 
@@ -111,6 +104,7 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         Bundle bundle = new Bundle();
         bundle.putIntArray("SongsIDs", songIDs);
         intent.putExtras(bundle);
+
         startActivity(intent);
     }
 
