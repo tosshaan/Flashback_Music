@@ -86,29 +86,83 @@ public class FlashbackList {
         ArrayList<Map.Entry<Integer, Integer>> flashbackList = new ArrayList<>(duplicateCount.entrySet());
         flashbackList.sort( Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
 
-        //Integer[] flashbackList = (Integer []) duplicateCount.entrySet().toArray();
-        //Arrays.sort(flashbackList, )
+        ArrayList<Integer> finalList = breakTies( flashbackList );
 
-            //ArrayList<Integer> finalList = breakTiesByLike( flashbackList );
-
-            // Copying tempArrayList to final array
-            flashbackSongIDs = new int[flashbackList.size()];
-            for( int k = 0; k < flashbackSongIDs.length; k++ ) {
-                flashbackSongIDs[k] = flashbackList.get(k).getKey();
-            }
-        }
-
-    /*
-    private ArrayList<Integer> breakTiesByLike(ArrayList<Map.Entry<Integer, Integer>> flashbackList) {
-        int startPos = 0;
-        int endPos = 0;
-        for( int i = 1; i < flashbackList.size(); i++ ) {
-            if( flashbackList.get(i-1).getValue() - flashbackList.get(i).getValue() == 1 ) {
-                endPos = i-1;
-            }
+        // Copying tempArrayList to final array
+        flashbackSongIDs = new int[finalList.size()];
+        for( int k = 0; k < flashbackSongIDs.length; k++ ) {
+            flashbackSongIDs[k] = finalList.get(k);
         }
     }
-*/
+
+    // Sorting songs, breaking ties first by like then by most recently played
+    private ArrayList<Integer> breakTies(ArrayList<Map.Entry<Integer, Integer>> flashbackList) {
+        ArrayList<Integer> finalList = new ArrayList<>();
+        boolean done = false;
+
+        //print original arraylist
+        for(int i = 0; i < flashbackList.size(); i++){
+            Log.d("FlashbackList[" + i + "]", metadataGetter.getName(flashbackList.get(i).getValue()));
+        }
+
+
+        for( int i = 0; i < flashbackList.size()-1; i++ ) {
+            done = true;
+            for( int j = 0; j < flashbackList.size()-i-1; j++ ) {
+                String songNamej = metadataGetter.getName(flashbackList.get(j).getKey());
+                String songNamejPLUS1 = metadataGetter.getName(flashbackList.get(j+1).getKey());
+
+                Log.d("SONG I IS:", songNamej);
+                Log.d("SONG I's POINTS ARE", flashbackList.get(i).getValue().toString());
+                Log.d("SONG J IS:", songNamejPLUS1);
+                Log.d("SONG J's POINTS ARE", flashbackList.get(j).getValue().toString());
+                if( flashbackList.get(i).getValue() == flashbackList.get(j).getValue() ) {
+                    // Switching songs if liking breaks a tie
+                    boolean result = !db.getSongLikedStatus(songNamej) &&
+                            db.getSongLikedStatus(songNamejPLUS1);
+                    if( result )
+                        Log.d("RESULT OF IF STATEMENT IS", "True");
+                    else
+                        Log.d("RESULT OF IF STATEMENT IS", "False");
+                    if( !db.getSongLikedStatus(songNamej) &&
+                            db.getSongLikedStatus(songNamejPLUS1 ) ) {
+                        HashMap.Entry<Integer,Integer> temp = new HashMap.SimpleEntry<>(flashbackList.get(j).getKey(),
+                                flashbackList.get(j).getValue());
+                        Log.d("TEMP NOW IS", temp.toString());
+                        flashbackList.set(j, flashbackList.get(j+1));
+                        Log.d("THE NEW J IS", flashbackList.get(j).toString());
+                        flashbackList.set(j+1, temp);
+                        Log.d("THE NEW J+1 IS", flashbackList.get(j+1).toString());
+                        done = false;
+                    }
+                    // If songs do not break tie, look at timestamp
+                    else if( (db.getSongLikedStatus(songNamej) &&
+                            db.getSongLikedStatus(songNamej) ) ||
+                            (!db.getSongLikedStatus(songNamejPLUS1) &&
+                                    !db.getSongLikedStatus(songNamej ))) {
+                        if( db.getCurrentSongTimestamp(songNamej).compareTo(db.getCurrentSongTimestamp(songNamejPLUS1)) < 0) {
+                            HashMap.Entry<Integer,Integer> temp = new HashMap.SimpleEntry<>(flashbackList.get(j).getKey(),
+                                    flashbackList.get(j).getValue());
+                            flashbackList.set(j, flashbackList.get(j+1));
+                            flashbackList.set(j+1, temp);
+                            done = false;
+                        }
+                    }
+
+                }
+                if( done) {
+                    break;
+                }
+            }
+        }
+
+        for( int i = 0; i < flashbackList.size(); i++ ) {
+            finalList.add(flashbackList.get(i).getKey());
+            Log.d("finalList[" + i + "]", metadataGetter.getName(finalList.get(i)));
+        }
+
+        return finalList;
+    }
 
     // Method to populate song's hashMap
     public void populateAllSongs() {

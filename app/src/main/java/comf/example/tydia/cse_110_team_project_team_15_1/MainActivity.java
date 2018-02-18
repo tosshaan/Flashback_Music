@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
     }
 
     private ServiceConnection serviceChecker = new ServiceConnection(){
