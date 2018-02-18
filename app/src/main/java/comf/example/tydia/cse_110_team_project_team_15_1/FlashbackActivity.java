@@ -1,5 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,11 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
     String songName;
     FlashbackList flashbackList;
     MetadataGetter metadataGetter;
+    MediaPlayer mp;
+    int songIndex = 0;
+    private int MEDIA_RES_ID = 0;
+    private boolean playFlag = true;
+
     //currently playing song
     // Need to get list of song names from the database
 
@@ -45,12 +51,6 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
         flashbackList = new FlashbackList("TODO", currTime, myData, this);
         flashbackList.generateList();
-        flashBackSongIDs = flashbackList.getFlashbackSongIDs();
-        songNames = getFlasbackSongNames(flashBackSongIDs);
-
-        // hide action bar
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
 
@@ -58,7 +58,67 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
             @Override
             public void onClick(View v) {
                 DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
+                mp.stop();
                 finish();
+            }
+        });
+
+        flashBackSongIDs = flashbackList.getFlashbackSongIDs();
+        if (flashBackSongIDs.length == 0) {
+            return;
+        }
+        songNames = getFlasbackSongNames(flashBackSongIDs);
+
+        MEDIA_RES_ID = flashBackSongIDs[songIndex];
+        songName = songNames[songIndex];
+
+        mp = MediaPlayer.create(this, MEDIA_RES_ID);
+        mp.start();
+
+        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+        songName = metadataGetter.getName(MEDIA_RES_ID);
+        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
+
+        // hide action bar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+
+        final Button playButton = (Button) findViewById(R.id.button_play);
+        final Button pauseButton = (Button) findViewById(R.id.button_pause);
+        playButton.setVisibility(View.GONE);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //    Log.d("tag", "index = " + songIndex + " // arraysize = " + albumSongsIDs.length );
+                //    Log.d("songid", "songid = " + albumSongsIDs[songIndex] );
+                mp.start();
+                if (playFlag == true) {
+                    pauseButton.setVisibility(View.GONE);
+                    playFlag = false;
+                } else {
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mp.pause();
+                playFlag = true;
+                playButton.setVisibility(View.VISIBLE);
+                System.out.println(playFlag);
+                if (playFlag == true) {
+                    pauseButton.setVisibility(View.GONE);
+                    playFlag = false;
+                } else {
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                }
+
             }
         });
 
@@ -127,6 +187,53 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
             }
         });
 
+        Button nextButton = (Button) findViewById(R.id.button_next);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (songIndex < (flashBackSongIDs.length - 1)) {
+                    songIndex++;
+                    mp.reset();
+                    MEDIA_RES_ID = flashBackSongIDs[songIndex];
+
+                    //reset the visibility of pause button
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+
+                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp.start();
+
+                    //loadMedia(albumSongsIDs[songIndex]);
+
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
+
+                    updateLastPlayedInfo();
+                    updateDislikedButton();
+                    updateLikedButton();
+
+
+                    //get current information to update song if needed
+
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    myData.finishSongInfoRequest();
+
+
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+                    mp.reset();
+                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                }
+            }
+        });
+
         list = (ListView) findViewById(R.id.list_listofsongs);
         // context, database structure, data
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,songNames);
@@ -184,15 +291,21 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
      * Call only after the new song has started playing and the songName field has been updated
      */
     private void updateDislikedButton(){
-        Button dislikeButton = (Button) findViewById(R.id.button_dislike);
+        ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike);
         if(myData.getSongDislikedStatus(songName)){
-            //TODO: set dislike button to be in highlighted state (because the song was already disliked at a previous time)
+            dislikeButton.setChecked(true);
+        }
+        else {
+            dislikeButton.setChecked(false);
         }
     }
     private void updateLikedButton(){
-        Button likeButton = (Button) findViewById(R.id.button_like);
+        ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like);
         if(myData.getSongLikedStatus(songName)){
-            //TODO: set like button to be in highlighted state because the song was already liked previously
+            likeButton.setChecked(true);
+        }
+        else {
+            likeButton.setChecked(false);
         }
     }
 
