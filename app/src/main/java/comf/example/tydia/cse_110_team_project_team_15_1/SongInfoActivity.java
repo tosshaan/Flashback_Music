@@ -125,6 +125,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    myData.finishSongInfoRequest();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();

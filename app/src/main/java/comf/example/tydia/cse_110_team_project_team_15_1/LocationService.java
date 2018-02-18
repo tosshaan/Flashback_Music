@@ -20,7 +20,6 @@ public class LocationService extends Service {
     public Location currLoc;
 
     public LocationService() {
-
     }
     public void setUp(){
         LocationListener locList = new LocationListener(){
@@ -46,7 +45,12 @@ public class LocationService extends Service {
             System.out.println("You messed up");
             return;
         }
-        currLoc = locManager.getLastKnownLocation(locProv);
+        //currLoc = locManager.getLastKnownLocation(locProv);
+        if(currLoc == null){
+            currLoc = new Location(LocationManager.GPS_PROVIDER);
+            currLoc.setLatitude(32.715738);
+            currLoc.setLongitude(-117.16108400000002);
+        }
         locManager.requestLocationUpdates(locProv, 0, 0, locList);
     }
 
