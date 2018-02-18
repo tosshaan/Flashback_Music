@@ -101,9 +101,9 @@ public class FlashbackList {
         boolean done = false;
 
         //print original arraylist
-        for(int i = 0; i < flashbackList.size(); i++){
-            Log.d("FlashbackList[" + i + "]", metadataGetter.getName(flashbackList.get(i).getValue()));
-        }
+        //for(int i = 0; i < flashbackList.size(); i++){
+        //    Log.d("FlashbackList[" + i + "]", metadataGetter.getName(flashbackList.get(i).getKey()));
+        //}
 
 
         for( int i = 0; i < flashbackList.size()-1; i++ ) {
@@ -112,48 +112,62 @@ public class FlashbackList {
                 String songNamej = metadataGetter.getName(flashbackList.get(j).getKey());
                 String songNamejPLUS1 = metadataGetter.getName(flashbackList.get(j+1).getKey());
 
-                Log.d("SONG I IS:", songNamej);
-                Log.d("SONG I's POINTS ARE", flashbackList.get(i).getValue().toString());
-                Log.d("SONG J IS:", songNamejPLUS1);
+                /*
+                Log.d("SONG J IS:", songNamej);
                 Log.d("SONG J's POINTS ARE", flashbackList.get(j).getValue().toString());
-                if( flashbackList.get(i).getValue() == flashbackList.get(j).getValue() ) {
+                Log.d("SONG J+1 IS:", songNamejPLUS1);
+                Log.d("SONG J+1's POINTS ARE", flashbackList.get(j+1).getValue().toString());
+                */
+                if( flashbackList.get(j).getValue() == flashbackList.get(j+1).getValue() ) {
                     // Switching songs if liking breaks a tie
                     boolean result = !db.getSongLikedStatus(songNamej) &&
                             db.getSongLikedStatus(songNamejPLUS1);
-                    if( result )
-                        Log.d("RESULT OF IF STATEMENT IS", "True");
-                    else
-                        Log.d("RESULT OF IF STATEMENT IS", "False");
                     if( !db.getSongLikedStatus(songNamej) &&
                             db.getSongLikedStatus(songNamejPLUS1 ) ) {
                         HashMap.Entry<Integer,Integer> temp = new HashMap.SimpleEntry<>(flashbackList.get(j).getKey(),
                                 flashbackList.get(j).getValue());
-                        Log.d("TEMP NOW IS", temp.toString());
+                        //Log.d("TEMP NOW IS", metadataGetter.getName(temp.getKey()));
                         flashbackList.set(j, flashbackList.get(j+1));
-                        Log.d("THE NEW J IS", flashbackList.get(j).toString());
+                        //Log.d("THE NEW J IS", metadataGetter.getName(flashbackList.get(j).getKey()));
                         flashbackList.set(j+1, temp);
-                        Log.d("THE NEW J+1 IS", flashbackList.get(j+1).toString());
+                        //Log.d("THE NEW J+1 IS", metadataGetter.getName(flashbackList.get(j+1).getKey()));
                         done = false;
                     }
                     // If songs do not break tie, look at timestamp
                     else if( (db.getSongLikedStatus(songNamej) &&
-                            db.getSongLikedStatus(songNamej) ) ||
+                            db.getSongLikedStatus(songNamejPLUS1) ) ||
                             (!db.getSongLikedStatus(songNamejPLUS1) &&
                                     !db.getSongLikedStatus(songNamej ))) {
                         if( db.getCurrentSongTimestamp(songNamej).compareTo(db.getCurrentSongTimestamp(songNamejPLUS1)) < 0) {
                             HashMap.Entry<Integer,Integer> temp = new HashMap.SimpleEntry<>(flashbackList.get(j).getKey(),
                                     flashbackList.get(j).getValue());
+                            //Log.d("TEMP NOW IS", metadataGetter.getName(temp.getKey()));
                             flashbackList.set(j, flashbackList.get(j+1));
+                            //Log.d("THE NEW J IS", metadataGetter.getName(flashbackList.get(j).getKey()));
                             flashbackList.set(j+1, temp);
+                            //Log.d("THE NEW J+1 IS", metadataGetter.getName(flashbackList.get(j+1).getKey()));
                             done = false;
                         }
                     }
 
+                    //TODO: Remove this
+//                    else {
+//                        Log.d("NO SWAP","");
+//                    }
+
                 }
-                if( done) {
-                    break;
-                }
+
             }
+            /*
+                // Printing at this iteration
+            for(int k = 0; k < flashbackList.size(); k++){
+                Log.d("FlashbackListAtIteration" + i + "[" + k + "]", metadataGetter.getName(flashbackList.get(k).getKey()));
+            }
+            */
+            if( done) {
+                break;
+            }
+
         }
 
         for( int i = 0; i < flashbackList.size(); i++ ) {
@@ -187,26 +201,6 @@ public class FlashbackList {
         return hashMap;
     }
 
-    /*comparator for flashbackList elements based on points
-    @Override
-    public int compare(Integer val1, Integer val2) {
-        return val1 > val2 ? -1 : (val1 == val2 ? 0 : 1);
-    }
-
-    public ArrayList<Integer> getFlashbackList (HashMap<Integer, Integer> hMap) {
-        //ArrayList<Integer> fbList = new ArrayList<>();
-        //Transfer as List and sort it
-        ArrayList<Map.Entry<Integer, Integer>> fbList = new ArrayList(hMap.entrySet());
-        Collections.sort(l, new Comparator<Map.Entry<?, Integer>>(){
-
-            public int compare(Map.Entry<?, Integer> o1, Map.Entry<?, Integer> o2) {
-                return o1.getValue().compareTo(o2.getValue());
-            }});
-
-        System.out.println(l);
-        return fbList;
-
-    }*/
 
     // Getter for list
     public int[] getFlashbackSongIDs() {
