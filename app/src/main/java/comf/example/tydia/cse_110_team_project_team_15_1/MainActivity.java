@@ -1,10 +1,13 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,7 +24,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static database data;
+    public static LocationService locationService;
     public static String PACKAGE_NAME;
+    private boolean bound;
 
 
     @Override
@@ -30,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         database db = new database();
         PACKAGE_NAME = getPackageName();
+
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
 
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback);
 
@@ -64,6 +72,26 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+    }
+
+    private ServiceConnection serviceChecker = new ServiceConnection(){
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LocationService.Local local = (LocationService.Local)iBinder;
+            locationService = local.getService();
+            locationService.setUp();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
+
+    public static Location getCurrLoc(){
+        return locationService.getCurrLoc();
     }
 
     /*

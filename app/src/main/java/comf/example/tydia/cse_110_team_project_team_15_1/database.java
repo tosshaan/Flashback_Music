@@ -51,7 +51,7 @@ public class database {
         currSongTime = new Timestamp(System.currentTimeMillis());
         System.out.println("Current song time is " + currSongTime);
 
-        //Getting location
+        /*//Getting location
         LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = manager.getProviders(true);
         Location myLoc = null;
@@ -78,7 +78,9 @@ public class database {
         if (myLoc == null) {
             System.out.println("Null reached");
             return;
-        }
+        }*/
+
+        Location myLoc = MainActivity.getCurrLoc();
 
         //might just throw all request permission into method here
         System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
