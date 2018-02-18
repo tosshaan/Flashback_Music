@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteController;
 import android.net.Uri;
@@ -45,6 +46,11 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
+        SharedPreferences.Editor edit = lastScreen.edit();
+        edit.putString("Activity", "Songs");
+        edit.apply();
 
         MainActivity.PACKAGE_NAME = getPackageName();
         metadataGetter = new MetadataGetter(this);

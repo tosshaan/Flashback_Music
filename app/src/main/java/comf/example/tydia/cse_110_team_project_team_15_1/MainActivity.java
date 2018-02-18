@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -35,6 +36,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         database db = new database();
         PACKAGE_NAME = getPackageName();
+
+        SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
+        String last = lastScreen.getString("Activity", "Main");
+        if(last.equals("Albums")){
+            Intent intent = new Intent(this, AlbumsActivity.class);
+            startActivity(intent);
+        }
+        else if(last.equals("AlbumSpecific")){
+            String lastAlbum = lastScreen.getString("AlbumName", "NoAlbum"); //name of album that was being looked at before closing
+            Intent intent = new Intent(this, AlbumSongsActivity.class);
+            //TODO: Launch back to the specific album
+        }
+        else if(last.equals("Flashback")){
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            startActivity(intent);
+        }
+        else if(last.equals("SongInfo")){
+            String lastSong = lastScreen.getString("SongName", "NoSong"); // name of song that was being played before closing
+            Intent intent = new Intent(this, SongInfo.class);
+            //TODO: Launch back to the song directly
+        }
+        else if(last.equals("Songs")){
+            Intent intent = new Intent(this, SongsActivity.class);
+            startActivity(intent);
+        }
+        else{
+            SharedPreferences.Editor edit = lastScreen.edit();
+            edit.putString("Activity", "Main");
+            edit.apply();
+        }
 
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
