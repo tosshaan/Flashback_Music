@@ -157,52 +157,49 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         dislikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(myData.getSongDislikedStatus(songName)){
-                    myData.setDislikedStatus(songName, false);
-                    // set button back to unhighlighted version
-                    dislikeButton.setChecked(false);
-                }
-                else{
+
+
+                Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                if (songIndex < (flashBackSongIDs.length - 1)) {
+                    songIndex++;
+                    mp.reset();
+                    MEDIA_RES_ID = flashBackSongIDs[songIndex];
+
+                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp.start();
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
 
 
-                    Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
-                    if (songIndex < (flashBackSongIDs.length - 1)) {
-                        songIndex++;
-                        mp.reset();
-                        MEDIA_RES_ID = flashBackSongIDs[songIndex];
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-                        mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
-                        mp.start();
+                    //loadMedia(albumSongsIDs[songIndex]);
 
-                        //loadMedia(albumSongsIDs[songIndex]);
+                    updateLastPlayedInfo();
+                    updateLikedButton();
+                    updateDislikedButton();
+
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                    playFlag = true;
 
 
-                        updateLastPlayedInfo();
-                        updateDislikedButton();
-                        updateLikedButton();
-
-                        //get current information to update song if needed
-                        try {
-                            myData.startSongInfoRequest(songName, getApplicationContext());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
-                        songName = metadataGetter.getName(MEDIA_RES_ID);
-                        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
-                        mp.reset();
-                        mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
-                    }
-                    setFinishListener();
-
+                } else {
+                    Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
+                    myData.setDislikedStatus(songName, true);
+                    myData.setLikedStatus(songName, false);
+                    mp.reset();
+                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    pauseButton.setVisibility(View.GONE);
+                    playButton.setVisibility(View.VISIBLE);
+                    playFlag = false;
                 }
+                setFinishListener();
+
             }
+
         });
 
         // LIKE
@@ -365,6 +362,10 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     mp.reset();
                     MEDIA_RES_ID = flashBackSongIDs[songIndex];
 
+                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+                    songName = metadataGetter.getName(MEDIA_RES_ID);
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+
                     mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                     mp.start();
 
@@ -372,7 +373,6 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
 
                     updateLastPlayedInfo();
-                    updateDislikedButton();
                     updateLikedButton();
 
                     //get current information to update song if needed
@@ -382,9 +382,6 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                         e.printStackTrace();
                     }
 
-                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
-                    songName = metadataGetter.getName(MEDIA_RES_ID);
-                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
