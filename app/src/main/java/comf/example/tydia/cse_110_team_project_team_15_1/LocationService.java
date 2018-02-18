@@ -13,6 +13,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 public class LocationService extends Service {
 
@@ -26,7 +27,7 @@ public class LocationService extends Service {
 
             @Override
             public void onLocationChanged(Location location) {
-                System.out.println("Changed location");
+                Log.d("service", "Changed location");
                 currLoc = location;
             }
 
@@ -43,7 +44,7 @@ public class LocationService extends Service {
         String locProv = LocationManager.GPS_PROVIDER;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("You messed up");
+            Log.d("service","No permission");
             return;
         }
         //currLoc = locManager.getLastKnownLocation(locProv);

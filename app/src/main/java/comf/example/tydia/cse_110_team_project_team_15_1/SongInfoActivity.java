@@ -196,7 +196,7 @@ public class SongInfoActivity extends AppCompatActivity {
                 mediaPlayer.pause();
                 playFlag = true;
                 playButton.setVisibility(View.VISIBLE);
-                System.out.println(playFlag);
+                Log.d("songActivity", ""+playFlag);
                 if (playFlag == true) {
                     pauseButton.setVisibility(View.GONE);
                     playFlag = false;
@@ -310,7 +310,7 @@ public class SongInfoActivity extends AppCompatActivity {
             mediaPlayer.prepareAsync();
 
         } catch (Exception e) {
-            System.out.println(e.toString());
+            Log.d("songActivity", e.toString());
         }
     }
 

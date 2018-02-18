@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.location.Geocoder;
+import android.util.Log;
 
 public class database {
 
@@ -50,7 +51,7 @@ public class database {
 
         //Getting time
         currSongTime = new Timestamp(System.currentTimeMillis());
-        System.out.println("Current song time is " + currSongTime);
+        Log.d("database", "Current song time is " + currSongTime);
 
         /*//Getting location
         LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -88,7 +89,7 @@ public class database {
             finishCheck = true;
 
             currSongAddress = getAddress(myLoc, context);
-            System.out.println("StartSongInfoRequest is " + currSongAddress);
+            Log.d("database", "StartSongInfoRequest is " + currSongAddress);
         }
         else {
             finishCheck = false;
@@ -96,9 +97,13 @@ public class database {
     }
 
     public void finishSongInfoRequest(){
+
+        Log.d("database", "Song Finish request initiated");
+
         if (finishCheck != false) {
             SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);
-            System.out.println(currSongAddress);
+            Log.d("database", currSongAddress);
+
             //update location song list
             if (SongsAtLocation.containsKey(currSongAddress)) {
                 if ((SongsAtLocation.get(currSongAddress)).contains(currSongName)) {
@@ -122,7 +127,7 @@ public class database {
             }
             //update day song list
             Calendar cal = Calendar.getInstance();
-            System.out.println(currSongTime.toString());
+            Log.d("database", currSongTime.toString());
             cal.setTime(currSongTime);
             int day = cal.get(Calendar.DAY_OF_WEEK);
             if (day == GregorianCalendar.MONDAY) {
@@ -154,7 +159,7 @@ public class database {
                     sun.add(currSongName);
                 }
             } else {
-                System.out.println("Error trying to add to day of week list");
+                Log.d("database", "Error trying to add to day of week list");
             }
 
             //add to time of day lists
@@ -169,7 +174,7 @@ public class database {
             } else {
                 if (!evening.contains(currSongName)) {
                     noon.add(currSongName);
-                    System.out.println("added right time");
+                    Log.d("database","added right time");
                 }
             }
         }
@@ -177,7 +182,7 @@ public class database {
 
     public Timestamp getCurrentSongTimestamp ( String SongName){
         if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null) {
-            System.out.println("Song hasn't finished playing before!");
+            Log.d("database", "Song hasn't finished playing before!");
             return null;
         }
         else {
@@ -187,7 +192,7 @@ public class database {
 
     public String getCurrentSongLastLocation ( String SongName, Context context) throws IOException {
         if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).locGetter() == null) {
-            System.out.println("Song hasn't finished playing before!");
+            Log.d("database", "Song hasn't finished playing before!");
             return null;
         }
         else {
@@ -196,9 +201,9 @@ public class database {
     }
 
     public ArrayList <String> getSongsPlayedAtLocation ( String address){
-        System.out.println("Checking for " + address);
+        Log.d("database","Checking for " + address);
         if (SongsAtLocation.containsKey(address) == false) {
-            System.out.println("No songs have been played at this location!");
+            Log.d("database", "No songs have been played at this location!");
             return null;
         }
         else {
@@ -217,7 +222,7 @@ public class database {
         else if(time <= 24){
             return evening;
         }
-        System.out.println("Incorrect time");
+        Log.d("database", "Incorrect time");
         return new ArrayList<String>();
     }
 
@@ -243,7 +248,7 @@ public class database {
         else if(day == GregorianCalendar.SUNDAY){
             return sun;
         }
-        System.out.println("Incorrect day");
+        Log.d("database","Incorrect day");
         return new ArrayList<String>();
     }
 
@@ -263,7 +268,7 @@ public class database {
 
     public void setDislikedStatus ( String SongName, boolean isDisliked) {
         if (SongsInformation.containsKey(SongName) == false) {
-            System.out.println("Song doesn't exist");
+            Log.d("database", "Song doesn't exist");
             SongInfo curr = new SongInfo(null, null, SongName);
             curr.dislikeSong(isDisliked);
             SongsInformation.put(SongName, curr);
@@ -275,7 +280,7 @@ public class database {
 
     public void setLikedStatus (String SongName, boolean isLiked) {
         if (SongsInformation.containsKey(SongName) == false) {
-            System.out.println("Song doesn't exist");
+            Log.d("database", "Song doesn't exist");
             SongInfo curr = new SongInfo(null, null, SongName);
             curr.likeSong(isLiked);
             SongsInformation.put(SongName, curr);
