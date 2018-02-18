@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.content.Intent;
 import android.view.View;
@@ -66,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
             edit.putString("Activity", "Main");
             edit.apply();
         }
-
-        Intent intent = new Intent(this, LocationService.class);
-        bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
 
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback);
 
@@ -177,13 +175,15 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode) {
             case 100:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    Intent intent = new Intent(this, LocationService.class);
+                    bindService(intent, serviceChecker, Context.BIND_AUTO_CREATE);
                 }
                 else {
-                    System.out.println("App will not work without permission");
+                    Log.d("main", "App will not work without permission");
                     return;
                 }
         }
+
     }
 
 
