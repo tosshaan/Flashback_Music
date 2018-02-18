@@ -237,6 +237,13 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateLikedButton();
                     // TODO: Skip song
                 }
+                //get current information to update song if needed
+                try {
+                    myData.startSongInfoRequest(songName, getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myData.finishSongInfoRequest();
             }
         });
 
@@ -260,6 +267,13 @@ public class SongInfoActivity extends AppCompatActivity {
                     likeButton.setChecked(true);
                     dislikeButton.setChecked(false);
                 }
+                //get current information to update song if needed
+                try {
+                    myData.startSongInfoRequest(songName, getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myData.finishSongInfoRequest();
             }
         });
 
@@ -407,13 +421,6 @@ public class SongInfoActivity extends AppCompatActivity {
             //loadMedia(albumSongsIDs[songIndex]);
 
 
-
-            //get current information to update song if needed
-            try {
-                myData.startSongInfoRequest(songName, getApplicationContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
             songName = metadataGetter.getName(MEDIA_RES_ID);
             showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
