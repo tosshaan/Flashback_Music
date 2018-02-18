@@ -53,38 +53,10 @@ public class database {
         currSongTime = new Timestamp(System.currentTimeMillis());
         Log.d("database", "Current song time is " + currSongTime);
 
-        /*//Getting location
-        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = manager.getProviders(true);
-        Location myLoc = null;
-
-        //Checking permissions
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    100);
-            return;
-        }
-        System.out.println("Now retrieving location");
-        for(int i = 0; i < providers.size(); i++){
-            Location guess = manager.getLastKnownLocation(providers.get(i));
-            if(guess == null){
-                continue;
-            }
-            if(myLoc == null || guess.getAccuracy() < myLoc.getAccuracy()){
-                myLoc = guess;
-            }
-        }
-        if (myLoc == null) {
-            System.out.println("Null reached");
-            return;
-        }*/
-
         Location myLoc = MainActivity.getCurrLoc();
 
         //might just throw all request permission into method here
-        //System.out.println(myLoc.getLatitude() + " , " + myLoc.getLongitude());
+        Log.d("database", myLoc.getLatitude() + " , " + myLoc.getLongitude());
         if(myLoc != null) {
             finishCheck = true;
 
@@ -96,9 +68,20 @@ public class database {
         }
     }
 
-    public void finishSongInfoRequest(){
+    public void finishSongInfoRequest(boolean finishedPlaying){
 
         Log.d("database", "Song Finish request initiated");
+
+        if(!finishedPlaying){
+            if(SongsInformation.containsKey(currSongName)){
+                SongsInformation.get(currSongName).dislikeSong(true);
+            }
+            else{
+                SongInfo song = new SongInfo(null, null, currSongName);
+                song.dislikeSong(true);
+            }
+            return;
+        }
 
         if (finishCheck != false) {
             SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);

@@ -103,6 +103,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         Bundle bundle = new Bundle();
         bundle.putIntArray("SongsIDs", IDs);
         intent.putExtras(bundle);
+
         startActivity(intent);
     }
 

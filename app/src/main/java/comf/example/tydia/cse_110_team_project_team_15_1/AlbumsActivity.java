@@ -39,11 +39,6 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
-        SharedPreferences.Editor edit = lastScreen.edit();
-        edit.putString("Activity", "Albums");
-        edit.apply();
-
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
