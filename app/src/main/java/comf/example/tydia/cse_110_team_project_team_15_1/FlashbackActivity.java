@@ -56,7 +56,12 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         myData = MainActivity.data;
         //need to get currently playing song
 
-        flashbackList = new FlashbackList("TODO", currTime, myData, this);
+        try {
+            flashbackList = new FlashbackList(myData.getAddress(MainActivity.getCurrLoc(),this), currTime, myData, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         flashbackList.generateList();
 
         Button switchScreen = (Button) findViewById(R.id.normal_mode);
