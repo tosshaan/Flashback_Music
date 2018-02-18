@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -140,6 +141,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateFlashback);
         TextView lastLoc = (TextView) findViewById((R.id.text_locationFlashback));
         try {
+            Log.d("updateLastPlayed", "Song name is " + songName);
             if(myData.getCurrentSongLastLocation(songName, this)!= null){
                 lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
             }

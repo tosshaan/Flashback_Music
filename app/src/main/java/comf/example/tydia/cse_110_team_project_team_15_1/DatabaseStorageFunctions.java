@@ -39,6 +39,7 @@ public class DatabaseStorageFunctions {
             builder.registerTypeAdapter(SongInfo.class, new SongInfoSerializer());
             Gson reader = builder.create();
             database db = reader.fromJson(dataString, database.class);
+            System.out.println("Ran here");
             return db;
         }
     }

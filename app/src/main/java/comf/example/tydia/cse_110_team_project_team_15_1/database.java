@@ -74,7 +74,7 @@ public class database {
                 myLoc = guess;
             }
         }
-
+        //****************BREAKS HERE *************************************8
         if (myLoc == null) {
             System.out.println("Null reached");
             return;
@@ -178,7 +178,7 @@ public class database {
 
     public Timestamp getCurrentSongTimestamp ( String SongName){
         if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null) {
-            System.out.println("Song hasn't finished playing before!");
+            System.out.println("Song hasn't finished playing before! Time");
             return null;
         }
         else {
@@ -188,7 +188,7 @@ public class database {
 
     public String getCurrentSongLastLocation ( String SongName, Context context) throws IOException {
         if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).locGetter() == null) {
-            System.out.println("Song hasn't finished playing before!");
+            System.out.println("Song hasn't finished playing before! - Location");
             return null;
         }
         else {
@@ -270,6 +270,7 @@ public class database {
             SongsInformation.put(SongName, curr);
         }
         else {
+            System.out.println("Song is disliked");
             SongsInformation.get(SongName).dislikeSong(isDisliked);
         }
     }
@@ -282,6 +283,7 @@ public class database {
             SongsInformation.put(SongName, curr);
         }
         else {
+            System.out.println("Song gets liked");
             SongsInformation.get(SongName).likeSong(isLiked);
         }
     }

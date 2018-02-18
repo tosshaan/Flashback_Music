@@ -57,7 +57,7 @@ public class SongInfoActivity extends AppCompatActivity {
 
         mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
         mediaPlayer.start();
-
+        System.out.println("Right here");
         updateLastPlayedInfo();
 
         // Storing info from song to database
