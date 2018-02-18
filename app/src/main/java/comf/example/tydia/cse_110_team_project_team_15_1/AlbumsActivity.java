@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +38,11 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_albums);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
+        SharedPreferences.Editor edit = lastScreen.edit();
+        edit.putString("Activity", "Albums");
+        edit.apply();
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();

@@ -1,5 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -42,6 +43,12 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashback);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
+        SharedPreferences.Editor edit = lastScreen.edit();
+        edit.putString("Activity", "Flashback");
+        edit.apply();
+
         setSupportActionBar(toolbar);
         Timestamp currTime = new Timestamp( System.currentTimeMillis() );
         metadataGetter = new MetadataGetter(this);

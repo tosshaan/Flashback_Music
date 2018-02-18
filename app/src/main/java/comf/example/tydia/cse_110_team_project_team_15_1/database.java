@@ -74,7 +74,6 @@ public class database {
                 myLoc = guess;
             }
         }
-
         if (myLoc == null) {
             System.out.println("Null reached");
             return;

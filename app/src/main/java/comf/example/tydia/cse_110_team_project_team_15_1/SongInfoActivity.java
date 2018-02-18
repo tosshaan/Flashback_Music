@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -46,8 +47,14 @@ public class SongInfoActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
+        SharedPreferences.Editor edit = lastScreen.edit();
+        edit.putString("Activity", "SongInfo");
+        edit.apply();
+
         MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
         songName = getIntent().getStringExtra("songName");
+        edit.putString("SongName", songName);
         Bundle bundle = getIntent().getExtras();
         //albumMode = getIntent().getBooleanExtra("albumMode", false);
         //if (albumMode) {
