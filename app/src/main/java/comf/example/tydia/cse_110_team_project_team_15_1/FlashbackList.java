@@ -89,14 +89,14 @@ public class FlashbackList {
         //Integer[] flashbackList = (Integer []) duplicateCount.entrySet().toArray();
         //Arrays.sort(flashbackList, )
 
-        //ArrayList<Integer> finalList = breakTiesByLike( flashbackList );
+            //ArrayList<Integer> finalList = breakTiesByLike( flashbackList );
 
-        // Copying tempArrayList to final array
-        flashbackSongIDs = new int[flashbackList.size()];
-        for( int k = 0; k < flashbackSongIDs.length; k++ ) {
-            flashbackSongIDs[k] = flashbackList.get(k).getKey();
+            // Copying tempArrayList to final array
+            flashbackSongIDs = new int[flashbackList.size()];
+            for( int k = 0; k < flashbackSongIDs.length; k++ ) {
+                flashbackSongIDs[k] = flashbackList.get(k).getKey();
+            }
         }
-    }
 
     /*
     private ArrayList<Integer> breakTiesByLike(ArrayList<Map.Entry<Integer, Integer>> flashbackList) {

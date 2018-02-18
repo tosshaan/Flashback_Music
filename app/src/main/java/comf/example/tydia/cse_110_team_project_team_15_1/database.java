@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.location.Geocoder;
+import android.util.Log;
 
 public class database {
 
