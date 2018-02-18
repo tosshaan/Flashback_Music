@@ -27,7 +27,7 @@ public class MetadataGetter {
     // Get song name based on ID
     public String getName(int id) {
         path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + id);
-        Log.d("CONTEXT AND PATH: ", "The context is " + context + " The path is " + path);
+        //Log.d("CONTEXT AND PATH: ", "The context is " + context + " The path is " + path);
         retriever.setDataSource(context, path);
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
     }
