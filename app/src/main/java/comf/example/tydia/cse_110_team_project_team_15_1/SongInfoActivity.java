@@ -243,7 +243,7 @@ public class SongInfoActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                myData.finishSongInfoRequest();
+                myData.finishSongInfoRequest(false);
             }
         });
 
@@ -273,7 +273,7 @@ public class SongInfoActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                myData.finishSongInfoRequest();
+                myData.finishSongInfoRequest(false);
             }
         });
 
