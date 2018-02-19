@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -56,20 +57,24 @@ public class JUnitTest02 {
         }
 
         try {
-            LocalDateTime morning = LocalDateTime.of(2018,2,7,10,23);
-            TimeMachine.useFixedClockAt(morning);
-            db.startSongInfoRequest("After The Storm", mainActivity.getApplicationContext());
-            db.startSongInfoRequest("Beautiful-Pain", mainActivity.getApplicationContext());
+            Timestamp morning = new Timestamp(2018,2,7,9,13,0,0);
+            db.startSongInfoRequest("After The Storm", mainActivity.getApplicationContext(), morning);
+            db.finishSongInfoRequest(true, false);
 
-            LocalDateTime noon = LocalDateTime.of(2018,2,7,14,23);
-            TimeMachine.useFixedClockAt(noon);
-            db.startSongInfoRequest("Currently", mainActivity.getApplicationContext());
-            db.startSongInfoRequest("Dead Dove Do Not Eat", mainActivity.getApplicationContext());
+            db.startSongInfoRequest("Beautiful-Pain", mainActivity.getApplicationContext(),morning);
+            db.finishSongInfoRequest(true, false);
 
-            LocalDateTime evening = LocalDateTime.of(2018,2,7,22,23);
-            TimeMachine.useFixedClockAt(evening);
-            db.startSongInfoRequest("123 Go", mainActivity.getApplicationContext());
-            db.startSongInfoRequest("Crane City", mainActivity.getApplicationContext());
+            Timestamp noon = new Timestamp(2018,2,7,14,13,0,0);
+            db.startSongInfoRequest("Currently", mainActivity.getApplicationContext(),noon);
+            db.finishSongInfoRequest(true, false);
+            db.startSongInfoRequest("Dead Dove Do Not Eat", mainActivity.getApplicationContext(),noon);
+            db.finishSongInfoRequest(true, false);
+
+            Timestamp evening = new Timestamp(2018,2,7,23,13,0,0);
+            db.startSongInfoRequest("123 Go", mainActivity.getApplicationContext(),evening);
+            db.finishSongInfoRequest(true, false);
+            db.startSongInfoRequest("Crane City", mainActivity.getApplicationContext(),evening);
+            db.finishSongInfoRequest(true, false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +85,16 @@ public class JUnitTest02 {
     @Test
     public void testGetSongsAtTime () {
         ArrayList<String> mlist = db.getSongsAtTime(9);
+        Log.d("arraylist is: ", mlist.toString());
         assertEquals(mlist.contains("After The Storm"), true);
+
+        ArrayList<String> nlist = db.getSongsAtTime(14);
+        Log.d("arraylist is: ", nlist.toString());
+        assertEquals(nlist.contains("Currently"), true);
+
+        ArrayList<String> elist = db.getSongsAtTime(22);
+        Log.d("arraylist is: ", elist.toString());
+        assertEquals(elist.contains("Crane City"), true);
     }
 
     @Test

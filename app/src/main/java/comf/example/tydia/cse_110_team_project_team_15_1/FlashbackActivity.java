@@ -387,7 +387,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

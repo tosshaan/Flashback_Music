@@ -46,11 +46,11 @@ public class database {
         sun = new ArrayList<String>();
     }
 
-    public void startSongInfoRequest(String SongName, Context context) throws IOException {
+    public void startSongInfoRequest(String SongName, Context context, Timestamp time) throws IOException {
         currSongName = SongName;
 
         //Getting time
-        currSongTime = new Timestamp(System.currentTimeMillis());
+        currSongTime = time;
         Log.d("database", "Current song time is " + currSongTime);
 
         Location myLoc = MainActivity.getCurrLoc();
@@ -166,7 +166,7 @@ public class database {
                 }
             } else {
                 if (!evening.contains(currSongName)) {
-                    noon.add(currSongName);
+                    evening.add(currSongName);
                     Log.d("database","added right time");
                 }
             }
