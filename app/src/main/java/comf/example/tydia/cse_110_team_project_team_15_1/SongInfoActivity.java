@@ -105,7 +105,7 @@ public class SongInfoActivity extends AppCompatActivity {
         });
 
         // finish playing a song
-        setFinishListener();
+        setFinishListener(true);
 
         /**
          * functionality for clicking previous button
@@ -141,6 +141,8 @@ public class SongInfoActivity extends AppCompatActivity {
                     playFlag = true;
                     pauseButton.setVisibility(View.VISIBLE);
                     playButton.setVisibility(View.GONE);
+                    setFinishListener(true);
+
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
                     mediaPlayer.reset();
@@ -148,10 +150,10 @@ public class SongInfoActivity extends AppCompatActivity {
                     playFlag = false;
                     pauseButton.setVisibility(View.GONE);
                     playButton.setVisibility(View.VISIBLE);
+                    setFinishListener(false);
+
                 }
 
-
-                setFinishListener();
             }
 
         });
@@ -189,19 +191,22 @@ public class SongInfoActivity extends AppCompatActivity {
                     Timestamp time = new Timestamp(System.currentTimeMillis());
 
                     //get current information to update song if needed
+
                     try {
                         myData.startSongInfoRequest(songName, getApplicationContext(), time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                     //myData.finishSongInfoRequest(true, false);
+                    setFinishListener(true);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
                     mediaPlayer.reset();
                     mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    setFinishListener(false);
                 }
-                setFinishListener();
             }
         });
 
@@ -264,11 +269,16 @@ public class SongInfoActivity extends AppCompatActivity {
                     }
                     myData.finishSongInfoRequest(false, true);
 
+
+
                     skipSong();
+
+                    updateLastPlayedInfo();
                     updateDislikedButton();
                     updateLikedButton();
+
                 }
-                setFinishListener();
+                //setFinishListener();
             }
         });
 
@@ -420,14 +430,16 @@ public class SongInfoActivity extends AppCompatActivity {
     /**
      * Method to give a toast message when song finishes
      */
-    private void setFinishListener() {
+    private void setFinishListener(boolean request) {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
-                myData.finishSongInfoRequest(true, false);
+                if (request) {
+                    myData.finishSongInfoRequest(true, false);
+                }
                 skipSong();
-                setFinishListener();
+                //setFinishListener(true);
                 updateLastPlayedInfo();
                 updateDislikedButton();
                 updateLikedButton();
@@ -453,11 +465,14 @@ public class SongInfoActivity extends AppCompatActivity {
             TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
             songName = metadataGetter.getName(MEDIA_RES_ID);
             showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+            setFinishListener(true);
 
         } else {
             Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
             mediaPlayer.reset();
             mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+            setFinishListener(false);
+
         }
     }
 }
