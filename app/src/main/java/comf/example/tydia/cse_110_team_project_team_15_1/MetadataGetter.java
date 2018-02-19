@@ -5,6 +5,8 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.Log;
 
+import java.time.LocalTime;
+
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 
 /**
@@ -18,6 +20,9 @@ public class MetadataGetter {
     Uri path;
     MediaMetadataRetriever retriever;
     Context context;
+
+
+
 
     public MetadataGetter( Context context) {
         this.context = context;
@@ -61,4 +66,15 @@ public class MetadataGetter {
         retriever.release();
     }
 
+    // Get current resource
+    public int getCurrentResources (int id, LocalTime start, LocalTime end) {
+        int cr;
+        LocalTime currentTime = TimeMachine.now().toLocalTime();
+        if (currentTime.isAfter(start) && currentTime.isBefore(end)) {
+            cr = id;
+        } else {
+            cr = -1;
+        }
+        return cr;
+    }
 }
