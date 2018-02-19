@@ -24,6 +24,7 @@ public class LocationService extends Service {
     public Location currLoc;
 
     public LocationService() {
+        Log.d("service", "Service instantiated");
     }
 
     /**

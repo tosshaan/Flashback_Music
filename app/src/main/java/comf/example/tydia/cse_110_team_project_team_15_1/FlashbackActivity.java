@@ -403,10 +403,10 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
                     updateLastPlayedInfo();
                     updateLikedButton();
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(),time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -47,6 +47,9 @@ public class SongInfo implements Serializable{
 
     //gets time
     public Timestamp timeGetter() {
+        if(this.time == null){
+            return new Timestamp(0);
+        }
         return this.time;
     }
 

@@ -27,6 +27,9 @@ public class SongInfoDeserializer implements JsonDeserializer<SongInfo>{
         JsonObject o = json.getAsJsonObject();
         String loc = o.getAsJsonPrimitive("location").getAsString();
         Timestamp time = new Timestamp(o.getAsJsonPrimitive("time").getAsLong());
+        if(time.equals(new Timestamp(0))){
+            time = null;
+        }
         String name = o.getAsJsonPrimitive("name").getAsString();
         boolean liked = o.getAsJsonPrimitive("liked").getAsBoolean();
         boolean disliked = o.getAsJsonPrimitive("disliked").getAsBoolean();

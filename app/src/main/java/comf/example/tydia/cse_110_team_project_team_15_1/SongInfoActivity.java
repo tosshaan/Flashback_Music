@@ -69,14 +69,14 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         updateLastPlayedInfo();
-
+        Timestamp time = new Timestamp(System.currentTimeMillis());
         // Storing info from song to database
         try {
-            myData.startSongInfoRequest(songName, getApplicationContext());
+            myData.startSongInfoRequest(songName, getApplicationContext(),time);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myData.finishSongInfoRequest(true);
+        //myData.finishSongInfoRequest(true, false);
 
         // Creating metadatagetter
         metadataGetter = new MetadataGetter(this);
@@ -130,14 +130,14 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateLastPlayedInfo();
                     updateDislikedButton();
                     updateLikedButton();
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(), time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myData.finishSongInfoRequest(true);
+                    //myData.finishSongInfoRequest(true, false);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
@@ -177,13 +177,16 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateDislikedButton();
                     updateLikedButton();
 
+
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(), time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myData.finishSongInfoRequest(true);
+                    //myData.finishSongInfoRequest(true, false);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
@@ -241,21 +244,21 @@ public class SongInfoActivity extends AppCompatActivity {
                 else{
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //dislikeButton.setChecked(true);
                     //likeButton.setChecked(false);
+                    //get current information to update song if needed
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext(),time);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    myData.finishSongInfoRequest(false, true);
+
                     skipSong();
                     updateDislikedButton();
                     updateLikedButton();
-                    // TODO: Skip song
                 }
-                //get current information to update song if needed
-                try {
-                    myData.startSongInfoRequest(songName, getApplicationContext());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                myData.finishSongInfoRequest(false);
             }
         });
 
@@ -279,13 +282,14 @@ public class SongInfoActivity extends AppCompatActivity {
                     likeButton.setChecked(true);
                     dislikeButton.setChecked(false);
                 }
+                Timestamp time = new Timestamp(System.currentTimeMillis());
                 //get current information to update song if needed
                 try {
-                    myData.startSongInfoRequest(songName, getApplicationContext());
+                    myData.startSongInfoRequest(songName, getApplicationContext(), time);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                myData.finishSongInfoRequest(false);
+                myData.finishSongInfoRequest(false, false);
             }
         });
 
@@ -333,32 +337,7 @@ public class SongInfoActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /**
-     * MediaPlayer functionality for the song currently playing
-     * @param resourceId - song ID
-     */
-    public void loadMedia(int resourceId) {
-        if(mediaPlayer == null)
-            mediaPlayer = new MediaPlayer();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(resourceId);
-        try {
-            mediaPlayer.setDataSource(assetFileDescriptor);
-            mediaPlayer.prepareAsync();
 
-        } catch (Exception e) {
-            Log.d("songActivity", e.toString());
-        }
-    }
-
-    /**
-     * calls super class' onStop() method
-     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -436,6 +415,7 @@ public class SongInfoActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                myData.finishSongInfoRequest(true, false);
                 skipSong();
                 setFinishListener();
                 updateLastPlayedInfo();
