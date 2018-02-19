@@ -17,6 +17,9 @@ import java.sql.Timestamp;
  * Created by Graham on 2/15/2018.
  */
 
+/**
+ * Parases songs info objects into strings so they can be stored properly
+ */
 public class SongInfoDeserializer implements JsonDeserializer<SongInfo>{
 
     @Override

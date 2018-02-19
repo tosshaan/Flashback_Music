@@ -24,6 +24,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Activity Class for the list of all songs in a particular album.
+ * Opened when a particular album name is clicked from AlbumsActivity
+ * Redirects to SongsInfoActivity, and FlashBackActivity
+ */
 public class AlbumSongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
@@ -32,7 +37,10 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
     int[] songIDs;
     MetadataGetter metadataGetter;
 
-
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +48,7 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Creating metadataGtter
+        // Creating metadataGetter
         metadataGetter = new MetadataGetter(this);
 
         // hide action bar
@@ -75,8 +83,10 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         });
     }
 
-    // Item click method
-    // int i is the index of the item clicked
+    /**
+     * Item click method
+     * @param i - index of list item clicked, which is a song name of an album in this case
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -85,7 +95,10 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         launchSongInfoAct(i);
     }
 
-    // Method to get names of songs based on IDs
+    /**
+     * Method to get names of songs based on IDs
+     * @param IDs - array of all songIDs
+     */
     public String[] getSongNames( int[] IDs ) {
 
         String[] songNames = new String[IDs.length];
@@ -95,6 +108,10 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         return songNames;
     }
 
+    /**
+     * Goes to SongInfoActivity for the particular song in the list of album songs
+     * @param i - index of the song in the list
+     */
     public void launchSongInfoAct(int i) {
         Intent intent = new Intent (this, SongInfoActivity.class);
         intent.putExtra("songID", songIDs[i]);
@@ -108,6 +125,9 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         startActivity(intent);
     }
 
+    /**
+     * Goes to FlashBackActivity
+     */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);

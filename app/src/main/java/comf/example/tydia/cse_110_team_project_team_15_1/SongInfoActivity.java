@@ -21,6 +21,11 @@ import android.widget.ToggleButton;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+/**
+ * Activity Class for the mediaPlayer functionality of the currently playing song.
+ * Opened when a particular song name is clicked from SongsActivity or AlbumSongsActivity
+ * Redirects to FlashBackActivity
+ */
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
@@ -34,6 +39,10 @@ public class SongInfoActivity extends AppCompatActivity {
 
     database myData;
 
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +85,6 @@ public class SongInfoActivity extends AppCompatActivity {
         showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
         // play and pause music
-
         final Button playButton = (Button) findViewById(R.id.button_play2);
         final Button pauseButton = (Button) findViewById(R.id.button_pause2);
         playButton.setVisibility(View.GONE);
@@ -99,6 +107,9 @@ public class SongInfoActivity extends AppCompatActivity {
         // finish playing a song
         setFinishListener();
 
+        /**
+         * functionality for clicking previous button
+         */
         Button prevButton = (Button) findViewById(R.id.button_prev2);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +148,9 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * functionality for clicking next button
+         */
         Button nextButton = (Button) findViewById(R.id.button_next2);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,11 +173,9 @@ public class SongInfoActivity extends AppCompatActivity {
                     songName = metadataGetter.getName(MEDIA_RES_ID);
                     showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-
                     updateLastPlayedInfo();
                     updateDislikedButton();
                     updateLikedButton();
-
 
                     //get current information to update song if needed
                     try {
@@ -173,7 +185,6 @@ public class SongInfoActivity extends AppCompatActivity {
                     }
                     myData.finishSongInfoRequest(true);
 
-
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
                     mediaPlayer.reset();
@@ -182,8 +193,9 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
-
-
+        /**
+         * functionality for clicking pause
+         */
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,8 +289,10 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * functionality for going back to last screen
+         */
         Button switchScreen = (Button) findViewById(R.id.button_songInfoBack);
-
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,7 +308,9 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
-        // launch flashback (temp)
+        /**
+         * goes to FlashbackActivity
+         */
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_songinfo);
         launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,11 +325,18 @@ public class SongInfoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Helper for launching FlashbackActivity
+     */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * MediaPlayer functionality for the song currently playing
+     * @param resourceId - song ID
+     */
     public void loadMedia(int resourceId) {
         if(mediaPlayer == null)
             mediaPlayer = new MediaPlayer();
@@ -333,6 +356,9 @@ public class SongInfoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * calls super class' onStop() method
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -341,6 +367,9 @@ public class SongInfoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * calls super class' onDestroy() method
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -372,7 +401,7 @@ public class SongInfoActivity extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
      * Update methods to change the look of the like and dislike buttons whenever the song changes, as we are not starting a new activity
      * Call only after the new song has started playing and the songName field has been updated
      */
@@ -385,6 +414,10 @@ public class SongInfoActivity extends AppCompatActivity {
             dislikeButton.setChecked(false);
         }
     }
+
+    /**
+     * Method for like button functionality
+     */
     private void updateLikedButton(){
         ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like2);
         if(myData.getSongLikedStatus(songName)){
@@ -394,6 +427,10 @@ public class SongInfoActivity extends AppCompatActivity {
             likeButton.setChecked(false);
         }
     }
+
+    /**
+     * Method to give a toast message when song finishes
+     */
     private void setFinishListener() {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -409,6 +446,9 @@ public class SongInfoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method to skip a song
+     */
     public void skipSong() {
         if (songIndex < (SongsIDs.length - 1)) {
             songIndex++;
@@ -419,7 +459,6 @@ public class SongInfoActivity extends AppCompatActivity {
             mediaPlayer.start();
 
             //loadMedia(albumSongsIDs[songIndex]);
-
 
             TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
             songName = metadataGetter.getName(MEDIA_RES_ID);

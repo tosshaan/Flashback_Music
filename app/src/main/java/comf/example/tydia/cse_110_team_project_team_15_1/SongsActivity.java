@@ -25,6 +25,11 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+/**
+ * Activity Class for the list of all songs in memory.
+ * Opened when "all songs" is clicked from MainActivity
+ * Redirects to SongsInfoActivity, and FlashBackActivity
+ */
 public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
@@ -36,6 +41,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     private int[] IDs;
     MetadataGetter metadataGetter;
 
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,8 +93,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         });
     }
 
-    // Item click method
-    // int i is the index of the item clicked
+    /**
+     * Item click method
+     * @param i - index of the item clicked
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -94,6 +105,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         launchSongInfoAct(i);
     }
 
+    /**
+     * Goes to SongInfoActivity for the particular song clicked in the list
+     * @param i - index of the song in the song list
+     */
     public void launchSongInfoAct(int i) {
         Intent intent = new Intent (this, SongInfoActivity.class);
         intent.putExtra("songID", IDs[i]);
@@ -107,7 +122,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         startActivity(intent);
     }
 
-    // Method to get the IDs of all songs in raw folder
+    /**
+     * Method to get an array of song ids for all the songs in the list
+     * @return array of song ids of all songs in the list
+     */
     public static int[] getSongIDs() {
         Field[] ID_Fields = R.raw.class.getFields();
         int[] songIDs = new int[ID_Fields.length];
@@ -122,7 +140,11 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         return songIDs;
     }
 
-    // Method to get names of songs based on IDs
+    /**
+     * Method to get song names from songIDs
+     * @param IDs - array of all songs' ids
+     * @return array of all songs' names
+     */
     public String[] getSongNames( int[] IDs ) {
 
         String[] songNames = new String[IDs.length];
@@ -132,6 +154,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         return songNames;
     }
 
+    /**
+     * Goes to FlashbackActivity
+     */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);

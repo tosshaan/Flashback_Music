@@ -23,6 +23,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Activity Class for the list of Albums.
+ * Opened when 'albums' is clicked from MainActivity
+ * Redirects to AlbumSongsActivity, and FlashBackActivity
+ */
 public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
@@ -32,6 +37,10 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
     int[] songIDs;
     MetadataGetter metadataGetter;
 
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +68,11 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
 
 
         list = (ListView) findViewById(R.id.list_allalbums);
+
         // context, database structure, data
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 , albumNames);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
-
 
         // launch flashback (temp)
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_album);
@@ -75,8 +84,10 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         });
     }
 
-    // Item click method
-    // int i is the index of the item clicked
+    /**
+     * Item click method
+     * int i is the index of the item clicked
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -86,7 +97,12 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         launchAlbumSongs(i);
     }
 
-    // Method to get names of albums based on IDs
+    /**
+     * Method to get names of albums based on IDs
+     *
+     * @param IDs - array of song IDs
+     * @return - String array of all albumNames
+     */
     public String[] getAlbumNames( int[] IDs ) {
 
         ArrayList<String> albumSet = new ArrayList<>();
@@ -106,6 +122,10 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         return albumNames;
     }
 
+    /**
+     * Goes to AlbumSongsActivity for the particular album that was clicked in the list
+     * @param i - list index for the album that was clicked
+     */
     public void launchAlbumSongs(int i) {
         Intent intent = new Intent (this, AlbumSongsActivity.class);
         // Getting songs from selected album and placing on intent
@@ -114,9 +134,10 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         startActivity(intent);
     }
 
-    /**  Method to retrieve songs from a given album
-        @Param i: index of album that selected in the list view
-        @Return albumSongsIDs: an int array containing all the ids of the songs of the album clicked
+    /**
+     * Method to retrieve songs from a given album
+     * @param i - index of album that selected in the list view
+     * @return albumSongsIDs: an int array containing all the ids of the songs of the album clicked
     */
     public int[] getAlbumSongs(int i) {
         ArrayList<Integer> albumSongIDsArr = new ArrayList<>();
@@ -137,6 +158,9 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         return albumSongIDs;
     }
 
+    /**
+     * Goes to FlashBackActivity
+     */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);

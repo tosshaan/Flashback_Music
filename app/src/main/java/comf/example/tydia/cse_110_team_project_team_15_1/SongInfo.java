@@ -9,12 +9,17 @@ import java.util.*;
 import java.sql.Timestamp;
 import java.lang.*;
 
+/**
+ * Objects of this class correspond to each song
+ */
 public class SongInfo implements Serializable{
     private Timestamp time;
     private String songName;
     private String location;
     private boolean liked;
     private boolean disliked;
+
+    //constructor
     public SongInfo(Timestamp t, String l, String songName){
         this.time = t;
         if( l != null) {
@@ -25,6 +30,8 @@ public class SongInfo implements Serializable{
         }
         this.songName = songName;
     }
+
+    //parameterized constructor
     public SongInfo(Timestamp t, String s, String l, boolean li, boolean di){
         time = t;
         songName = s;
@@ -37,15 +44,23 @@ public class SongInfo implements Serializable{
         liked = li;
         disliked = di;
     }
+
+    //gets time
     public Timestamp timeGetter() {
         return this.time;
     }
+
+    //sets time
     public void timeSetter(Timestamp time) {
         this.time = time;
     }
+
+    //gets location
     public String locGetter() {
         return this.location;
     }
+
+    //sets location
     public void LocationSetter(String location) {
         if( location != null) {
             this.location = location;
@@ -54,12 +69,18 @@ public class SongInfo implements Serializable{
             this.location = "";
         }
     }
+
+    //getter for songName
     public String songGetter() {
         return this.songName;
     }
+
+    //setter for songName
     public void songSetter( String songName) {
         this.songName = songName;
     }
+
+    //setter for disliking a song
     public void likeSong(boolean l) {
         if (l == true) {
             this.liked = true;
@@ -69,6 +90,8 @@ public class SongInfo implements Serializable{
             this.liked = false;
         }
     }
+
+    //setter for disliking a song
     public void dislikeSong(boolean l) {
         if (l == true) {
             this.disliked = true;
@@ -78,9 +101,12 @@ public class SongInfo implements Serializable{
             this.disliked = false;
         }
     }
+    //checks is song is liked
     public boolean isLiked() {
         return this.liked;
     }
+
+    //checks if song is disliked
     public boolean isDisliked() {
         return this.disliked;
     }

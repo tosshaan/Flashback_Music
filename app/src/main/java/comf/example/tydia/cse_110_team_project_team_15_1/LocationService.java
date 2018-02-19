@@ -15,6 +15,9 @@ import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+/**
+ * Class to manage location
+ */
 public class LocationService extends Service {
 
     private final IBinder binder = new Local();
@@ -22,6 +25,10 @@ public class LocationService extends Service {
 
     public LocationService() {
     }
+
+    /**
+     * sets up location listener
+     */
     public void setUp(){
         LocationListener locList = new LocationListener(){
 
@@ -56,10 +63,17 @@ public class LocationService extends Service {
         locManager.requestLocationUpdates(locProv, 0, 0, locList);
     }
 
+    /**
+     * gets current location
+     * @return location object
+     */
     public Location getCurrLoc(){
         return currLoc;
     }
 
+    /**
+     * gets binder object
+     */
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
