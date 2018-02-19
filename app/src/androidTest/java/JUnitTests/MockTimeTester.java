@@ -13,15 +13,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
 import comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity;
-import comf.example.tydia.cse_110_team_project_team_15_1.TimeMachine;
 import comf.example.tydia.cse_110_team_project_team_15_1.database;
 
 import static org.junit.Assert.assertEquals;
@@ -126,26 +123,5 @@ public class MockTimeTester {
         assertEquals(satList.contains("I Fell In Love"), true);
     }
 
-    @Test
-    public void testMockTime() {
-        // pick a song id
-        int currentResource = idsTest[1];
-
-        // specify a time range
-        LocalTime intervalStart = LocalTime.parse("11:00:00");
-        LocalTime intervalEnd = LocalTime.parse("16:00:00");
-
-        // declare two dummy times, one within expected range, the other not
-        LocalDateTime dummyTime1 = LocalDateTime.of(2018,2,7,12,23);
-        LocalDateTime dummyTime2 = LocalDateTime.of(2018,1,7,9,23);
-
-        // test within the given time range
-        TimeMachine.useFixedClockAt(dummyTime1);
-        assertEquals(currentResource, metadataGetter.getCurrentResources(idsTest[1],intervalStart,intervalEnd));
-
-        // test not in the time range
-        TimeMachine.useFixedClockAt(dummyTime2);
-        assertNotEquals(currentResource, metadataGetter.getCurrentResources(idsTest[1],intervalStart,intervalEnd));
-    }
 
 }
