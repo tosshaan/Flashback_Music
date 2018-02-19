@@ -31,7 +31,7 @@
     <TextView
         android:id="@+id/text_SongNameFlashback"
         android:layout_width="252dp"
-        android:layout_height="79dp"
+        android:layout_height="83dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/song_name"
@@ -43,7 +43,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/text_timeAndDateFlashback"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintVertical_bias="0.386" />
 
     <TextView
         android:id="@+id/text_timeAndDateFlashback"
@@ -59,7 +59,7 @@
     <TextView
         android:id="@+id/text_locationFlashback"
         android:layout_width="252dp"
-        android:layout_height="28dp"
+        android:layout_height="49dp"
         android:layout_marginBottom="8dp"
         android:text="@string/location"
         android:textAlignment="center"
