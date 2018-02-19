@@ -156,11 +156,11 @@ public class database {
             }
 
             //add to time of day lists
-            if (currSongTime.getHours() < 8) {
+            if (currSongTime.getHours() < 11 && currSongTime.getHours() >= 5) {
                 if (!morning.contains(currSongName)) {
                     morning.add(currSongName);
                 }
-            } else if (currSongTime.getHours() <= 16) {
+            } else if (currSongTime.getHours() >= 11 && currSongTime.getHours() < 17) {
                 if (!noon.contains(currSongName)) {
                     noon.add(currSongName);
                 }
@@ -206,13 +206,13 @@ public class database {
     }
 
     public ArrayList<String> getSongsAtTime(int time){
-        if(time < 8){
+        if(time < 11 && time >= 5){
             return morning;
         }
-        else if(time <= 16){
+        else if(time >= 11 && time < 17){
             return noon;
         }
-        else if(time <= 24){
+        else if((time >= 17 && time < 24) || time < 5){
             return evening;
         }
         Log.d("database", "Incorrect time");
