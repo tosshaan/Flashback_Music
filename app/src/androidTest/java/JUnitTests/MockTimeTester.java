@@ -1,4 +1,4 @@
-package test1;
+package JUnitTests;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,10 +18,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import comf.example.tydia.cse_110_team_project_team_15_1.AlbumsActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
-import comf.example.tydia.cse_110_team_project_team_15_1.R;
 import comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.TimeMachine;
 import comf.example.tydia.cse_110_team_project_team_15_1.database;
@@ -33,7 +31,7 @@ import static org.junit.Assert.assertNotEquals;
  * Created by tosshaan on 2/14/2018.
  */
 
-public class JUnitTest02 {
+public class MockTimeTester {
 
     private int[] idsTest;
     private MetadataGetter metadataGetter;

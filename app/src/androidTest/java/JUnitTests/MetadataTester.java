@@ -1,21 +1,15 @@
-package test1;
+package JUnitTests;
 
 import android.support.test.rule.ActivityTestRule;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import comf.example.tydia.cse_110_team_project_team_15_1.AlbumsActivity;
-import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
 import comf.example.tydia.cse_110_team_project_team_15_1.R;
 import comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity;
-import comf.example.tydia.cse_110_team_project_team_15_1.TimeMachine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -24,7 +18,7 @@ import static org.junit.Assert.assertNotEquals;
  * Created by tosshaan on 2/14/2018.
  */
 
-public class JUnitTest01 {
+public class MetadataTester {
 
     //@Rule
     //public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
