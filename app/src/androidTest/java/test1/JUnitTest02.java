@@ -84,17 +84,23 @@ public class JUnitTest02 {
 
     @Test
     public void testGetSongsAtTime () {
+        // test if correct song is in morning list
         ArrayList<String> mlist = db.getSongsAtTime(9);
-        Log.d("arraylist is: ", mlist.toString());
         assertEquals(mlist.contains("After The Storm"), true);
+        assertEquals(mlist.contains("Beautiful-Pain"), true);
+        assertEquals(mlist.size(), 2);
 
+        // test if correct song is in noon list
         ArrayList<String> nlist = db.getSongsAtTime(14);
-        Log.d("arraylist is: ", nlist.toString());
         assertEquals(nlist.contains("Currently"), true);
+        assertEquals(nlist.contains("Dead Dove Do Not Eat"), true);
+        assertEquals(nlist.size(), 2);
 
+        // test if correct song is in evening list
         ArrayList<String> elist = db.getSongsAtTime(22);
-        Log.d("arraylist is: ", elist.toString());
         assertEquals(elist.contains("Crane City"), true);
+        assertEquals(elist.contains("123 Go"), true);
+        assertEquals(elist.size(), 2);
     }
 
     @Test
