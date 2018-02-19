@@ -60,10 +60,10 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         updateLastPlayedInfo();
-
+        Timestamp time = new Timestamp(System.currentTimeMillis());
         // Storing info from song to database
         try {
-            myData.startSongInfoRequest(songName, getApplicationContext());
+            myData.startSongInfoRequest(songName, getApplicationContext(),time);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,10 +119,10 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateLastPlayedInfo();
                     updateDislikedButton();
                     updateLikedButton();
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(), time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -164,10 +164,10 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateDislikedButton();
                     updateLikedButton();
 
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(), time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -229,12 +229,12 @@ public class SongInfoActivity extends AppCompatActivity {
                 else{
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //dislikeButton.setChecked(true);
                     //likeButton.setChecked(false);
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext());
+                        myData.startSongInfoRequest(songName, getApplicationContext(),time);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -267,9 +267,10 @@ public class SongInfoActivity extends AppCompatActivity {
                     likeButton.setChecked(true);
                     dislikeButton.setChecked(false);
                 }
+                Timestamp time = new Timestamp(System.currentTimeMillis());
                 //get current information to update song if needed
                 try {
-                    myData.startSongInfoRequest(songName, getApplicationContext());
+                    myData.startSongInfoRequest(songName, getApplicationContext(), time);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

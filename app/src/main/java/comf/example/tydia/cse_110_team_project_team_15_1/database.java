@@ -46,11 +46,11 @@ public class database {
         sun = new ArrayList<String>();
     }
 
-    public void startSongInfoRequest(String SongName, Context context) throws IOException {
+    public void startSongInfoRequest(String SongName, Context context, Timestamp time) throws IOException {
         currSongName = SongName;
 
         //Getting time
-        currSongTime = new Timestamp(System.currentTimeMillis());
+        currSongTime = time;
         Log.d("database", "Current song time is " + currSongTime);
 
         Location myLoc = MainActivity.getCurrLoc();
@@ -295,6 +295,10 @@ public class database {
         Address addressLine = currLocation.get(0);
         String actualAddress = addressLine.getAddressLine(0);
         return actualAddress;
+    }
+    //TESTER METHOD
+    public SongInfo getSongInfo(String songName) {
+        return SongsInformation.get(songName);
     }
 
 }
