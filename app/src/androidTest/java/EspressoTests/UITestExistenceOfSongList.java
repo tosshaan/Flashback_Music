@@ -1,4 +1,4 @@
-package comf.example.tydia.cse_110_team_project_team_15_1;
+package EspressoTests;
 
 
 import android.support.test.espresso.ViewInteraction;
@@ -15,6 +15,9 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
+import comf.example.tydia.cse_110_team_project_team_15_1.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -35,13 +38,8 @@ public class UITestExistenceOfSongList {
     public void testExistenceOfSongList() {
         ViewInteraction button = onView(
                 allOf(withId(R.id.button_songs),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
                         isDisplayed()));
-        button.check(matches(isDisplayed()));
+
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.button_songs), withText("all songs"),
