@@ -1,18 +1,15 @@
-package test1;
+package JUnitTests;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import java.sql.Timestamp;
-import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,13 +18,9 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
-import comf.example.tydia.cse_110_team_project_team_15_1.FlashbackActivity;
-import comf.example.tydia.cse_110_team_project_team_15_1.FlashbackList;
 import comf.example.tydia.cse_110_team_project_team_15_1.LocationService;
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.SongInfo;
-import comf.example.tydia.cse_110_team_project_team_15_1.SongInfoActivity;
-import comf.example.tydia.cse_110_team_project_team_15_1.SongsActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.database;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -38,7 +31,7 @@ import static junit.framework.Assert.assertTrue;
  * Created by Cory Liang on 2/17/2018.
  */
 
-public class GPXTest {
+public class GPXTester {
     @Rule
     public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
 

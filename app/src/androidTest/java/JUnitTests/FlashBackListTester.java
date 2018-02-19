@@ -1,4 +1,4 @@
-package test1;
+package JUnitTests;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.FlashbackList;
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
-import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
 import comf.example.tydia.cse_110_team_project_team_15_1.R;
 import comf.example.tydia.cse_110_team_project_team_15_1.database;
 
