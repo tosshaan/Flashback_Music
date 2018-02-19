@@ -56,8 +56,6 @@ public class GPXTest {
             return;
         }
         db = new database();
-
-
     }
 
     @Test
