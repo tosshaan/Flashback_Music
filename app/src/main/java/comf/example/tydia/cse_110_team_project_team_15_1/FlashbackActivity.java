@@ -89,6 +89,9 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                     mp.release();
                 }
+                SharedPreferences.Editor edit = lastScreen.edit();
+                edit.putString("Activity", "Main");
+                edit.apply();
                 finish();
             }
         });
