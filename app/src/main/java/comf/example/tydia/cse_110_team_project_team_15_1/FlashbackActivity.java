@@ -22,6 +22,11 @@ import android.widget.ToggleButton;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+/**
+ * Activity Class for the list of flashback songs
+ * Opened when a flashback mode is selected from any normal mode activity
+ * Redirects to normal mode, specifically the activity that called it in the first place
+ */
 public class FlashbackActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView list;
@@ -40,6 +45,10 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
     String[] songNames;
     int[] flashBackSongIDs;
 
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +90,9 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
                     mp.release();
                 }
+                SharedPreferences.Editor edit = lastScreen.edit();
+                edit.putString("Activity", "Main");
+                edit.apply();
                 finish();
             }
         });
@@ -329,7 +341,11 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         }
     }
 
-    // Method to get names of songs based on IDs
+    /**
+     * Method to get names of songs based on IDs
+     * @param IDs - array of song ids
+     * @return array of flashback song names
+     */
     public String[] getFlasbackSongNames( int[] IDs ) {
 
         String[] songNames = new String[IDs.length];
@@ -352,6 +368,10 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
             dislikeButton.setChecked(false);
         }
     }
+
+    /**
+     * like button functionality
+     */
     private void updateLikedButton(){
         ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like);
         if(myData.getSongLikedStatus(songName)){
@@ -362,6 +382,9 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         }
     }
 
+    /**
+     * Method to give toast message when a song finishes playing, and goes to next song
+     */
     private void setFinishListener() {
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -384,10 +407,12 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
                     updateLastPlayedInfo();
                     updateLikedButton();
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
+
                         myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

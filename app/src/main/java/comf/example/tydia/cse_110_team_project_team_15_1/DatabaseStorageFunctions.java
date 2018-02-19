@@ -13,7 +13,16 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Graham on 2/14/2018.
  */
 
+/**
+ * Class to store database
+ */
 public class DatabaseStorageFunctions {
+
+    /**
+     * stores database
+     * @param currentState - databae object
+     * @param context - context
+     */
     public static void storeDatabase(database currentState, Context context){
         SharedPreferences dataPref = context.getSharedPreferences("database", MODE_PRIVATE);
         SharedPreferences.Editor saver = dataPref.edit();
@@ -26,6 +35,12 @@ public class DatabaseStorageFunctions {
         saver.apply();
         Log.d("storage", "Saved database");
     }
+
+    /**
+     * retreieves database
+     * @param context - context
+     * @return database object
+     */
     public static database retreiveDatabase(Context context){
         SharedPreferences dataPref = context.getSharedPreferences("database", MODE_PRIVATE);
         String dataString = dataPref.getString("data","");

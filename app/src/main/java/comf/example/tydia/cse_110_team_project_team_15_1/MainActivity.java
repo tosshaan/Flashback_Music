@@ -23,6 +23,11 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * Activity Class for the list of all songs in a particular album.
+ * Opened when a particular album name is clicked from AlbumaActivity
+ * Redirects to SongsInfoActivity, and FlashBackActivity
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static database data;
@@ -30,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     public static String PACKAGE_NAME;
     private boolean bound;
 
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Method to get current location of device
+     * @return Location object
+     */
     public static Location getCurrLoc(){
         if( locationService != null ) {
             Log.d("I AM HERE NOW:", locationService.toString());
@@ -121,19 +134,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Goes to FlashbackActivity
+     */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * Goes to AlbumsActivity
+     */
     public void launchAlbums() {
         Intent intent = new Intent (this, AlbumsActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * Goes to SongsActivity
+     */
     public void launchSongs() {
         Intent intent = new Intent (this, SongsActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Method to get permission for location access
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch(requestCode) {

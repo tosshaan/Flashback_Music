@@ -11,6 +11,9 @@ import java.lang.reflect.Type;
  * Created by Graham on 2/15/2018.
  */
 
+/**
+ * parses song info
+ */
 public class SongInfoSerializer implements JsonSerializer<SongInfo>{
 
     @Override

@@ -21,6 +21,11 @@ import android.widget.ToggleButton;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+/**
+ * Activity Class for the mediaPlayer functionality of the currently playing song.
+ * Opened when a particular song name is clicked from SongsActivity or AlbumSongsActivity
+ * Redirects to FlashBackActivity
+ */
 public class SongInfoActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
@@ -34,6 +39,10 @@ public class SongInfoActivity extends AppCompatActivity {
 
     database myData;
 
+    /**
+     * This method runs when the activity is created
+     * Contains all functionality for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +69,12 @@ public class SongInfoActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         updateLastPlayedInfo();
-
+        Timestamp time = new Timestamp(System.currentTimeMillis());
         // Storing info from song to database
         try {
+
             myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,7 +87,6 @@ public class SongInfoActivity extends AppCompatActivity {
         showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
         // play and pause music
-
         final Button playButton = (Button) findViewById(R.id.button_play2);
         final Button pauseButton = (Button) findViewById(R.id.button_pause2);
         playButton.setVisibility(View.GONE);
@@ -99,6 +109,9 @@ public class SongInfoActivity extends AppCompatActivity {
         // finish playing a song
         setFinishListener();
 
+        /**
+         * functionality for clicking previous button
+         */
         Button prevButton = (Button) findViewById(R.id.button_prev2);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,24 +132,37 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateLastPlayedInfo();
                     updateDislikedButton();
                     updateLikedButton();
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
+
                         myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     //myData.finishSongInfoRequest(true, false);
-
+                    playFlag = true;
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
                     mediaPlayer.reset();
                     mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    playFlag = false;
+                    pauseButton.setVisibility(View.GONE);
+                    playButton.setVisibility(View.VISIBLE);
                 }
 
+
+                setFinishListener();
             }
+
         });
 
+        /**
+         * functionality for clicking next button
+         */
         Button nextButton = (Button) findViewById(R.id.button_next2);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,31 +185,35 @@ public class SongInfoActivity extends AppCompatActivity {
                     songName = metadataGetter.getName(MEDIA_RES_ID);
                     showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
 
-
                     updateLastPlayedInfo();
                     updateDislikedButton();
                     updateLikedButton();
 
 
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+
                     //get current information to update song if needed
                     try {
+
                         myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     //myData.finishSongInfoRequest(true, false);
-
 
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
                     mediaPlayer.reset();
                     mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                 }
+                setFinishListener();
             }
         });
 
-
-
+        /**
+         * functionality for clicking pause
+         */
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -229,12 +259,14 @@ public class SongInfoActivity extends AppCompatActivity {
                 else{
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
-
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
                     //dislikeButton.setChecked(true);
                     //likeButton.setChecked(false);
                     //get current information to update song if needed
                     try {
+
                         myData.startSongInfoRequest(songName, getApplicationContext(),new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -244,6 +276,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateDislikedButton();
                     updateLikedButton();
                 }
+                setFinishListener();
             }
         });
 
@@ -267,9 +300,12 @@ public class SongInfoActivity extends AppCompatActivity {
                     likeButton.setChecked(true);
                     dislikeButton.setChecked(false);
                 }
+                Timestamp time = new Timestamp(System.currentTimeMillis());
                 //get current information to update song if needed
                 try {
+
                     myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -277,8 +313,10 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * functionality for going back to last screen
+         */
         Button switchScreen = (Button) findViewById(R.id.button_songInfoBack);
-
         switchScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,7 +332,9 @@ public class SongInfoActivity extends AppCompatActivity {
             }
         });
 
-        // launch flashback (temp)
+        /**
+         * goes to FlashbackActivity
+         */
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_songinfo);
         launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,10 +349,14 @@ public class SongInfoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Helper for launching FlashbackActivity
+     */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
     }
+
 
     @Override
     protected void onStop() {
@@ -322,6 +366,9 @@ public class SongInfoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * calls super class' onDestroy() method
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -353,7 +400,7 @@ public class SongInfoActivity extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
      * Update methods to change the look of the like and dislike buttons whenever the song changes, as we are not starting a new activity
      * Call only after the new song has started playing and the songName field has been updated
      */
@@ -366,6 +413,10 @@ public class SongInfoActivity extends AppCompatActivity {
             dislikeButton.setChecked(false);
         }
     }
+
+    /**
+     * Method for like button functionality
+     */
     private void updateLikedButton(){
         ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like2);
         if(myData.getSongLikedStatus(songName)){
@@ -375,6 +426,10 @@ public class SongInfoActivity extends AppCompatActivity {
             likeButton.setChecked(false);
         }
     }
+
+    /**
+     * Method to give a toast message when song finishes
+     */
     private void setFinishListener() {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -391,6 +446,9 @@ public class SongInfoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method to skip a song
+     */
     public void skipSong() {
         if (songIndex < (SongsIDs.length - 1)) {
             songIndex++;
@@ -401,7 +459,6 @@ public class SongInfoActivity extends AppCompatActivity {
             mediaPlayer.start();
 
             //loadMedia(albumSongsIDs[songIndex]);
-
 
             TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
             songName = metadataGetter.getName(MEDIA_RES_ID);
