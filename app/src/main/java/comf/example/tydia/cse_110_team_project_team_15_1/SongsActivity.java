@@ -47,11 +47,6 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        SharedPreferences lastScreen = getApplicationContext().getSharedPreferences("Screen", MODE_PRIVATE);
-        SharedPreferences.Editor edit = lastScreen.edit();
-        edit.putString("Activity", "Songs");
-        edit.apply();
-
         MainActivity.PACKAGE_NAME = getPackageName();
         metadataGetter = new MetadataGetter(this);
 
