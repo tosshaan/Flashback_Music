@@ -21,6 +21,7 @@ public class LocationService extends Service {
     public Location currLoc;
 
     public LocationService() {
+        Log.d("service", "Service instantiated");
     }
     public void setUp(){
         LocationListener locList = new LocationListener(){

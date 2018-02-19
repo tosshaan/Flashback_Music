@@ -67,7 +67,7 @@ public class SongInfoActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myData.finishSongInfoRequest(true);
+        //myData.finishSongInfoRequest(true, false);
 
         // Creating metadatagetter
         metadataGetter = new MetadataGetter(this);
@@ -126,7 +126,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myData.finishSongInfoRequest(true);
+                    //myData.finishSongInfoRequest(true, false);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
@@ -171,7 +171,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myData.finishSongInfoRequest(true);
+                    //myData.finishSongInfoRequest(true, false);
 
 
                 } else {
@@ -232,18 +232,18 @@ public class SongInfoActivity extends AppCompatActivity {
 
                     //dislikeButton.setChecked(true);
                     //likeButton.setChecked(false);
+                    //get current information to update song if needed
+                    try {
+                        myData.startSongInfoRequest(songName, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    myData.finishSongInfoRequest(false, true);
+
                     skipSong();
                     updateDislikedButton();
                     updateLikedButton();
-                    // TODO: Skip song
                 }
-                //get current information to update song if needed
-                try {
-                    myData.startSongInfoRequest(songName, getApplicationContext());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                myData.finishSongInfoRequest(false);
             }
         });
 
@@ -273,7 +273,7 @@ public class SongInfoActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                myData.finishSongInfoRequest(false);
+                myData.finishSongInfoRequest(false, false);
             }
         });
 
@@ -312,25 +312,6 @@ public class SongInfoActivity extends AppCompatActivity {
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
-    }
-
-    public void loadMedia(int resourceId) {
-        if(mediaPlayer == null)
-            mediaPlayer = new MediaPlayer();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(resourceId);
-        try {
-            mediaPlayer.setDataSource(assetFileDescriptor);
-            mediaPlayer.prepareAsync();
-
-        } catch (Exception e) {
-            Log.d("songActivity", e.toString());
-        }
     }
 
     @Override
@@ -399,6 +380,7 @@ public class SongInfoActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                myData.finishSongInfoRequest(true, false);
                 skipSong();
                 setFinishListener();
                 updateLastPlayedInfo();

@@ -68,22 +68,32 @@ public class database {
         }
     }
 
-    public void finishSongInfoRequest(boolean finishedPlaying){
+    public void finishSongInfoRequest(boolean finishedPlaying, boolean wasDisliked){
 
         Log.d("database", "Song Finish request initiated");
 
         if(!finishedPlaying){
-            if(SongsInformation.containsKey(currSongName)){
+            if(SongsInformation.containsKey(currSongName) && wasDisliked){
                 SongsInformation.get(currSongName).dislikeSong(true);
+            }
+            else if(!SongsInformation.containsKey(currSongName) && wasDisliked){
+                SongInfo song = new SongInfo(null, null, currSongName);
+                song.dislikeSong(true);
+                SongsInformation.put(currSongName, song);
+            }
+            else if(SongsInformation.containsKey(currSongName) && !wasDisliked){
+                SongsInformation.get(currSongName).likeSong(true);
             }
             else{
                 SongInfo song = new SongInfo(null, null, currSongName);
-                song.dislikeSong(true);
+                song.likeSong(true);
+                SongsInformation.put(currSongName, song);
             }
             return;
         }
 
         if (finishCheck != false) {
+
             SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);
             Log.d("database", currSongAddress);
 
@@ -146,11 +156,11 @@ public class database {
             }
 
             //add to time of day lists
-            if (currSongTime.getHours() < 8) {
+            if (currSongTime.getHours() < 11 && currSongTime.getHours() >= 5) {
                 if (!morning.contains(currSongName)) {
                     morning.add(currSongName);
                 }
-            } else if (currSongTime.getHours() <= 16) {
+            } else if (currSongTime.getHours() >= 11 && currSongTime.getHours() < 17) {
                 if (!noon.contains(currSongName)) {
                     noon.add(currSongName);
                 }
@@ -164,7 +174,7 @@ public class database {
     }
 
     public Timestamp getCurrentSongTimestamp ( String SongName){
-        if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null) {
+        if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null || SongsInformation.get(SongName).timeGetter().equals(new Timestamp(0))) {
             Log.d("database", "Song hasn't finished playing before!");
             return null;
         }
@@ -196,13 +206,13 @@ public class database {
     }
 
     public ArrayList<String> getSongsAtTime(int time){
-        if(time < 8){
+        if(time < 11 && time >= 5){
             return morning;
         }
-        else if(time <= 16){
+        else if(time >= 11 && time < 17){
             return noon;
         }
-        else if(time <= 24){
+        else if((time >= 17 && time < 24) || time < 5){
             return evening;
         }
         Log.d("database", "Incorrect time");
