@@ -98,6 +98,16 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         });
 
         if (flashBackSongIDs.length == 0) {
+            Button play = (Button) findViewById(R.id.button_play);
+            play.setVisibility(View.GONE);
+            Button pause = (Button) findViewById(R.id.button_pause);
+            pause.setVisibility(View.GONE);
+            Button skip = (Button) findViewById(R.id.button_next);
+            skip.setVisibility(View.GONE);
+            Button down = (Button) findViewById(R.id.button_dislike);
+            down.setVisibility(View.GONE);
+            Button up = (Button) findViewById(R.id.button_like);
+            up.setVisibility(View.GONE);
             return;
         }
         songNames = getFlasbackSongNames(flashBackSongIDs);
