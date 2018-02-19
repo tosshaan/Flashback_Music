@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.AlbumsActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
@@ -75,6 +76,18 @@ public class JUnitTest02 {
             db.finishSongInfoRequest(true, false);
             db.startSongInfoRequest("Crane City", mainActivity.getApplicationContext(),evening);
             db.finishSongInfoRequest(true, false);
+
+            Timestamp sunday = new Timestamp(2018,1,31,9,13,0,0);
+            db.startSongInfoRequest("Lift Me Up", mainActivity.getApplicationContext(), sunday);
+            db.finishSongInfoRequest(true,false);
+
+            Timestamp friday = new Timestamp(2018,2,1,9,13,0,0);
+            db.startSongInfoRequest("Can't You Be Mine", mainActivity.getApplicationContext(), friday);
+            db.finishSongInfoRequest(true,false);
+
+            Timestamp saturday = new Timestamp(2018,2,2,9,13,0,0);
+            db.startSongInfoRequest("I Fell In Love", mainActivity.getApplicationContext(), saturday);
+            db.finishSongInfoRequest(true,false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,19 +101,31 @@ public class JUnitTest02 {
         ArrayList<String> mlist = db.getSongsAtTime(9);
         assertEquals(mlist.contains("After The Storm"), true);
         assertEquals(mlist.contains("Beautiful-Pain"), true);
-        assertEquals(mlist.size(), 2);
 
         // test if correct song is in noon list
         ArrayList<String> nlist = db.getSongsAtTime(14);
         assertEquals(nlist.contains("Currently"), true);
         assertEquals(nlist.contains("Dead Dove Do Not Eat"), true);
-        assertEquals(nlist.size(), 2);
 
         // test if correct song is in evening list
         ArrayList<String> elist = db.getSongsAtTime(22);
         assertEquals(elist.contains("Crane City"), true);
         assertEquals(elist.contains("123 Go"), true);
-        assertEquals(elist.size(), 2);
+    }
+
+    @Test
+    public void testGetSongsByDay () {
+        ArrayList<String> sunList = db.getSongsByDay(GregorianCalendar.SUNDAY);
+        Log.d("day: ", sunList.toString());
+        assertEquals(sunList.contains("Lift Me Up"), true);
+
+        ArrayList<String> friList = db.getSongsByDay(GregorianCalendar.FRIDAY);
+        Log.d("day: ", friList.toString());
+        assertEquals(friList.contains("Can't You Be Mine"), true);
+
+        ArrayList<String> satList = db.getSongsByDay(GregorianCalendar.SATURDAY);
+        Log.d("day: ", satList.toString());
+        assertEquals(satList.contains("I Fell In Love"), true);
     }
 
     @Test
