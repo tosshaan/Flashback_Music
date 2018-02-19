@@ -206,6 +206,7 @@ public class SongInfoActivity extends AppCompatActivity {
 
                     //myData.finishSongInfoRequest(true, false);
                     setFinishListener(true);
+                    playFlag = true;
 
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
