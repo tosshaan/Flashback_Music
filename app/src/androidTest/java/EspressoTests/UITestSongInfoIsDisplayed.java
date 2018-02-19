@@ -1,4 +1,4 @@
-package comf.example.tydia.cse_110_team_project_team_15_1;
+package EspressoTests;
 
 
 import android.support.test.espresso.DataInteraction;
@@ -18,6 +18,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
+import comf.example.tydia.cse_110_team_project_team_15_1.R;
+
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -35,7 +38,11 @@ import static org.hamcrest.Matchers.is;
 public class UITestSongInfoIsDisplayed {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule;
+
+    public UITestSongInfoIsDisplayed() {
+        mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    }
 
     @Test
     public void testSongInfoIsDisplayed() {

@@ -1,4 +1,4 @@
-package comf.example.tydia.cse_110_team_project_team_15_1;
+package EspressoTests;
 
 
 import android.support.test.espresso.ViewInteraction;
@@ -16,6 +16,9 @@ import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
+import comf.example.tydia.cse_110_team_project_team_15_1.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -38,11 +41,6 @@ public class UITestSwitchingModeButtons {
     public void testSwitchingModes() {
         ViewInteraction button = onView(
                 allOf(withId(R.id.b_flashback),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
