@@ -340,10 +340,12 @@ public class SongInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
-                mediaPlayer.pause();
-                pauseButton.setVisibility(View.GONE);
-                playButton.setVisibility(View.VISIBLE);
-                playFlag = false;
+                if (playFlag) {
+                    mediaPlayer.pause();
+                    pauseButton.setVisibility(View.GONE);
+                    playButton.setVisibility(View.VISIBLE);
+                    playFlag = false;
+                }
                 launchFlashback();
             }
         });
