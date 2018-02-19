@@ -18,10 +18,8 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
- * Created by Cadu on 15-Feb-
- * Class to generate Flashback lists given a location and time
+ * Class to generate Flashback lists given the location and time
  */
-
 public class FlashbackList {
     database db;
     String currAddress;
@@ -31,6 +29,9 @@ public class FlashbackList {
     HashMap<String, Integer> allSongIDs;
     MetadataGetter metadataGetter;
 
+    /**
+     * constructor
+     */
     public FlashbackList(String address, Timestamp time, database db, Context context ) {
         this.db = db;
         currTime = time;
@@ -42,7 +43,9 @@ public class FlashbackList {
         populateAllSongs();
     }
 
-    //Method to populate list
+    /**
+     * populates flashback songs list
+     */
     public void generateList() {
         // Temp ArrayList to hold flashbackSongs
         ArrayList<Integer> tempList = new ArrayList<>();
@@ -95,7 +98,11 @@ public class FlashbackList {
         }
     }
 
-    // Sorting songs, breaking ties first by like then by most recently played
+    /**
+     * Sorts songs and then breaks ties first based on like status and then based on most recently played
+     * @param flashbackList - arraylist of unsorted kay-value entries with song ids as keys and points as value
+     * @return final arraylist of sorted song ids
+     */
     private ArrayList<Integer> breakTies(ArrayList<Map.Entry<Integer, Integer>> flashbackList) {
         ArrayList<Integer> finalList = new ArrayList<>();
         boolean done = false;
@@ -104,7 +111,6 @@ public class FlashbackList {
         //for(int i = 0; i < flashbackList.size(); i++){
         //    Log.d("FlashbackList[" + i + "]", metadataGetter.getName(flashbackList.get(i).getKey()));
         //}
-
 
         for( int i = 0; i < flashbackList.size()-1; i++ ) {
             done = true;
@@ -178,7 +184,9 @@ public class FlashbackList {
         return finalList;
     }
 
-    // Method to populate song's hashMap
+    /**
+     * populates get populate hashMap with song names
+     */
     public void populateAllSongs() {
         int[] songIDs = SongsActivity.getSongIDs();
         for( int i = 0; i < songIDs.length; i++ ) {
@@ -187,7 +195,11 @@ public class FlashbackList {
         }
     }
 
-    // Method to count duplicates in ArrayList
+    /**
+     * maanages counting of duplicates in hashMap
+     * @param list - list of unsorted songIDs, with number of occurrences as the points
+     * @return hashMap containing unique songIDs mapped to their points
+     */
     public HashMap<Integer, Integer> getDuplicateCount(ArrayList<Integer> list) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         for( int i: list ) {

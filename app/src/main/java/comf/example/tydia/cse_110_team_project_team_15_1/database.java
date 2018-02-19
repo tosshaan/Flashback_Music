@@ -20,6 +20,10 @@ import android.support.v4.app.ActivityCompat;
 import android.location.Geocoder;
 import android.util.Log;
 
+/**
+ * Class to manage all the data related to location and time
+ * of where and when songs were played, respectively
+ */
 public class database {
 
     private String currSongName;
@@ -30,7 +34,9 @@ public class database {
     private boolean finishCheck;
     ArrayList<String> morning, noon, evening, mon, tue, wed, thur, fri, sat, sun;
 
-
+    /**
+     * constructor
+     */
     public database() {
         SongsAtLocation = new HashMap<String, ArrayList<String>>();
         SongsInformation = new HashMap<String, SongInfo>();
@@ -46,7 +52,13 @@ public class database {
         sun = new ArrayList<String>();
     }
 
+    /**
+     * manage data when a song is requested
+     * @param SongName - name of song that is to be played
+     * @param context - activity context
+     */
     public void startSongInfoRequest(String SongName, Context context, Timestamp time) throws IOException {
+
         currSongName = SongName;
 
         //Getting time
@@ -68,7 +80,14 @@ public class database {
         }
     }
 
+
+    /**
+     * manage data when a song finishes playing
+     * @param finishedPlaying - true if song has finished playing
+     */
+ 
     public void finishSongInfoRequest(boolean finishedPlaying, boolean wasDisliked){
+
 
         Log.d("database", "Song Finish request initiated");
 
@@ -173,6 +192,11 @@ public class database {
         }
     }
 
+    /**
+     * Method that returns last played time of the song passed
+     * @param SongName - name of song whose timestamp needs to be returned
+     * @return timestamp of SongName
+     */
     public Timestamp getCurrentSongTimestamp ( String SongName){
         if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null || SongsInformation.get(SongName).timeGetter().equals(new Timestamp(0))) {
             Log.d("database", "Song hasn't finished playing before!");
@@ -183,6 +207,12 @@ public class database {
         }
     }
 
+    /**
+     * Method that returns the last played location of the song that's passed
+     * @param SongName - name of song whose last played location needs to be returned
+     * @param context - context
+     * @return String location of where SongName song was last played
+     */
     public String getCurrentSongLastLocation ( String SongName, Context context) throws IOException {
         if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).locGetter() == null) {
             Log.d("database", "Song hasn't finished playing before!");
@@ -193,6 +223,11 @@ public class database {
         }
     }
 
+    /**
+     * Method returns an array of all song names played at a location whose address is passed
+     * @param address - address of location
+     * @return array of song names played at that location
+     */
     public ArrayList <String> getSongsPlayedAtLocation ( String address){
         Log.d("database","Checking for " + address);
         if (SongsAtLocation.containsKey(address) == false) {
@@ -205,6 +240,11 @@ public class database {
         }
     }
 
+    /**
+     * Method returns an arraylist of all songs played at a particular time
+     * @param time - time for obtaining list
+     * @return list of songs played at the time passed
+     */
     public ArrayList<String> getSongsAtTime(int time){
         if(time < 11 && time >= 5){
             return morning;
@@ -219,6 +259,11 @@ public class database {
         return new ArrayList<String>();
     }
 
+    /**
+     * returns arraylist of songs corresponding to a day of the week passed
+     * @param day - int for day of the week
+     * @return arraylist of songs
+     */
     public ArrayList<String> getSongsByDay(int day){
         if(day == GregorianCalendar.MONDAY){
             return mon;
@@ -245,6 +290,11 @@ public class database {
         return new ArrayList<String>();
     }
 
+    /**
+     * Method to check if a song is disliked or not
+     * @param SongName - name of song
+     * @return true if song is disliked
+     */
     public boolean getSongDislikedStatus ( String SongName){
         if(!SongsInformation.containsKey(SongName)){
             return false;
@@ -252,6 +302,11 @@ public class database {
         return SongsInformation.get(SongName).isDisliked();
     }
 
+    /**
+     * Method to check id a ong is liked
+     * @param SongName - name of song
+     * @return true if song is liked
+     */
     public boolean getSongLikedStatus ( String SongName){
         if(!SongsInformation.containsKey(SongName)){
             return false;
@@ -259,6 +314,11 @@ public class database {
         return SongsInformation.get(SongName).isLiked();
     }
 
+    /**
+     * setter for disliking a song
+     * @param SongName - song to dislike
+     * @param isDisliked - false if not already disliked
+     */
     public void setDislikedStatus ( String SongName, boolean isDisliked) {
         if (SongsInformation.containsKey(SongName) == false) {
             Log.d("database", "Song doesn't exist");
@@ -271,6 +331,11 @@ public class database {
         }
     }
 
+    /**
+     * setter for liking a song
+     * @param SongName - song to like
+     * @param isLiked - true if already liked
+     */
     public void setLikedStatus (String SongName, boolean isLiked) {
         if (SongsInformation.containsKey(SongName) == false) {
             Log.d("database", "Song doesn't exist");
@@ -283,12 +348,32 @@ public class database {
         }
     }
 
+    /**
+     * method to check if a particular song has been played at current location
+     * @param SongName - name of song
+     * @return true if song has been played at
+     */
     public boolean isSongHere (String SongName) {
+
         return SongsInformation.containsKey(SongName);
     }
+
+    /**
+     * method to check if a given address is a valid location
+     * @param address - address
+     * @return true if it's a location
+     */
     public boolean isLocation (String address) {
+
         return SongsAtLocation.containsKey(address);
     }
+
+    /**
+     * method to get address of current location
+     * @param loc - Location object of current location
+     * @param context - context
+     * @return a string for the address
+     */
     public String getAddress(Location loc, Context context) throws IOException {
         Geocoder geocoder = new Geocoder(context);
         ArrayList<Address> currLocation = (ArrayList<Address>) geocoder.getFromLocation(loc.getLatitude(),loc.getLongitude(),1);
