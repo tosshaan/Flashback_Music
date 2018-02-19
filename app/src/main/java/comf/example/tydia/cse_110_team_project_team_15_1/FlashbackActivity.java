@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -409,7 +410,9 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext(),time);
+
+                        myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

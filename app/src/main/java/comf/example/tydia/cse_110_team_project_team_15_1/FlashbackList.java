@@ -187,7 +187,7 @@ public class FlashbackList {
     /**
      * populates get populate hashMap with song names
      */
-    public void populateAllSongs() {
+    private void populateAllSongs() {
         int[] songIDs = SongsActivity.getSongIDs();
         for( int i = 0; i < songIDs.length; i++ ) {
             // Pushing song's name and ID to HashMap
@@ -227,6 +227,11 @@ public class FlashbackList {
     // Setter for time
     public void setCurrTime(Timestamp newTime ) {
         currTime = newTime;
+    }
+
+    // Setter for database
+    public void setDatabase(database db) {
+        this.db = db;
     }
 
 }

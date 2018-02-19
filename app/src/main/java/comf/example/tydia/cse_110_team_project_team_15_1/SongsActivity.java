@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -41,16 +42,20 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     private int[] IDs;
     MetadataGetter metadataGetter;
 
+
     /**
      * This method runs when the activity is created
      * Contains all functionality for the activity
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
