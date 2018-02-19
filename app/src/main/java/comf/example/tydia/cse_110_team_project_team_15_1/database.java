@@ -52,6 +52,7 @@ public class database {
         sun = new ArrayList<String>();
     }
 
+
     /**
      * manage data when a song is requested
      * @param SongName - name of song that is to be played
@@ -185,7 +186,7 @@ public class database {
                 }
             } else {
                 if (!evening.contains(currSongName)) {
-                    noon.add(currSongName);
+                    evening.add(currSongName);
                     Log.d("database","added right time");
                 }
             }

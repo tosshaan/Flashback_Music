@@ -72,7 +72,9 @@ public class SongInfoActivity extends AppCompatActivity {
         Timestamp time = new Timestamp(System.currentTimeMillis());
         // Storing info from song to database
         try {
-            myData.startSongInfoRequest(songName, getApplicationContext(),time);
+
+            myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,7 +135,9 @@ public class SongInfoActivity extends AppCompatActivity {
                     Timestamp time = new Timestamp(System.currentTimeMillis());
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext(), time);
+
+                        myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -190,7 +194,9 @@ public class SongInfoActivity extends AppCompatActivity {
 
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext(), time);
+
+                        myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -258,7 +264,9 @@ public class SongInfoActivity extends AppCompatActivity {
                     //likeButton.setChecked(false);
                     //get current information to update song if needed
                     try {
-                        myData.startSongInfoRequest(songName, getApplicationContext(),time);
+
+                        myData.startSongInfoRequest(songName, getApplicationContext(),new Timestamp(System.currentTimeMillis()));
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -295,7 +303,9 @@ public class SongInfoActivity extends AppCompatActivity {
                 Timestamp time = new Timestamp(System.currentTimeMillis());
                 //get current information to update song if needed
                 try {
-                    myData.startSongInfoRequest(songName, getApplicationContext(), time);
+
+                    myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
