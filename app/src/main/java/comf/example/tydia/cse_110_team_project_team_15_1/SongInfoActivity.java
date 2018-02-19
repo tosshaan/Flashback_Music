@@ -138,14 +138,22 @@ public class SongInfoActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     //myData.finishSongInfoRequest(true, false);
-
+                    playFlag = true;
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(getApplicationContext(), "No more previous songs", Toast.LENGTH_SHORT).show();
                     mediaPlayer.reset();
                     mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    playFlag = false;
+                    pauseButton.setVisibility(View.GONE);
+                    playButton.setVisibility(View.VISIBLE);
                 }
 
+
+                setFinishListener();
             }
+
         });
 
         /**
@@ -193,6 +201,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     mediaPlayer.reset();
                     mediaPlayer = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
                 }
+                setFinishListener();
             }
         });
 
@@ -259,6 +268,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     updateDislikedButton();
                     updateLikedButton();
                 }
+                setFinishListener();
             }
         });
 
