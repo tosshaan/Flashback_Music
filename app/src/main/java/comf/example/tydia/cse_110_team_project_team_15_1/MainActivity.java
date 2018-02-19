@@ -36,12 +36,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         database db = new database();
         PACKAGE_NAME = getPackageName();
-        Intent intent2 = new Intent(this, LocationService.class);
-        bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
         if(last.equals("Flashback")){
+            Intent intent2 = new Intent(this, LocationService.class);
+            bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
+
             Intent intent = new Intent(this, FlashbackActivity.class);
             startActivity(intent);
         }
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        Intent intent2 = new Intent(this, LocationService.class);
+        bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
     }
 
     private ServiceConnection serviceChecker = new ServiceConnection(){

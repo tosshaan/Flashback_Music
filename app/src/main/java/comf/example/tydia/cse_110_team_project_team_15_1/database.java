@@ -68,22 +68,32 @@ public class database {
         }
     }
 
-    public void finishSongInfoRequest(boolean finishedPlaying){
+    public void finishSongInfoRequest(boolean finishedPlaying, boolean wasDisliked){
 
         Log.d("database", "Song Finish request initiated");
 
         if(!finishedPlaying){
-            if(SongsInformation.containsKey(currSongName)){
+            if(SongsInformation.containsKey(currSongName) && wasDisliked){
                 SongsInformation.get(currSongName).dislikeSong(true);
+            }
+            else if(!SongsInformation.containsKey(currSongName) && wasDisliked){
+                SongInfo song = new SongInfo(null, null, currSongName);
+                song.dislikeSong(true);
+                SongsInformation.put(currSongName, song);
+            }
+            else if(SongsInformation.containsKey(currSongName) && !wasDisliked){
+                SongsInformation.get(currSongName).likeSong(true);
             }
             else{
                 SongInfo song = new SongInfo(null, null, currSongName);
-                song.dislikeSong(true);
+                song.likeSong(true);
+                SongsInformation.put(currSongName, song);
             }
             return;
         }
 
         if (finishCheck != false) {
+
             SongInfo song = new SongInfo(currSongTime, currSongAddress, currSongName);
             Log.d("database", currSongAddress);
 
@@ -164,7 +174,7 @@ public class database {
     }
 
     public Timestamp getCurrentSongTimestamp ( String SongName){
-        if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null) {
+        if (SongsInformation.containsKey(SongName) == false || SongsInformation.get(SongName).timeGetter() == null || SongsInformation.get(SongName).timeGetter().equals(new Timestamp(0))) {
             Log.d("database", "Song hasn't finished playing before!");
             return null;
         }
