@@ -28,7 +28,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:background="@color/dark_transparent"
-        android:text="Flashback"
+        android:text="@string/flashback"
         app:layout_constraintBottom_toBottomOf="@+id/btn_back2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,11 +37,46 @@
         android:id="@+id/list_allsongs"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="130dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/URLeditText"
+        style="@android:style/Widget.Material.Light.EditText"
+        android:layout_width="299dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="120dp"
+        android:ems="10"
+        android:fontFamily="@font/roboto_light"
+        android:hint="paste a URL of a song to download"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/list_allsongs"
+        app:layout_constraintEnd_toStartOf="@+id/b_download"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/b_download"
+        android:layout_width="48dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/b_download"
+        app:layout_constraintBottom_toBottomOf="@+id/URLeditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/URLeditText"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </android.support.constraint.ConstraintLayout>
