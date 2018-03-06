@@ -1,7 +1,12 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteController;
 import android.net.Uri;
@@ -17,9 +22,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
+
 import org.w3c.dom.Text;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -41,6 +50,11 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     private String[] songNames;
     private int[] IDs;
     MetadataGetter metadataGetter;
+
+    //https://www.youtube.com/watch?v=atZRWb6_QRs
+    // yt tutorial to download songs
+    long queueid;
+    DownloadManager dm;
 
 
     /**
@@ -91,6 +105,66 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                 launchFlashback();
             }
         });
+
+        Button b_dl = (Button) findViewById(R.id.b_download);
+        b_dl.setOnClickListener(view -> {
+            EditText editText = (EditText) findViewById(R.id.URLeditText);
+            String input = "http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
+                    //editText.getText().toString();
+            Download(input);
+        });
+
+        Button viewdl = (Button) findViewById(R.id.b_viewDownload);
+        viewdl.setOnClickListener(view -> {
+            View_Click(viewdl);
+        });
+
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if(DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                    DownloadManager.Query req_query = new DownloadManager.Query();
+                    req_query.setFilterById(queueid);
+                    Cursor c = dm.query(req_query);
+
+                    if(c.moveToFirst()) {
+                        int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+
+                        if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                            Toast.makeText(getApplicationContext(), "Download Sucessful", Toast.LENGTH_SHORT);
+                            /*
+                            VideoView videoView = (VideoView) findViewById(R.id.video);
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+
+                            MediaController mediaController = new MediaController(getApplicationContext());
+                            mediaController.setAnchorView(videoView);
+                            videoView.requestFocus();
+                            videoView.setVideoURI(Uri.parse(uriString));
+                            videoView.start();
+                            */
+                        }
+                    }
+                }
+            }
+        };
+
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+    }
+
+    public void Download(String input) {
+        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
+
+        queueid = dm.enqueue(request);
+    }
+
+    public void View_Click(View view) {
+        Intent intent = new Intent();
+        intent.setAction(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        startActivity(intent);
     }
 
     /**

@@ -22,6 +22,16 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
+        android:id="@+id/b_viewDownload"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginTop="16dp"
+        android:text="view DL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
         android:id="@+id/b_flashback_song"
         android:layout_width="110dp"
         android:layout_height="40dp"
