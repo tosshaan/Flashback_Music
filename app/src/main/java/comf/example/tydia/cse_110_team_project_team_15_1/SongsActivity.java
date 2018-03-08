@@ -1,19 +1,23 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteController;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.test.mock.MockContext;
@@ -34,6 +38,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.EventListener;
 
 /**
  * Activity Class for the list of all songs in memory.
@@ -106,11 +111,19 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
+        Button viewDL = (Button) findViewById(R.id.showDL_songs);
+        viewDL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchDLSong();
+            }
+        });
+
         Button b_dl = (Button) findViewById(R.id.b_download);
         b_dl.setOnClickListener(view -> {
             EditText editText = (EditText) findViewById(R.id.URLeditText);
-            String input = "http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
-                    //editText.getText().toString();
+            String input = editText.getText().toString();
+            //"http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
             Download(input);
         });
 
@@ -157,8 +170,32 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     public void Download(String input) {
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, input);
+        //Log.d("DOWNLOADINGx", "Download path " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+
+        haveStoragePermission();
 
         queueid = dm.enqueue(request);
+
+    }
+
+    public  boolean haveStoragePermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.e("Permission error","You have permission");
+                return true;
+            } else {
+
+                Log.e("Permission error","You have asked for permission");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //you dont need to worry about these stuff below api level 23
+            Log.e("Permission error","You already have the permission");
+            return true;
+        }
     }
 
     public void View_Click(View view) {
@@ -236,6 +273,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         startActivity(intent);
     }
 
+    public void launchDLSong() {
+        Intent intent = new Intent (this, ViewDLSongsActivity.class);
+        startActivity(intent);
+    }
 
 
 }

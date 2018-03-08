@@ -10,5 +10,6 @@
     <string name="song_name">Song Name</string>
     <string name="location">Location</string>
     <string name="normalmode">NormalMode</string>
+    <string name="title_activity_view_dlsongs">ViewDLSongsActivity</string>
 
 </resources>

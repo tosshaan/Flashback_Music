@@ -23,11 +23,21 @@
 
     <Button
         android:id="@+id/b_viewDownload"
+        android:layout_width="87dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="240dp"
+        android:layout_marginTop="16dp"
+        android:text="view DL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/showDL_songs"
         android:layout_width="110dp"
         android:layout_height="40dp"
         android:layout_marginEnd="136dp"
         android:layout_marginTop="16dp"
-        android:text="view DL"
+        android:text="Dl Songs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
