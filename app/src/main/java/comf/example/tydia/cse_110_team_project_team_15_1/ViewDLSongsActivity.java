@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -65,6 +66,25 @@ public class ViewDLSongsActivity extends AppCompatActivity {
 
             checkStoragePermission();
         }
+
+        Button delete = (Button) findViewById(R.id.b_delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText text = (EditText) findViewById(R.id.Delete);
+                int index = Integer.parseInt(text.getText().toString());
+
+                if (index < items.length) {
+                    File f = mySongs.get(index);
+                    f.delete();
+                    display();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "bad index", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
     }
 

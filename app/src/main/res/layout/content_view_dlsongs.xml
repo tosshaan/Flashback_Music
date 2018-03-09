@@ -8,6 +8,40 @@
     tools:context="comf.example.tydia.cse_110_team_project_team_15_1.ViewDLSongsActivity"
     tools:showIn="@layout/activity_view_dlsongs">
 
+    <EditText
+        android:id="@+id/Delete"
+        style="@android:style/Widget.Material.Light.EditText"
+        android:layout_width="299dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="76dp"
+        android:ems="10"
+        android:fontFamily="@font/roboto_light"
+        android:hint="index of song to delete"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+    <Button
+        android:id="@+id/b_delete"
+        android:layout_width="48dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginTop="76dp"
+        android:background="@drawable/b_download"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
 
     <Button
         android:id="@+id/btn_backTest"
@@ -17,7 +51,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/b_back_selector"
-        app:layout_constraintBottom_toTopOf="@+id/list_allsongs"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
