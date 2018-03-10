@@ -65,16 +65,4 @@ public class MetadataGetter {
     public void release() {
         retriever.release();
     }
-
-    // Get current resource
-    public int getCurrentResources (int id, LocalTime start, LocalTime end) {
-        int cr;
-        LocalTime currentTime = TimeMachine.now().toLocalTime();
-        if (currentTime.isAfter(start) && currentTime.isBefore(end)) {
-            cr = id;
-        } else {
-            cr = -1;
-        }
-        return cr;
-    }
 }
