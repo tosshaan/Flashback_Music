@@ -19,9 +19,17 @@ import android.widget.Button;
 import android.content.Intent;
 import android.view.View;
 import android.Manifest;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Activity Class for the list of all songs in a particular album.
@@ -34,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static LocationService locationService;
     public static String PACKAGE_NAME;
     private boolean bound;
+    static ArrayList<String> someList;
 
     /**
      * This method runs when the activity is created
@@ -45,6 +54,62 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         database db = new database();
         PACKAGE_NAME = getPackageName();
+
+        // TODO: DELETE THIS CRAP!!!
+
+        FirebaseDB dbFunc = new FirebaseDB();
+        long date = System.currentTimeMillis();
+        String address = "Decentralized Unpark";;
+        String userName = "Tosh and I";
+        String songName = "Ugly Pleasure";
+        dbFunc.submit(userName, address, songName, date);
+        userName = "Graham and Cory";
+        songName = "Water on your splitends";
+        date = System.currentTimeMillis();
+        dbFunc.submit(userName, address, songName, date);
+        userName = "Tong and Wei";
+        songName = "malagnam";
+        date = System.currentTimeMillis();
+        dbFunc.submit(userName, address, songName, date);
+        userName = "Tosh and I";
+        songName = "Old Song";
+        address = "Central Park";
+        date = date - (FirebaseDB.MILLISECODNS_IN_DAY * 10);
+        dbFunc.submit(userName, address, songName, date);
+
+
+
+        someList = new ArrayList<>();
+        ArrayList<String> tempList = dbFunc.getSongNamesAtLocation("Central Park", new MyCallback() {
+            @Override
+            public void onCallback(ArrayList<String> list) {
+                 Log.d("WHERE LIST IS: ", list.toString());
+                 someList = list;
+            }
+        });
+
+
+        Log.d("FIRST LIST SIZE: ", "" +someList.size() );
+        for( String name: someList ) {
+            Log.d("SONG IS: ", name);
+        }
+
+        LocalDate whenDis = LocalDate.now();
+        someList = dbFunc.getSongsLastWeek(whenDis, new MyCallback() {
+            @Override
+            public void onCallback(ArrayList<String> list) {
+                Log.d("WHEN LIST IS: ", list.toString());
+                someList = list;
+            }
+        });
+
+        Log.d("SECOND LIST SIZE: ", ""+ someList.size() );
+        for( String name: someList ) {
+            Log.d("SONG IS: ", name);
+        }
+
+
+        // TODO: END OF DELETABLE CRAP!!
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "781790350902",
+    "firebase_url": "https://cse-110-team-project-tea-d55ce.firebaseio.com",
+    "project_id": "cse-110-team-project-tea-d55ce",
+    "storage_bucket": "cse-110-team-project-tea-d55ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781790350902:android:2e29b68ba47a66ca",
+        "android_client_info": {
+          "package_name": "comf.example.tydia.cse_110_team_project_team_15_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781790350902-cnkd3mr4rtbl1hst6fbnks5u9l4gpjji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comf.example.tydia.cse_110_team_project_team_15_1",
+            "certificate_hash": "0fb1b03b944821bdc92c119f8f0e2a82d44002e5"
+          }
+        },
+        {
+          "client_id": "781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_Bs9kONClKLRZ34Wbp767uNP9TtMegPE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
