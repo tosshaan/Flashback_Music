@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class PeopleServiceFactory {
 
-    public static PeopleService setUp(Context context, String serverAuthCode) throws IOException {
+    public static PeopleService setUp(String serverAuthCode) throws IOException {
         HttpTransport transport = new NetHttpTransport();
         JacksonFactory factory = JacksonFactory.getDefaultInstance();
 

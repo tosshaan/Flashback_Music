@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public static String PACKAGE_NAME;
     private boolean bound;
     static ArrayList<String> someList;
-    public static ArrayList<String> friendsList = new ArrayList<String>();
-    public static String myAccountID;
+    public static ArrayList<Person> friendsList = new ArrayList<Person>();
+    public static Person myAccountID;
 
     /**
      * This method runs when the activity is created
@@ -309,7 +309,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     Log.d(SIGN_IN_TAG, "Sign in result: " + fromIntent.getStatus().isSuccess());
                     Log.d(SIGN_IN_TAG, "Server Authorization Code: " + account.getServerAuthCode());
 
-                    new infoRetriever().execute(account.getServerAuthCode());
+                    new FriendAsync().execute(account.getServerAuthCode());
+
 
                 } else {
 
@@ -339,55 +340,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onConnectionSuspended(int x) {
 
     }
-    class infoRetriever extends AsyncTask<String, Void, List<String>> {
 
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-
-        }
-
-        @Override
-        protected List<String> doInBackground(String... parameters) {
-
-            List<String> friendsIDs = new ArrayList<>();
-
-            try {
-                PeopleService peopleGetter = PeopleServiceFactory.setUp(MainActivity.this, parameters[0]);
-                Person profile = peopleGetter.people().get("people/me")
-                        .setRequestMaskIncludeField("person.names,person.emailAddresses")
-                        .execute();
-                myAccountID = profile.getResourceName();
-                Log.d("myAccountID", profile.getEmailAddresses().get(0).getValue());
-                ListConnectionsResponse peopleList = peopleGetter.people().connections()
-                        .list("people/me")
-                        .setPageSize(100)
-                        .setRequestMaskIncludeField("person.names,person.emailAddresses")
-                        .execute();
-                List<Person> friends = peopleList.getConnections();
-                if (friends == null) {
-                    System.out.println("I HAVE NO FRIENDS");
-                }
-                for (Person p : friends) {
-                    List<EmailAddress> grahamPls = p.getEmailAddresses();
-                    friendsList.add(grahamPls.get(0).getValue());
-                    friendsIDs.add(grahamPls.get(0).getValue());
-                    Person person = peopleGetter.people().get(p.getResourceName()).setPersonFields("emailAddresses").execute();
-                    Log.d("Friend ID Added: ", grahamPls.get(0).getValue());
-                    System.out.println(person.getEmailAddresses().get(0).getValue());
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Running Async Task");
-            return friendsIDs;
-        }
-
-
-
-    }
 
 }
