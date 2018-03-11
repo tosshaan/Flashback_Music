@@ -21,9 +21,7 @@ public class MetadataGetter {
     MediaMetadataRetriever retriever;
     Context context;
 
-
-
-
+    
     public MetadataGetter( Context context) {
         this.context = context;
         retriever = new MediaMetadataRetriever();
