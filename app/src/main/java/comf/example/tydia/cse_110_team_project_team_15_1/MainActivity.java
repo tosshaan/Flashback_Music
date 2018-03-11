@@ -129,29 +129,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         // TODO: END OF DELETABLE CRAP!!
-
-        GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                // The serverClientId is an OAuth 2.0 web client ID
-                .requestServerAuthCode("781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com")
-                .requestEmail()
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN),
-                        new Scope(PeopleServiceScopes.CONTACTS_READONLY),
-                        new Scope(PeopleServiceScopes.USERINFO_PROFILE),
-                        new Scope(PeopleServiceScopes.USER_EMAILS_READ))
-                .build();
-
-
-        // Begin Sign In Code
-        signInClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addOnConnectionFailedListener(this)
-                .addConnectionCallbacks(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleOptions)
-                .build();
-        signInClient.connect();
-
-        getGoogleToken();
-
+        googleSignIn();
 
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
@@ -205,6 +183,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Intent intent2 = new Intent(this, LocationService.class);
         bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
 
+    }
+    public void googleSignIn() {
+        GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                // The serverClientId is an OAuth 2.0 web client ID
+                .requestServerAuthCode("781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com")
+                .requestEmail()
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN),
+                        new Scope(PeopleServiceScopes.CONTACTS_READONLY),
+                        new Scope(PeopleServiceScopes.USERINFO_PROFILE),
+                        new Scope(PeopleServiceScopes.USER_EMAILS_READ))
+                .build();
+
+
+        // Begin Sign In Code
+        signInClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleOptions)
+                .build();
+        signInClient.connect();
+
+        getGoogleToken();
     }
     @Override
     protected void onStart() {
