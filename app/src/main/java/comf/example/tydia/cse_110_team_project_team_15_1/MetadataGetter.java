@@ -38,12 +38,12 @@ public class MetadataGetter {
     }
 
     // Get song name based on ID
-    public String getName(int id) {
+    public String getName() {
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
     }
 
     // Get song artist based on ID
-    public String getArtist(int id) {
+    public String getArtist() {
         String artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         if( artist == null ) {
             return "Unknown";
@@ -52,12 +52,12 @@ public class MetadataGetter {
     }
 
     // Get song album based on ID
-    public String getAlbum(int id) {
+    public String getAlbum() {
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
     }
 
     // Get track number based on ID
-    public String getTrackNumber(int id) {
+    public String getTrackNumber() {
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER);
     }
 
