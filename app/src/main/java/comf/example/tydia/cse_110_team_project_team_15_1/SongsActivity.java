@@ -271,6 +271,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
+
     }
 
     public void launchDLSong() {
