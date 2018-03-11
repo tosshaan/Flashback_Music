@@ -7,11 +7,8 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,12 +17,8 @@ import android.content.Intent;
 import android.view.View;
 import android.Manifest;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.sql.Timestamp;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -58,33 +51,50 @@ public class MainActivity extends AppCompatActivity {
         // TODO: DELETE THIS CRAP!!!
 
         FirebaseDB dbFunc = new FirebaseDB();
+        URI testURL = null;
+        try {
+            testURL = new URI("Test");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.d("OH NO ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "");
+        }
         long date = System.currentTimeMillis();
         String address = "Decentralized Unpark";;
         String userName = "Tosh and I";
         String songName = "Ugly Pleasure";
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date,testURL);
         userName = "Graham and Cory";
         songName = "Water on your splitends";
         date = System.currentTimeMillis();
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date, testURL);
         userName = "Tong and Wei";
         songName = "malagnam";
         date = System.currentTimeMillis();
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date, testURL);
         userName = "Tosh and I";
         songName = "Old Song";
         address = "Central Park";
         date = date - (FirebaseDB.MILLISECODNS_IN_DAY * 10);
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date, testURL);
 
-
-
-        someList = new ArrayList<>();
-        ArrayList<String> tempList = dbFunc.getSongNamesAtLocation("Central Park", new MyCallback() {
+        LocalDate whenDis = LocalDate.now();
+        dbFunc.getAllSongsForVibe("Central Park", whenDis, "someUser", new FirebaseQueryObserver() {
             @Override
-            public void onCallback(ArrayList<String> list) {
-                 Log.d("WHERE LIST IS: ", list.toString());
-                 someList = list;
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+                //call generateList method here
+                Log.d("THE WHOLE LIST OF SONGS IS: ", songNameList.toString());
+                Log.d("THE WHOLE LIST OF URLS IS: ", songURLList.toString() );
+            }
+        });
+
+
+/*
+        someList = new ArrayList<>();
+        dbFunc.getSongNamesAtLocation("Central Park", new FirebaseQueryObserver() {
+            @Override
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+                 Log.d("WHERE SONG_NAME_LIST IS: ", songNameList.toString());
+                Log.d("WHERE SONG_URL_LIST IS: ", songURLList.toString());
             }
         });
 
@@ -95,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         LocalDate whenDis = LocalDate.now();
-        someList = dbFunc.getSongsLastWeek(whenDis, new MyCallback() {
+        dbFunc.getSongsLastWeek(whenDis, new FirebaseQueryObserver() {
             @Override
-            public void onCallback(ArrayList<String> list) {
-                Log.d("WHEN LIST IS: ", list.toString());
-                someList = list;
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+                Log.d("WHEN SONG_NAME_LIST IS: ", songNameList.toString());
+                Log.d("WHEN SONG_URL_LIST IS: ", songURLList.toString());
             }
         });
 
@@ -107,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         for( String name: someList ) {
             Log.d("SONG IS: ", name);
         }
-
+*/
 
         // TODO: END OF DELETABLE CRAP!!
 
