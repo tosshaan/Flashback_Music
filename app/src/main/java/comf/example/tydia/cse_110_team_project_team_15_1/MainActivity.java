@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import android.Manifest;
 import com.google.api.services.people.v1.PeopleService;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,33 +82,50 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // TODO: DELETE THIS CRAP!!!
         /*
         FirebaseDB dbFunc = new FirebaseDB();
+        URI testURL = null;
+        try {
+            testURL = new URI("Test");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.d("OH NO ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "");
+        }
         long date = System.currentTimeMillis();
         String address = "Decentralized Unpark";;
         String userName = "Tosh and I";
         String songName = "Ugly Pleasure";
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date,testURL);
         userName = "Graham and Cory";
         songName = "Water on your splitends";
         date = System.currentTimeMillis();
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date, testURL);
         userName = "Tong and Wei";
         songName = "malagnam";
         date = System.currentTimeMillis();
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date, testURL);
         userName = "Tosh and I";
         songName = "Old Song";
         address = "Central Park";
         date = date - (FirebaseDB.MILLISECODNS_IN_DAY * 10);
-        dbFunc.submit(userName, address, songName, date);
+        dbFunc.submit(userName, address, songName, date, testURL);
 
-
-
-        someList = new ArrayList<>();
-        ArrayList<String> tempList = dbFunc.getSongNamesAtLocation("Central Park", new MyCallback() {
+        LocalDate whenDis = LocalDate.now();
+        dbFunc.getAllSongsForVibe("Central Park", whenDis, "someUser", new FirebaseQueryObserver() {
             @Override
-            public void onCallback(ArrayList<String> list) {
-                 Log.d("WHERE LIST IS: ", list.toString());
-                 someList = list;
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+                //call generateList method here
+                Log.d("THE WHOLE LIST OF SONGS IS: ", songNameList.toString());
+                Log.d("THE WHOLE LIST OF URLS IS: ", songURLList.toString() );
+            }
+        });
+
+
+/*
+        someList = new ArrayList<>();
+        dbFunc.getSongNamesAtLocation("Central Park", new FirebaseQueryObserver() {
+            @Override
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+                 Log.d("WHERE SONG_NAME_LIST IS: ", songNameList.toString());
+                Log.d("WHERE SONG_URL_LIST IS: ", songURLList.toString());
             }
         });
 
@@ -116,11 +136,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         LocalDate whenDis = LocalDate.now();
-        someList = dbFunc.getSongsLastWeek(whenDis, new MyCallback() {
+        dbFunc.getSongsLastWeek(whenDis, new FirebaseQueryObserver() {
             @Override
-            public void onCallback(ArrayList<String> list) {
-                Log.d("WHEN LIST IS: ", list.toString());
-                someList = list;
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+                Log.d("WHEN SONG_NAME_LIST IS: ", songNameList.toString());
+                Log.d("WHEN SONG_URL_LIST IS: ", songURLList.toString());
             }
         });
 
@@ -128,30 +148,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         for( String name: someList ) {
             Log.d("SONG IS: ", name);
         }
-        */
+*/
         // TODO: END OF DELETABLE CRAP!!
-
-        GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                // The serverClientId is an OAuth 2.0 web client ID
-                .requestServerAuthCode("781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com")
-                .requestEmail()
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN),
-                        new Scope(PeopleServiceScopes.CONTACTS_READONLY),
-                        new Scope(PeopleServiceScopes.USERINFO_PROFILE),
-                        new Scope(PeopleServiceScopes.USER_EMAILS_READ))
-                .build();
-
-
-        // Begin Sign In Code
-        signInClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addOnConnectionFailedListener(this)
-                .addConnectionCallbacks(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleOptions)
-                .build();
-        signInClient.connect();
-
-        getGoogleToken();
+        googleSignIn();
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
@@ -205,6 +204,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Intent intent2 = new Intent(this, LocationService.class);
         bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
 
+    }
+    public void googleSignIn() {
+        GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                // The serverClientId is an OAuth 2.0 web client ID
+                .requestServerAuthCode("781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com")
+                .requestEmail()
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN),
+                        new Scope(PeopleServiceScopes.CONTACTS_READONLY),
+                        new Scope(PeopleServiceScopes.USERINFO_PROFILE),
+                        new Scope(PeopleServiceScopes.USER_EMAILS_READ))
+                .build();
+
+
+        // Begin Sign In Code
+        signInClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleOptions)
+                .build();
+        signInClient.connect();
+
+        getGoogleToken();
     }
     @Override
     protected void onStart() {

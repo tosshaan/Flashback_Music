@@ -40,7 +40,7 @@ public class FlashbackList {
         // Getting IDs of all songs in storage
         allSongIDs = new HashMap<String, Integer>();
         metadataGetter = new MetadataGetter(context);
-        populateAllSongs();
+        //populateAllSongs();
     }
 
     /**
@@ -115,8 +115,8 @@ public class FlashbackList {
         for( int i = 0; i < flashbackList.size()-1; i++ ) {
             done = true;
             for( int j = 0; j < flashbackList.size()-i-1; j++ ) {
-                String songNamej = metadataGetter.getName(flashbackList.get(j).getKey());
-                String songNamejPLUS1 = metadataGetter.getName(flashbackList.get(j+1).getKey());
+                String songNamej = metadataGetter.getName();
+                String songNamejPLUS1 = metadataGetter.getName();
 
                 /*
                 Log.d("SONG J IS:", songNamej);
@@ -178,7 +178,7 @@ public class FlashbackList {
 
         for( int i = 0; i < flashbackList.size(); i++ ) {
             finalList.add(flashbackList.get(i).getKey());
-            Log.d("finalList[" + i + "]", metadataGetter.getName(finalList.get(i)));
+            Log.d("finalList[" + i + "]", metadataGetter.getName());
         }
 
         return finalList;
@@ -187,13 +187,14 @@ public class FlashbackList {
     /**
      * populates get populate hashMap with song names
      */
+    /*
     private void populateAllSongs() {
         int[] songIDs = SongsActivity.getSongIDs();
         for( int i = 0; i < songIDs.length; i++ ) {
             // Pushing song's name and ID to HashMap
             allSongIDs.put(metadataGetter.getName(songIDs[i]), songIDs[i]);
         }
-    }
+    }*/
 
     /**
      * maanages counting of duplicates in hashMap
