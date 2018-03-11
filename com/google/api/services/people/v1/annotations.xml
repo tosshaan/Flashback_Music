@@ -1,0 +1,8 @@
+<root>
+    <item name='com.google.api.services.people.v1.PeopleService'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+    <item name='com.google.api.services.people.v1.PeopleService.People'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

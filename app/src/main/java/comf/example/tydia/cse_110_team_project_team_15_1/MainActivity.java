@@ -1,6 +1,7 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -8,8 +9,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +23,7 @@ import android.content.Intent;
 import android.view.View;
 import android.Manifest;
 
+import com.google.api.services.people.v1.PeopleService;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,7 +32,31 @@ import java.lang.reflect.Array;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.people.v1.PeopleService.People;
+import com.google.api.services.people.v1.PeopleServiceScopes;
+import com.google.api.services.people.v1.model.EmailAddress;
+import com.google.api.services.people.v1.model.ListConnectionsResponse;
+import com.google.api.services.people.v1.model.Name;
+import com.google.api.services.people.v1.model.Person;
+import com.google.api.services.people.v1.model.PhoneNumber;
 import static java.lang.Thread.sleep;
 
 /**
@@ -36,7 +64,13 @@ import static java.lang.Thread.sleep;
  * Opened when a particular album name is clicked from AlbumaActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks{
+    private static final String TAG = "X";
+    GoogleApiClient mGoogleApiClient;
+
+
+    final int RC_INTENT = 200;
+    final int RC_API_CHECK = 100;
 
     public static database data;
     public static LocationService locationService;
@@ -108,8 +142,28 @@ public class MainActivity extends AppCompatActivity {
             Log.d("SONG IS: ", name);
         }
 
-
         // TODO: END OF DELETABLE CRAP!!
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                // The serverClientId is an OAuth 2.0 web client ID
+                .requestServerAuthCode("1038307014773-ouvgsgkqtdh1v8pgtq2552ungg63465n.apps.googleusercontent.com")
+                .requestEmail()
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN),
+                        new Scope(PeopleServiceScopes.CONTACTS_READONLY),
+                        new Scope(PeopleServiceScopes.USER_EMAILS_READ),
+                        new Scope(PeopleServiceScopes.USERINFO_EMAIL),
+                        new Scope(PeopleServiceScopes.USER_PHONENUMBERS_READ))
+                .build();
+
+
+        // To connect with Google Play Services and Sign In
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
+                .build();
+        mGoogleApiClient.connect();
+        getIdToken();
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
@@ -161,6 +215,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent2 = new Intent(this, LocationService.class);
         bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
+
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
     }
 
     private ServiceConnection serviceChecker = new ServiceConnection(){
@@ -241,6 +302,113 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    private void getIdToken() {
+        // Show an account picker to let the user choose a Google account from the device.
+        // If the GoogleSignInOptions only asks for IDToken and/or profile and/or email then no
+        // consent screen will be shown here.
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_INTENT);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode) {
+            case RC_INTENT:
+                Log.d(TAG, "sign in result");
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
+                if (result.isSuccess()) {
+                    GoogleSignInAccount acct = result.getSignInAccount();
+                    Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
+                    // This is what we need to exchange with the server.
+                    Log.d(TAG, "auth Code:" + acct.getServerAuthCode());
+
+                    new PeoplesAsync().execute(acct.getServerAuthCode());
+
+                } else {
+
+                    Log.d(TAG, result.getStatus().toString() + "\nmsg: " + result.getStatus().getStatusMessage());
+                }
+                break;
+
+        }
+
+    }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+        Log.d("connection", "msg: " + connectionResult.getErrorMessage());
+
+        GoogleApiAvailability mGoogleApiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = mGoogleApiAvailability.getErrorDialog(this, connectionResult.getErrorCode(), RC_API_CHECK);
+        dialog.show();
+
+    }
+    @Override
+    public void onConnected(Bundle bundle) {
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+    class PeoplesAsync extends AsyncTask<String, Void, List<String>> {
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+        }
+
+        @Override
+        protected List<String> doInBackground(String... params) {
+
+            List<String> nameList = new ArrayList<>();
+
+            try {
+                PeopleService peopleService = PeopleHelper.setUp(MainActivity.this, params[0]);
+
+                ListConnectionsResponse response = peopleService.people().connections()
+                        .list("people/me")
+                        // This line's really important! Here's why:
+                        // http://stackoverflow.com/questions/35604406/retrieving-information-about-a-contact-with-google-people-api-java
+                        .setRequestMaskIncludeField("person.names,person.emailAddresses,person.phoneNumbers")
+                        .execute();
+                List<Person> connections = response.getConnections();
+                for (Person person : connections) {
+                    if (!person.isEmpty()) {
+                        List<Name> names = person.getNames();
+                        List<EmailAddress> emailAddresses = person.getEmailAddresses();
+                        List<PhoneNumber> phoneNumbers = person.getPhoneNumbers();
+
+                        if (phoneNumbers != null)
+                            for (PhoneNumber phoneNumber : phoneNumbers)
+                                Log.d(TAG, "phone: " + phoneNumber.getValue());
+
+                        if (emailAddresses != null)
+                            for (EmailAddress emailAddress : emailAddresses)
+                                Log.d(TAG, "email: " + emailAddress.getValue());
+
+                        if (names != null)
+                            for (Name name : names)
+                                nameList.add(name.getDisplayName());
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Running");
+            return nameList;
+        }
+
+
+
+    }
 
 }
