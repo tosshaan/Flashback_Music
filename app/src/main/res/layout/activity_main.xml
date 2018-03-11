@@ -8,7 +8,7 @@
     tools:context="comf.example.tydia.cse_110_team_project_team_15_1.MainActivity">
 
     <Button
-        android:id="@+id/b_flashback"
+        android:id="@+id/b_vibe"
         android:layout_width="110dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"

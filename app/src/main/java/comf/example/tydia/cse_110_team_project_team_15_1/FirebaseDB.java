@@ -1,4 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -41,9 +43,9 @@ public class FirebaseDB {
      * @param songName the name of the song played
      * @param date the date when the song is played (or a different value when testing)
      */
-    public void submit(String userName, String address, String songName, long date, URI url ) {
+    public void submit(String userName, String address, String songName, long date, Uri url ) {
         //songDatabaseRecord song = new songDatabaseRecord(userName, songName, time);
-        myFirebaseRef.child(address).child(userName).child(songName).child("" + url).setValue(date);
+        myFirebaseRef.child(address).child(userName).child(songName).child(convertURL(url)).setValue(date);
     }
 
     /** Method to find all songs played at a particular location
@@ -248,35 +250,39 @@ public class FirebaseDB {
                         // Looping through users in location
                         for( DataSnapshot userSnap: locationSnap.getChildren() ) {
                             String currUser = userSnap.getKey();
-                            // Looping through songs for user
-                            for( DataSnapshot songSnap: userSnap.getChildren() ) {
-                                String currSong = songSnap.getKey();
-                                // Looping through urls for user
-                                for( DataSnapshot URLsnap: songSnap.getChildren() ) {
-                                    String currURL = URLsnap.getKey();
-                                    long songDays = (long) URLsnap.getValue() / MILLISECODNS_IN_DAY;
-                                    LocalDate songDate = LocalDate.ofEpochDay(songDays);
-                                    // Checking for same address
-                                    if( currAddress.equals(address) && !songNamesAdr.contains(currSong) ) {
-                                        // Adding 4 times for priority
-                                        for(int i = 0; i < HIGHEST_PRIORITY; i++){
-                                            songNamesAdr.add(currSong);
-                                            songURLsAdr.add(currURL);
+                            // TODO: Figure out proper userName!
+                            if( !currUser.equals("User")) {
+                                    // Looping through songs for user
+                                for( DataSnapshot songSnap: userSnap.getChildren() ) {
+                                    String currSong = songSnap.getKey();
+                                    // Looping through urls for user
+                                    for (DataSnapshot URLsnap : songSnap.getChildren()) {
+                                        String currURL = unconvertURL(URLsnap.getKey());
+                                        long songDays = (long) URLsnap.getValue() / MILLISECODNS_IN_DAY;
+                                        LocalDate songDate = LocalDate.ofEpochDay(songDays);
+                                        // Checking for same address
+                                        if (currAddress.equals(address) && !songNamesAdr.contains(currSong)) {
+                                            // Adding 4 times for priority
+                                            for (int i = 0; i < HIGHEST_PRIORITY; i++) {
+                                                songNamesAdr.add(currSong);
+                                                songURLsAdr.add(currURL);
+                                            }
                                         }
-                                    }
-                                    // Checking for same week
-                                    if( (Math.abs(songDate.getDayOfYear() - currDate.getDayOfYear()) <= DAYS_IN_A_WEEK) &&
-                                            !songNamesDate.contains(currSong) ) {
-                                        for(int i = 0; i < SECOND_PRIORITY; i++){
-                                            songNamesDate.add(currSong);
-                                            songURLsDate.add(currURL);
+                                        // Checking for same week
+                                        if ((Math.abs(songDate.getDayOfYear() - currDate.getDayOfYear()) <= DAYS_IN_A_WEEK) &&
+                                                !songNamesDate.contains(currSong)) {
+                                            for (int i = 0; i < SECOND_PRIORITY; i++) {
+                                                songNamesDate.add(currSong);
+                                                songURLsDate.add(currURL);
+                                            }
                                         }
+
+                                        // TODO: Check for Google+ Friend
+
                                     }
-
-                                    // TODO: Check for Google+ Friend
-
                                 }
                             }
+
                         }
 
                     }
@@ -332,5 +338,31 @@ public class FirebaseDB {
         }
     }
     */
+
+    /**
+     * Method to remove forbidden symbols from the URL and remove path
+     * @param uri the uri to be converted
+     * @return the converted url
+     */
+    private static String convertURL(Uri uri ) {
+        Log.d("URL IS: ", uri.toString());
+        String newURI = uri.toString();
+        newURI = newURI.replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath(),"");
+        newURI = newURI.replace(".","@");
+        newURI = newURI.replace("/", "^");
+        Log.d("NOW URL IS: ", newURI);
+        return newURI;
+    }
+
+    /**
+     * Method to convert URL back to original version
+     * @param url the url that was converted
+     * @return the original url back
+     */
+    private static String unconvertURL( String url) {
+        url = url.replace("@",".");
+        url = url.replace("^","/");
+        return url;
+    }
 
 }

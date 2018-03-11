@@ -37,7 +37,7 @@ public class VibeModeList {
     /**
      * constructor
      */
-    public VibeModeList(String address, LocalDate currDate,database db) {
+    public VibeModeList(database db) {
         vibeModeSongs = new ArrayList<>();
         vibeModeURLs = new ArrayList<>();
         this.db = db;
