@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -33,12 +34,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.github.clans.fab.FloatingActionMenu;
+
 import org.w3c.dom.Text;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 /**
  * Activity Class for the list of all songs in memory.
@@ -46,6 +50,17 @@ import java.util.EventListener;
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
 public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private FloatingActionMenu menuRed;
+
+
+    private com.github.clans.fab.FloatingActionButton fab1;
+    private com.github.clans.fab.FloatingActionButton fab2;
+    private com.github.clans.fab.FloatingActionButton fab3;
+
+
+    private List<FloatingActionMenu> menus = new ArrayList<>();
+    private Handler mUiHandler = new Handler();
 
     ListView list;
     // Need to get list of song names from the database
@@ -165,7 +180,23 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
         registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
+        menuRed = (FloatingActionMenu) findViewById(R.id.menu_red);
+
+        fab1 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab3);
+
+
+
+
+
+        fab1.setOnClickListener(clickListener);
+        fab2.setOnClickListener(clickListener);
+        fab3.setOnClickListener(clickListener);
+
     }
+
+
 
     public void Download(String input) {
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
@@ -278,5 +309,25 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         startActivity(intent);
     }
 
+    // TODO sorting..
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                // by Title
+                case R.id.fab1:
 
+                    break;
+                // by Artist
+                case R.id.fab2:
+                    break;
+                // by Album
+                case R.id.fab3:
+                    break;
+                // by Liked status
+                case R.id.fab4:
+                    break;
+            }
+        }
+    };
 }

@@ -88,7 +88,7 @@ public class ViewDLSongsActivity extends AppCompatActivity {
 
     }
 
-    public ArrayList<File> findSong(File root) {
+    static public ArrayList<File> findSong(File root) {
 
         ArrayList<File> at = new ArrayList<File>();
         File[] files = root.listFiles();
