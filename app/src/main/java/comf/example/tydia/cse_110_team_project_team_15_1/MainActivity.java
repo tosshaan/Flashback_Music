@@ -143,9 +143,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         // TODO: END OF DELETABLE CRAP!!
+
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 // The serverClientId is an OAuth 2.0 web client ID
-                .requestServerAuthCode("1038307014773-ouvgsgkqtdh1v8pgtq2552ungg63465n.apps.googleusercontent.com")
+                .requestServerAuthCode("781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com")
                 .requestEmail()
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN),
                         new Scope(PeopleServiceScopes.CONTACTS_READONLY),
@@ -163,8 +164,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
                 .build();
         mGoogleApiClient.connect();
-        getIdToken();
 
+        getIdToken();
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
         if(last.equals("Flashback")){

@@ -28,8 +28,8 @@ public class PeopleHelper    {
         // Redirect URL for web based applications.
         // Can be empty too.
         String redirectUrl = "";
-        String clientID = "1038307014773-ouvgsgkqtdh1v8pgtq2552ungg63465n.apps.googleusercontent.com";
-        String clientSecret = "6khwoVFMHBV3CLSdHeHlDpNT";
+        String clientID = "781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com";
+        String clientSecret = "Z7DcQmFsIX1DyyDwpBQQsS9Y";
 
         // Exchange auth code for access token
         GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
