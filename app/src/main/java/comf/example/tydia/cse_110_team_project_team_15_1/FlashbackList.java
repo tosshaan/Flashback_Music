@@ -40,7 +40,7 @@ public class FlashbackList {
         // Getting IDs of all songs in storage
         allSongIDs = new HashMap<String, Integer>();
         metadataGetter = new MetadataGetter(context);
-        populateAllSongs();
+        //populateAllSongs();
     }
 
     /**
@@ -187,13 +187,14 @@ public class FlashbackList {
     /**
      * populates get populate hashMap with song names
      */
+    /*
     private void populateAllSongs() {
         int[] songIDs = SongsActivity.getSongIDs();
         for( int i = 0; i < songIDs.length; i++ ) {
             // Pushing song's name and ID to HashMap
             allSongIDs.put(metadataGetter.getName(songIDs[i]), songIDs[i]);
         }
-    }
+    }*/
 
     /**
      * maanages counting of duplicates in hashMap

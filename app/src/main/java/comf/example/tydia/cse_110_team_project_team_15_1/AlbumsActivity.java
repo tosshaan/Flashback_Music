@@ -54,7 +54,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         MainActivity.PACKAGE_NAME = getPackageName();
         metadataGetter = new MetadataGetter(this);
 
-        songIDs = SongsActivity.getSongIDs();
+        //songIDs = SongsActivity.getSongIDs();
         albumNames = getAlbumNames(songIDs);
 
         Button switchScreen = (Button) findViewById(R.id.btn_back);

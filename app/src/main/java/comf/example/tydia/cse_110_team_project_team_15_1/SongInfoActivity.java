@@ -35,6 +35,7 @@ public class SongInfoActivity extends AppCompatActivity {
     private int songIndex;
     private String songName;
     private int [] SongsIDs;
+    private String[] songsUri;
     //private boolean albumMode = true;
 
     database myData;
@@ -52,21 +53,33 @@ public class SongInfoActivity extends AppCompatActivity {
 
         myData = MainActivity.data;
 
+        mediaPlayer = new MediaPlayer();
+
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
-        songName = getIntent().getStringExtra("songName");
-        Bundle bundle = getIntent().getExtras();
-        //albumMode = getIntent().getBooleanExtra("albumMode", false);
-        //if (albumMode) {
-            SongsIDs = bundle.getIntArray("SongsIDs");
-            songIndex = getIntent().getIntExtra("songIndex", 0);
-        //}
+        //MEDIA_RES_ID = getIntent().getIntExtra("songID", 0);
 
-        mediaPlayer = MediaPlayer.create(this, MEDIA_RES_ID);
-        mediaPlayer.start();
+        //songName = getIntent().getStringExtra("songName");
+        Bundle bundle = getIntent().getExtras();
+        songsUri = bundle.getStringArray("list");
+
+        //SongsIDs = bundle.getIntArray("SongsIDs");
+        songIndex = getIntent().getIntExtra("songIndex", 0);
+        Log.d("Things from string array", "length: " +songsUri.length);
+
+        try {
+            mediaPlayer.setDataSource("file://" + songsUri[songIndex]);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("setDataSource", "failed to set uri");
+        }
+
 
         updateLastPlayedInfo();
         Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -82,6 +95,9 @@ public class SongInfoActivity extends AppCompatActivity {
 
         // Creating metadatagetter
         metadataGetter = new MetadataGetter(this);
+        metadataGetter.setPath(songsUri[songIndex]);
+
+        songName = metadataGetter.getName(MEDIA_RES_ID);
 
         TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
         showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));

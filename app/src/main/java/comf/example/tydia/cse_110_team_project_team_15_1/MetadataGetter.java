@@ -2,9 +2,11 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.File;
 import java.time.LocalTime;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
@@ -29,18 +31,19 @@ public class MetadataGetter {
         retriever = new MediaMetadataRetriever();
     }
 
+    public void setPath(String pathx) {
+        path = Uri.parse("file://" + pathx);
+        retriever.setDataSource(context, path);
+
+    }
+
     // Get song name based on ID
     public String getName(int id) {
-        path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + id);
-        //Log.d("CONTEXT AND PATH: ", "The context is " + context + " The path is " + path);
-        retriever.setDataSource(context, path);
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
     }
 
     // Get song artist based on ID
     public String getArtist(int id) {
-        path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + id);
-        retriever.setDataSource(context, path);
         String artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         if( artist == null ) {
             return "Unknown";
@@ -50,15 +53,11 @@ public class MetadataGetter {
 
     // Get song album based on ID
     public String getAlbum(int id) {
-        path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + id);
-        retriever.setDataSource(context, path);
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
     }
 
     // Get track number based on ID
     public String getTrackNumber(int id) {
-        path = Uri.parse("android.resource://" + MainActivity.PACKAGE_NAME + "/" + id);
-        retriever.setDataSource(context, path);
         return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER);
     }
 
