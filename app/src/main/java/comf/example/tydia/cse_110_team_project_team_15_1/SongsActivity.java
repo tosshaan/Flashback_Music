@@ -9,7 +9,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.media.RemoteController;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +21,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.test.mock.MockContext;
@@ -38,6 +41,7 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import org.w3c.dom.Text;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -51,8 +55,10 @@ import java.util.List;
  */
 public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private FloatingActionMenu menuRed;
+    private SortSongs sortSongs; //= new SortSongs(getApplicationContext());
 
+    private FloatingActionMenu menuRed;
+    private boolean startedFlag = true;
 
     private com.github.clans.fab.FloatingActionButton fab1;
     private com.github.clans.fab.FloatingActionButton fab2;
@@ -66,15 +72,21 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     // Need to get list of song names from the database
     public static String PACKAGE_NAME;
 
-
-    private String[] songNames;
-    private int[] IDs;
     MetadataGetter metadataGetter;
 
     //https://www.youtube.com/watch?v=atZRWb6_QRs
     // yt tutorial to download songs
     long queueid;
     DownloadManager dm;
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 99;
+
+    ArrayList<File> mySongs;
+    String[] songNames;
+
+
+    Boolean mExternalStorageAvailable;
+    String[] items;
 
 
     /**
@@ -89,7 +101,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        sortSongs = new SortSongs(getApplicationContext());
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -107,15 +119,13 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        // Dynamically populating idList
-        IDs = getSongIDs();
-        songNames = getSongNames(IDs);
-
         list = (ListView) findViewById(R.id.list_allsongs);
-        // context, database structure, data
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,songNames);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            checkStoragePermission();
+        }
+        display();
 
         // launch flashback (temp)
         final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_song);
@@ -126,20 +136,35 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        Button viewDL = (Button) findViewById(R.id.showDL_songs);
-        viewDL.setOnClickListener(new View.OnClickListener() {
+        Button deleteAll = (Button) findViewById(R.id.DeleteAll);
+        deleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchDLSong();
+                for (int i = 0; i < mySongs.size(); i++) {
+                    File f = mySongs.get(i);
+                    f.delete();
+
+                }
+                display();
+                //launchDLSong();
             }
         });
 
         Button b_dl = (Button) findViewById(R.id.b_download);
         b_dl.setOnClickListener(view -> {
             EditText editText = (EditText) findViewById(R.id.URLeditText);
-            String input = editText.getText().toString();
+            String input = //"http://www.hubharp.com/web_sound/HarrisLilliburleroShort.mp3";
+            editText.getText().toString();
+
             //"http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
             Download(input);
+//            input = "http://www.hubharp.com/web_sound/WalloonLilliShort.mp3";
+//            Download(input);
+//
+//            input = "http://www.hubharp.com/web_sound/PurcellSongMusShort.mp3";
+//            Download(input);
+
+
         });
 
         Button viewdl = (Button) findViewById(R.id.b_viewDownload);
@@ -161,17 +186,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                         int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
-                            Toast.makeText(getApplicationContext(), "Download Sucessful", Toast.LENGTH_SHORT);
-                            /*
-                            VideoView videoView = (VideoView) findViewById(R.id.video);
-                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-
-                            MediaController mediaController = new MediaController(getApplicationContext());
-                            mediaController.setAnchorView(videoView);
-                            videoView.requestFocus();
-                            videoView.setVideoURI(Uri.parse(uriString));
-                            videoView.start();
-                            */
+                            Toast.makeText(getApplicationContext(), "Download Sucessful", Toast.LENGTH_SHORT).show();
+                            mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+                            display();
                         }
                     }
                 }
@@ -253,52 +270,29 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
      */
     public void launchSongInfoAct(int i) {
         Intent intent = new Intent (this, SongInfoActivity.class);
-        intent.putExtra("songID", IDs[i]);
-        intent.putExtra("songName", songNames[i]);
-        //intent.putExtra("albumMode", false);
+
         intent.putExtra("songIndex", i);
         Bundle bundle = new Bundle();
-        bundle.putIntArray("SongsIDs", IDs);
+        String[] list = getStringArray();
+
+        bundle.putStringArray("list", list);
         intent.putExtras(bundle);
 
         startActivity(intent);
     }
 
-    /**
-     * Method to get an array of song ids for all the songs in the list
-     * @return array of song ids of all songs in the list
-     */
-    public static int[] getSongIDs() {
-        Field[] ID_Fields = R.raw.class.getFields();
-        int[] songIDs = new int[ID_Fields.length];
-        for(int i = 0; i < ID_Fields.length; i++) {
-            try {
-                songIDs[i] = ID_Fields[i].getInt(null);
-               // Log.d("id number: " + i, "" + songIDs[i] );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public String[] getStringArray() {
+        String[] ret = new String[mySongs.size()];
+        for (int i = 0; i < mySongs.size(); i++) {
+            ret[i] = mySongs.get(i).toString();
         }
-        return songIDs;
+
+        return ret;
     }
 
-    /**
-     * Method to get song names from songIDs
-     * @param IDs - array of all songs' ids
-     * @return array of all songs' names
-     */
-    public String[] getSongNames( int[] IDs ) {
-
-        String[] songNames = new String[IDs.length];
-        for( int i = 0; i < songNames.length; i++ ) {
-            songNames[i] = metadataGetter.getName(IDs[i]);
-        }
-        return songNames;
-    }
-
-    /**
-     * Goes to FlashbackActivity
-     */
+        /**
+         * Goes to FlashbackActivity
+         */
     public void launchFlashback() {
         Intent intent = new Intent (this, FlashbackActivity.class);
         startActivity(intent);
@@ -309,20 +303,135 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         startActivity(intent);
     }
 
+
+
+
+
+    public ArrayList<File> findSong(File root) {
+
+        ArrayList<File> at = new ArrayList<File>();
+        File[] files = root.listFiles();
+        Log.d("findSong", "findSong: length of this directory " + files.length);
+
+        for(File singleFile : files) {
+
+            if(singleFile.isDirectory() && !singleFile.isHidden()) {
+                Log.d("findSong", "findSong: found a directory " + singleFile.getName());
+
+                at.addAll(findSong(singleFile));
+            }
+            else {
+                if(singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")) {
+                    Log.d("findSong", "findSong: found a song " + singleFile.getName());
+                    Log.d("absolutepath", "path = " +singleFile.getAbsolutePath());
+
+                    at.add(singleFile);
+                }
+            }
+        }
+
+        return at;
+    }
+
+    public void display() {
+
+        Log.d("display", "findSong: entering");
+
+        Log.d("display", "name of external storage = " +
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+
+        //getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (startedFlag) {
+            startedFlag = false;
+            mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        }
+        items = new String[mySongs.size()];
+
+        for (int i = 0; i < mySongs.size(); i++) {
+            items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
+        }
+        ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        list.setAdapter(adp);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                launchSongInfoAct(i);
+            }
+        });
+    }
+
+    public void checkExternalStorage() {
+
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            mExternalStorageAvailable = true;
+        }
+        else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            mExternalStorageAvailable = true;
+        }
+        else {
+            mExternalStorageAvailable = false;
+        }
+
+        handleExternalStorageState();
+    }
+
+    public void handleExternalStorageState() {
+
+        if (mExternalStorageAvailable) {
+
+            display();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Please insert an SDcard", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean checkStoragePermission() {
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+            else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+            return false;
+        }
+        else {
+
+            checkExternalStorage();
+            return true;
+        }
+    }
+
     // TODO sorting..
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            sortSongs.setArrayList(mySongs);
             switch (v.getId()) {
                 // by Title
                 case R.id.fab1:
-
+                    sortSongs.sortByTitle();
+                    mySongs = sortSongs.returnlist();
+                    Log.d("sorted list", mySongs.toString());
+                    display();
                     break;
                 // by Artist
                 case R.id.fab2:
+                    sortSongs.sortByArtist();
+                    mySongs = sortSongs.returnlist();
+                    Log.d("sorted list", mySongs.toString());
+                    display();
                     break;
                 // by Album
                 case R.id.fab3:
+                    sortSongs.sortByAlbum();
+                    mySongs = sortSongs.returnlist();
+                    Log.d("sorted list", mySongs.toString());
+                    display();
                     break;
                 // by Liked status
                 case R.id.fab4:
@@ -330,4 +439,5 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         }
     };
+
 }
