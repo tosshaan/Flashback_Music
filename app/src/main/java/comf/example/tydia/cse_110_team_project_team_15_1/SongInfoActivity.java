@@ -3,6 +3,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
+import java.net.URI;
 import java.sql.Timestamp;
 
 /**
@@ -26,7 +28,7 @@ import java.sql.Timestamp;
  * Opened when a particular song name is clicked from SongsActivity or AlbumSongsActivity
  * Redirects to FlashBackActivity
  */
-public class SongInfoActivity extends AppCompatActivity {
+public class SongInfoActivity extends AppCompatActivity implements songObserver {
 
     //private MediaPlayer mediaPlayer;
     private myMusicPlayer musicPlayer;
@@ -36,6 +38,8 @@ public class SongInfoActivity extends AppCompatActivity {
     private int songIndex;
     private String songName;
     private String[] songsUri;
+    private FirebaseDB firebaseDB;
+    private playerSubject subject;
     //private boolean albumMode = true;
 
     database myData;
@@ -51,6 +55,7 @@ public class SongInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        firebaseDB = new FirebaseDB();
         myData = MainActivity.data;
 
 
@@ -63,10 +68,17 @@ public class SongInfoActivity extends AppCompatActivity {
         //songName = getIntent().getStringExtra("songName");
         Bundle bundle = getIntent().getExtras();
         songsUri = bundle.getStringArray("list");
+        songIndex = getIntent().getIntExtra("songIndex", 0);
+        // Creating metadatagetter
+        metadataGetter = new MetadataGetter(this);
+        metadataGetter.setPath(songsUri[songIndex]);
+
+        songName = metadataGetter.getName();
 
         //SongsIDs = bundle.getIntArray("SongsIDs");
-        songIndex = getIntent().getIntExtra("songIndex", 0);
+
         musicPlayer = new myMusicPlayer();
+        musicPlayer.regObserver(this);
 
         musicPlayer.setMusic(songsUri, songIndex);
 
@@ -85,11 +97,7 @@ public class SongInfoActivity extends AppCompatActivity {
         }
         //myData.finishSongInfoRequest(true, false);
 
-        // Creating metadatagetter
-        metadataGetter = new MetadataGetter(this);
-        metadataGetter.setPath(songsUri[songIndex]);
 
-        songName = metadataGetter.getName();
 
         TextView showMetadata = (TextView) findViewById(R.id.text_SongName);
         showMetadata.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
@@ -344,8 +352,8 @@ public class SongInfoActivity extends AppCompatActivity {
         /**
          * goes to FlashbackActivity
          */
-        final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_songinfo);
-        launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
+        final Button launchVibe = (Button) findViewById(R.id.b_vibe_songinfo);
+        launchVibe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatabaseStorageFunctions.storeDatabase(myData, getApplicationContext());
@@ -355,7 +363,7 @@ public class SongInfoActivity extends AppCompatActivity {
                     playButton.setVisibility(View.VISIBLE);
                     playFlag = false;
                 }
-                launchFlashback();
+                launchVibe();
             }
         });
     }
@@ -363,8 +371,8 @@ public class SongInfoActivity extends AppCompatActivity {
     /**
      * Helper for launching FlashbackActivity
      */
-    public void launchFlashback() {
-        Intent intent = new Intent (this, FlashbackActivity.class);
+    public void launchVibe() {
+        Intent intent = new Intent (this, VibeModeActivity.class);
         startActivity(intent);
     }
 
@@ -456,7 +464,9 @@ public class SongInfoActivity extends AppCompatActivity {
                 updateDislikedButton();
                 updateLikedButton();
             }
-        }); */
+        });
+        */
+
 
     }
 
@@ -482,5 +492,26 @@ public class SongInfoActivity extends AppCompatActivity {
             setFinishListener(false);
 
         }
+    }
+
+    @Override
+    public void update() {
+        //TODO: Figure some stuff out
+        updateLastPlayedInfo();
+        updateDislikedButton();
+        updateLikedButton();
+        myData.finishSongInfoRequest(true, false);
+        // TODO: Figure out user name
+        Location myLoc = MainActivity.getCurrLoc();
+        String currSongAddress = "";
+        try {
+            currSongAddress = myData.getAddress(myLoc, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        firebaseDB.submit("User2", currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+
     }
 }

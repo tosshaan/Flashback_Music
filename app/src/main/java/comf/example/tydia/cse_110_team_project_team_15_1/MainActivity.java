@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         // TODO: DELETE THIS CRAP!!!
         /*
+
         FirebaseDB dbFunc = new FirebaseDB();
         URI testURL = null;
         try {
@@ -167,12 +168,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             edit.apply();
         }
 
-        final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback);
+        final Button launchVibe = (Button) findViewById(R.id.b_vibe);
 
-        launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
+        launchVibe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchFlashback();
+                launchVibe();
             }
         });
 
@@ -272,8 +273,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     /**
      * Goes to FlashbackActivity
      */
-    public void launchFlashback() {
-        Intent intent = new Intent (this, FlashbackActivity.class);
+    public void launchVibe() {
+        Intent intent = new Intent (this, VibeModeActivity.class);
+
         startActivity(intent);
     }
 

@@ -37,21 +37,31 @@ public class MetadataGetter {
 
     // Get song name based on ID
     public String getName() {
-        return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String name = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        if( name == null ) {
+            //return " Unknown";
+            File file = new File(path.toString());
+            return file.getName().replace(".mp3", "").replace(".wav", "").replace("-", " ");
+        }
+        return name;
     }
 
     // Get song artist based on ID
     public String getArtist() {
         String artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         if( artist == null ) {
-            return "Unknown";
+            return " Unknown";
         }
         return artist;
     }
 
     // Get song album based on ID
     public String getAlbum() {
-        return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        String album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        if( album == null ) {
+            return " Unknown";
+        }
+        return album;
     }
 
     // Get track number based on ID

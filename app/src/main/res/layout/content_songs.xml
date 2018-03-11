@@ -43,7 +43,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/b_flashback_song"
+        android:id="@+id/b_vibe_song"
         android:layout_width="110dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
