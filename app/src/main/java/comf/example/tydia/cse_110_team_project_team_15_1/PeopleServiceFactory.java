@@ -17,41 +17,28 @@ import java.io.IOException;
  */
 
 
-public class PeopleHelper    {
-    private static final String APPLICATION_NAME = "Peoples App";
-
+public class PeopleServiceFactory {
 
     public static PeopleService setUp(Context context, String serverAuthCode) throws IOException {
-        HttpTransport httpTransport = new NetHttpTransport();
-        JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        HttpTransport transport = new NetHttpTransport();
+        JacksonFactory factory = JacksonFactory.getDefaultInstance();
 
-        // Redirect URL for web based applications.
-        // Can be empty too.
         String redirectUrl = "";
         String clientID = "781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com";
         String clientSecret = "Z7DcQmFsIX1DyyDwpBQQsS9Y";
 
-        // Exchange auth code for access token
-        GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
-                httpTransport,
-                jsonFactory,
-                clientID,
-                clientSecret,
-                serverAuthCode,
-                redirectUrl).execute();
+        GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(transport, factory, clientID, clientSecret, serverAuthCode, redirectUrl).execute();
 
-        // Then, create a GoogleCredential object using the tokens from GoogleTokenResponse
         GoogleCredential credential = new GoogleCredential.Builder()
                 .setClientSecrets(clientID, clientSecret)
-                .setTransport(httpTransport)
-                .setJsonFactory(jsonFactory)
+                .setTransport(transport)
+                .setJsonFactory(factory)
                 .build();
 
         credential.setFromTokenResponse(tokenResponse);
 
-        // credential can then be used to access Google services
-        return new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName(APPLICATION_NAME)
+        return new PeopleService.Builder(transport, factory, credential)
+                .setApplicationName("Vibe Music")
                 .build();
     }
 }
