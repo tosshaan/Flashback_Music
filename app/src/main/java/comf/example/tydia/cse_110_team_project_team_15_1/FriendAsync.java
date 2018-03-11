@@ -8,7 +8,6 @@ import com.google.api.services.people.v1.model.EmailAddress;
 import com.google.api.services.people.v1.model.ListConnectionsResponse;
 import com.google.api.services.people.v1.model.Person;
 
-import org.mortbay.jetty.Main;
 import org.mortbay.jetty.servlet.Context;
 
 import java.io.IOException;
@@ -22,11 +21,14 @@ import java.util.List;
 public class FriendAsync extends AsyncTask<String, Void, List<String>> {
 
     private static Context context;
+    private AsyncObserver listener;
+
+    public FriendAsync(AsyncObserver list){
+        listener = list;
+    }
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-
     }
 
     @Override
@@ -39,17 +41,22 @@ public class FriendAsync extends AsyncTask<String, Void, List<String>> {
             Person profile = peopleGetter.people().get("people/me")
                     .setRequestMaskIncludeField("person.names,person.emailAddresses")
                     .execute();
-            MainActivity.myAccountID = profile;
-            Log.d("myAccountID", profile.getEmailAddresses().get(0).getValue());
+
+            MainActivity.myPerson = profile;
+
+            Log.d("myPerson", profile.getEmailAddresses().get(0).getValue());
+
             ListConnectionsResponse peopleList = peopleGetter.people().connections()
                     .list("people/me")
                     .setPageSize(100)
                     .setRequestMaskIncludeField("person.names,person.emailAddresses")
                     .execute();
             List<Person> friends = peopleList.getConnections();
+
             if (friends == null) {
                 System.out.println("I HAVE NO FRIENDS");
             }
+
             for (Person p : friends) {
                 List<EmailAddress> grahamPls = p.getEmailAddresses();
                 MainActivity.friendsList.add(p);
@@ -66,7 +73,10 @@ public class FriendAsync extends AsyncTask<String, Void, List<String>> {
         return friendsIDs;
     }
 
-
-
+    @Override
+    protected void onPostExecute(List<String> r){
+        super.onPostExecute(r);
+        listener.callback();
+    }
 
 }

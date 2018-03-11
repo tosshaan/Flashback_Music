@@ -48,7 +48,7 @@ import static java.lang.Thread.sleep;
  * Opened when a particular album name is clicked from AlbumaActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks{
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, AsyncObserver{
     private static final String SIGN_IN_TAG = "X";
     GoogleApiClient signInClient;
 
@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private boolean bound;
     static ArrayList<String> someList;
     public static ArrayList<Person> friendsList = new ArrayList<Person>();
-    public static Person myAccountID;
+    public static Person myPerson;
+    public static String myPersonalID;
 
     /**
      * This method runs when the activity is created
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         PACKAGE_NAME = getPackageName();
 
         // TODO: DELETE THIS CRAP!!!
-
+        /*
         FirebaseDB dbFunc = new FirebaseDB();
         long date = System.currentTimeMillis();
         String address = "Decentralized Unpark";;
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         for( String name: someList ) {
             Log.d("SONG IS: ", name);
         }
-
+        */
         // TODO: END OF DELETABLE CRAP!!
 
         GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -151,8 +152,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         signInClient.connect();
 
         getGoogleToken();
-
-
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
@@ -194,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 launchSongs();
             }
         });
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) this,
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     Log.d(SIGN_IN_TAG, "Sign in result: " + fromIntent.getStatus().isSuccess());
                     Log.d(SIGN_IN_TAG, "Server Authorization Code: " + account.getServerAuthCode());
 
-                    new FriendAsync().execute(account.getServerAuthCode());
+                    new FriendAsync(this).execute(account.getServerAuthCode());
 
 
                 } else {
@@ -317,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     Log.d(SIGN_IN_TAG, fromIntent.getStatus().toString() + " Error Message: " + fromIntent.getStatus().getStatusMessage());
                 }
                 break;
-
         }
 
     }
@@ -342,4 +341,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
+    @Override
+    public void callback() {
+        //Checking if we need to generate a unique anon name for the current user
+        SharedPreferences username = getSharedPreferences("Names", MODE_PRIVATE);
+        String storedName = username.getString("Username", null);
+        if(storedName == null){
+            myPersonalID = GoogleHelper.generateUserName(myPerson.getEmailAddresses().get(0).getValue());
+            SharedPreferences.Editor edit = username.edit();
+            edit.putString("Username",myPersonalID);
+            Log.d("Callback", "Username generated: " + myPersonalID);
+            edit.apply();
+        }
+        else{
+            Log.d("Callback", "Username found: " + storedName);
+            myPersonalID = storedName;
+        }
+    }
 }
