@@ -11,5 +11,6 @@
     <string name="location">Location</string>
     <string name="normalmode">NormalMode</string>
     <string name="title_activity_view_dlsongs">ViewDLSongsActivity</string>
+    <string name="title_activity_vibe_mode">VibeModeActivity</string>
 
 </resources>

@@ -13,12 +13,13 @@ import java.sql.Timestamp;
  * Created by tosshaan on 3/10/2018.
  */
 
-public class myMusicPlayer {
+public class myMusicPlayer implements playerSubject {
 
     MediaPlayer mp;
     int songIndex;
     String[] songList;
     boolean playFlag = true;
+    songObserver observer;
 
 
     public myMusicPlayer() {
@@ -31,7 +32,7 @@ public class myMusicPlayer {
         try {
             mp.setDataSource("file://" + songList[index]);
             mp.prepare();
-
+            finish();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,6 +93,7 @@ public class myMusicPlayer {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 skip();
+                notifyObservers();
             }
         });
     }
@@ -131,11 +133,22 @@ public class myMusicPlayer {
         }
     }
 
+
     public boolean isPlaying() {
         return mp.isPlaying();
     }
 
     public void release() {
         mp.release();
+    }
+
+    @Override
+    public void notifyObservers() {
+        observer.update();
+    }
+
+    @Override
+    public void regObserver(songObserver obs) {
+        observer = obs;
     }
 }
