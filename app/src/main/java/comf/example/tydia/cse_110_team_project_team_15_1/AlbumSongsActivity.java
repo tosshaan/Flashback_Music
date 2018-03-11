@@ -74,11 +74,11 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
         list.setOnItemClickListener(this);
 
         // launch flashback (temp)
-        final Button launchFlashbackActivity = (Button) findViewById(R.id.b_flashback_album_songs);
-        launchFlashbackActivity.setOnClickListener(new View.OnClickListener() {
+        final Button launchVibe = (Button) findViewById(R.id.b_vibe_album_songs);
+        launchVibe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchFlashback();
+                launchVibe();
             }
         });
     }
@@ -128,8 +128,8 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
     /**
      * Goes to FlashBackActivity
      */
-    public void launchFlashback() {
-        Intent intent = new Intent (this, FlashbackActivity.class);
+    public void launchVibe() {
+        Intent intent = new Intent (this, VibeModeActivity.class);
         startActivity(intent);
     }
 
