@@ -54,9 +54,9 @@
             android:label="@string/title_activity_song_info"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service
+        <!--<service
             android:name=".MyIntentService"
-            android:exported="false" />
+            android:exported="false" /> -->
         <service
             android:name=".LocationService"
             android:enabled="true"
