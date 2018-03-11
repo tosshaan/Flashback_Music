@@ -53,7 +53,7 @@ import java.util.List;
  * Opened when "all songs" is clicked from MainActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, songObserver {
 
     private SortSongs sortSongs; //= new SortSongs(getApplicationContext());
 
@@ -78,6 +78,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     // yt tutorial to download songs
     long queueid;
     DownloadManager dm;
+    private myDownloadManager downloadManager;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 99;
 
@@ -120,6 +121,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         });
 
         list = (ListView) findViewById(R.id.list_allsongs);
+        downloadManager = new myDownloadManager(this, this);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -440,4 +442,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         }
     };
 
+    @Override
+    public void update() {
+
+    }
 }
