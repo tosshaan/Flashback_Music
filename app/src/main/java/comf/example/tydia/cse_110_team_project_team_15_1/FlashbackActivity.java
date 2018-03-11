@@ -36,7 +36,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
     MetadataGetter metadataGetter;
     MediaPlayer mp;
     int songIndex = 0;
-    private int MEDIA_RES_ID = 0;
+    private int i  = 0;
     private boolean playFlag = true;
 
     //currently playing song
@@ -112,15 +112,15 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
         }
         songNames = getFlasbackSongNames(flashBackSongIDs);
 
-        MEDIA_RES_ID = flashBackSongIDs[songIndex];
+         int x = flashBackSongIDs[songIndex];
         songName = songNames[songIndex];
 
-        mp = MediaPlayer.create(this, MEDIA_RES_ID);
+        mp = MediaPlayer.create(this, 3);
         mp.start();
 
         TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
-        songName = metadataGetter.getName(MEDIA_RES_ID);
-        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+        songName = metadataGetter.getName();
+        showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
 
         // hide action bar
@@ -195,17 +195,17 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                 if (songIndex < (flashBackSongIDs.length - 1)) {
                     songIndex++;
                     mp.reset();
-                    MEDIA_RES_ID = flashBackSongIDs[songIndex];
+                     int x= flashBackSongIDs[songIndex];
 
-                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp = MediaPlayer.create(getApplicationContext(), 3);
                     mp.start();
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
 
 
                     TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
-                    songName = metadataGetter.getName(MEDIA_RES_ID);
-                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+                    songName = metadataGetter.getName();
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
                     //loadMedia(albumSongsIDs[songIndex]);
 
@@ -223,7 +223,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                     myData.setDislikedStatus(songName, true);
                     myData.setLikedStatus(songName, false);
                     mp.reset();
-                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp = MediaPlayer.create(getApplicationContext(), 3);
                     pauseButton.setVisibility(View.GONE);
                     playButton.setVisibility(View.VISIBLE);
                     playFlag = false;
@@ -266,20 +266,20 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                 if (songIndex < (flashBackSongIDs.length - 1)) {
                     songIndex++;
                     mp.reset();
-                    MEDIA_RES_ID = flashBackSongIDs[songIndex];
+                     int x= flashBackSongIDs[songIndex];
 
                     //reset the visibility of pause button
                     pauseButton.setVisibility(View.VISIBLE);
                     playButton.setVisibility(View.GONE);
 
-                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp = MediaPlayer.create(getApplicationContext(), 3);
                     mp.start();
 
                     //loadMedia(albumSongsIDs[songIndex]);
 
                     TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
-                    songName = metadataGetter.getName(MEDIA_RES_ID);
-                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+                    songName = metadataGetter.getName();
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
 
                     updateLastPlayedInfo();
@@ -303,7 +303,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
                     mp.reset();
-                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp = MediaPlayer.create(getApplicationContext(), 3);
                 }
                 setFinishListener();
             }
@@ -360,7 +360,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
 
         String[] songNames = new String[IDs.length];
         for( int i = 0; i < songNames.length; i++ ) {
-            songNames[i] = metadataGetter.getName(IDs[i]);
+            songNames[i] = metadataGetter.getName();
         }
         return songNames;
     }
@@ -403,13 +403,13 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                 if (songIndex < (flashBackSongIDs.length - 1)) {
                     songIndex++;
                     mp.reset();
-                    MEDIA_RES_ID = flashBackSongIDs[songIndex];
+                    int f = flashBackSongIDs[songIndex];
 
                     TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
-                    songName = metadataGetter.getName(MEDIA_RES_ID);
-                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist(MEDIA_RES_ID) + "\nAlbum: " + metadataGetter.getAlbum(MEDIA_RES_ID));
+                    songName = metadataGetter.getName();
+                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
-                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp = MediaPlayer.create(getApplicationContext(), 3);
                     mp.start();
 
                     //loadMedia(albumSongsIDs[songIndex]);
@@ -431,7 +431,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
                     mp.reset();
-                    mp = MediaPlayer.create(getApplicationContext(), MEDIA_RES_ID);
+                    mp = MediaPlayer.create(getApplicationContext(), 3);
                 }
                 setFinishListener();
             }

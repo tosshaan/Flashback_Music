@@ -103,7 +103,7 @@ public class AlbumSongsActivity extends AppCompatActivity implements AdapterView
 
         String[] songNames = new String[IDs.length];
         for( int i = 0; i < songNames.length; i++ ) {
-            songNames[i] = metadataGetter.getName(IDs[i]);
+            songNames[i] = metadataGetter.getName();
         }
         return songNames;
     }
