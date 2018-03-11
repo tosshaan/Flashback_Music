@@ -54,7 +54,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         MainActivity.PACKAGE_NAME = getPackageName();
         metadataGetter = new MetadataGetter(this);
 
-        songIDs = SongsActivity.getSongIDs();
+        //songIDs = SongsActivity.getSongIDs();
         albumNames = getAlbumNames(songIDs);
 
         Button switchScreen = (Button) findViewById(R.id.btn_back);
@@ -108,7 +108,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
         ArrayList<String> albumSet = new ArrayList<>();
 
         for( int i = 0; i < IDs.length; i++ ) {
-            String album = metadataGetter.getAlbum(IDs[i]);
+            String album = metadataGetter.getAlbum();
             if(!albumSet.contains( album ))
                 albumSet.add(album);
         }
@@ -144,7 +144,7 @@ public class AlbumsActivity extends AppCompatActivity implements AdapterView.OnI
 
         for(int j = 0; j < songIDs.length; j++){
 
-            if(albumNames[i].equals(metadataGetter.getAlbum(songIDs[j]))){
+            if(albumNames[i].equals(metadataGetter.getAlbum())){
                 albumSongIDsArr.add(songIDs[j]);
             }
         }

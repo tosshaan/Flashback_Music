@@ -88,7 +88,7 @@ public class ViewDLSongsActivity extends AppCompatActivity {
 
     }
 
-    public ArrayList<File> findSong(File root) {
+    static public ArrayList<File> findSong(File root) {
 
         ArrayList<File> at = new ArrayList<File>();
         File[] files = root.listFiles();
@@ -142,7 +142,7 @@ public class ViewDLSongsActivity extends AppCompatActivity {
                 mp = new MediaPlayer();
                 mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-                if (checkStoragePermission()) {
+                //if (checkStoragePermission()) {
 
                     try {
                         //Log.d("before Parse" , "onItemClick: " + "file://" + mySongs.get(i).toString());
@@ -159,14 +159,15 @@ public class ViewDLSongsActivity extends AppCompatActivity {
 
                     }
 
-                }
+                /*}
                 else {
                     Log.d("permission to read", "CANNOT READ");
-                }
+                }*/
                 //mp = MediaPlayer.create(getApplicationContext(), Uri.parse(mySongs.get(i).toString()));
             }
         });
     }
+
 
     public void checkExternalStorage() {
 
@@ -232,5 +233,6 @@ public class ViewDLSongsActivity extends AppCompatActivity {
             }
         }
     }
+
 
 }
