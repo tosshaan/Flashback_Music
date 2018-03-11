@@ -37,6 +37,7 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.services.people.v1.PeopleServiceScopes;
+import com.google.api.services.people.v1.model.EmailAddress;
 import com.google.api.services.people.v1.model.ListConnectionsResponse;
 import com.google.api.services.people.v1.model.Person;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public static String PACKAGE_NAME;
     private boolean bound;
     static ArrayList<String> someList;
-    public static ArrayList<String> friendsList;
+    public static ArrayList<String> friendsList = new ArrayList<String>();
     public static String myAccountID;
 
     /**
@@ -135,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .requestEmail()
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN),
                         new Scope(PeopleServiceScopes.CONTACTS_READONLY),
-                        new Scope(PeopleServiceScopes.USERINFO_PROFILE))
+                        new Scope(PeopleServiceScopes.USERINFO_PROFILE),
+                        new Scope(PeopleServiceScopes.USER_EMAILS_READ))
                 .build();
 
 
@@ -304,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 if (fromIntent.isSuccess()) {
                     GoogleSignInAccount account = fromIntent.getSignInAccount();
-                    myAccountID = account.getId();
                     Log.d(SIGN_IN_TAG, "Sign in result: " + fromIntent.getStatus().isSuccess());
                     Log.d(SIGN_IN_TAG, "Server Authorization Code: " + account.getServerAuthCode());
 
@@ -355,16 +356,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             try {
                 PeopleService peopleGetter = PeopleServiceFactory.setUp(MainActivity.this, parameters[0]);
-
+                Person profile = peopleGetter.people().get("people/me")
+                        .setRequestMaskIncludeField("person.names,person.emailAddresses")
+                        .execute();
+                myAccountID = profile.getResourceName();
+                Log.d("myAccountID", profile.getEmailAddresses().get(0).getValue());
                 ListConnectionsResponse peopleList = peopleGetter.people().connections()
                         .list("people/me")
-                        .setRequestMaskIncludeField("person.names")
+                        .setPageSize(100)
+                        .setRequestMaskIncludeField("person.names,person.emailAddresses")
                         .execute();
                 List<Person> friends = peopleList.getConnections();
+                if (friends == null) {
+                    System.out.println("I HAVE NO FRIENDS");
+                }
                 for (Person p : friends) {
-                    friendsList.add(p.getResourceName());
-                    friendsIDs.add(p.getResourceName());
-                    Log.d("Friend ID Added: ", p.getResourceName());
+                    List<EmailAddress> grahamPls = p.getEmailAddresses();
+                    friendsList.add(grahamPls.get(0).getValue());
+                    friendsIDs.add(grahamPls.get(0).getValue());
+                    Person person = peopleGetter.people().get(p.getResourceName()).setPersonFields("emailAddresses").execute();
+                    Log.d("Friend ID Added: ", grahamPls.get(0).getValue());
+                    System.out.println(person.getEmailAddresses().get(0).getValue());
                 }
 
             } catch (IOException e) {
