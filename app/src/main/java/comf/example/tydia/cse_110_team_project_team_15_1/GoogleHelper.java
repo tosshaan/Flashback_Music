@@ -38,15 +38,11 @@ public class GoogleHelper {
      * Returns the name that needs to be displayed on the screen, whether friend or anonymous
      */
     public static String getDisplayName(String id){
-        Person foundFriend = null;
         Log.d("Song Username Info", id);
+
         String email = parseForEmail(id);
-        for(Person p : MainActivity.friendsList){
-            if(p.getEmailAddresses().get(0).getValue().equals(email)){
-                foundFriend = p;
-                break;
-            }
-        }
+
+        Person foundFriend = getFriend(email);
         if(foundFriend != null){
             return getFriendsName(foundFriend);
         }
@@ -54,8 +50,27 @@ public class GoogleHelper {
             return getAnonName(id);
         }
     }
-    private static String parseForEmail(String id){
-        int index = id.indexOf("!");
+
+    /*
+     * Returns the Person object of the friend on your friends list with a matching email
+     * Return null if the email is not someone on your friends list
+     */
+    public static Person getFriend(String email){
+        Person retVal = null;
+        for(Person p : MainActivity.friendsList){
+            if(p.getEmailAddresses().get(0).getValue().equals(email)){
+                retVal = p;
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    /*
+     * Fetches just the email portion of the user ID stored in firebase, scrapping the anon name
+     */
+    public static String parseForEmail(String id){
+        int index = id.lastIndexOf("!");
         if(index != -1){
             return id.substring(0, index);
         }
@@ -64,9 +79,17 @@ public class GoogleHelper {
             return "";
         }
     }
+
+    /*
+     * Returns the name of your friend from the person object of your friends list
+     */
     private static String getFriendsName(Person p){
         return p.getNames().get(0).getDisplayName();
     }
+
+    /*
+     * Gets the anonymous name of someone who is not on your friends list
+     */
     private static String getAnonName(String id){
         int index = id.indexOf("!");
         if(index != -1){
@@ -77,9 +100,17 @@ public class GoogleHelper {
             return "Anon Name problem found";
         }
     }
+
+    /*
+     * Generates a full username for the current user in format "email!anonymousName"
+     */
     public static String generateUserName(String email){
         return email + "!" + generateAnonName();
     }
+
+    /*
+     * Generates the anonymous portion of the users unique ID
+     */
     private static String generateAnonName(){
         Random ran = new Random();
         int adjective = ran.nextInt(50);
