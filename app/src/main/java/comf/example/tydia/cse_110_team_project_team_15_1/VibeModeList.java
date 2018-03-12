@@ -100,24 +100,6 @@ public class VibeModeList {
                         vibeModeURLList.set(j+1, tempURL);
                         done = false;
                     }
-                    // If songs do not break tie, look at timestamp
-                    else if( (db.getSongLikedStatus(songNamej) &&
-                            db.getSongLikedStatus(songNamejPLUS1) ) ||
-                            (!db.getSongLikedStatus(songNamejPLUS1) &&
-                                    !db.getSongLikedStatus(songNamej ))) {
-                        if( db.getCurrentSongTimestamp(songNamej).compareTo(db.getCurrentSongTimestamp(songNamejPLUS1)) < 0) {
-                            HashMap.Entry<String,Integer> temp = new HashMap.SimpleEntry<>(vibeModeSongList.get(j).getKey(),
-                                    vibeModeSongList.get(j).getValue());
-                            HashMap.Entry<String,Integer> tempURL = new HashMap.SimpleEntry<>(vibeModeURLList.get(j).getKey(),
-                                    vibeModeURLList.get(j).getValue());
-                            vibeModeSongList.set(j, vibeModeSongList.get(j+1));
-                            vibeModeSongList.set(j+1, temp);
-                            vibeModeURLList.set(j, vibeModeURLList.get(j+1));
-                            vibeModeURLList.set(j+1, tempURL);
-                            done = false;
-                        }
-                    }
-
                 }
 
             }
@@ -128,8 +110,9 @@ public class VibeModeList {
 
         }
 
+        //Log.d("HUUUGE", "breakTies: " + vibeModeURLs.size() + ", " + vibeModeSongs.size());
 
-        for( int i = 0; i < vibeModeSongList.size(); i++ ) {
+        for( int i = 0; i < vibeModeURLs.size() ; i++ ) {
             vibeModeSongs.add(vibeModeSongList.get(i).getKey());
             vibeModeURLs.add(vibeModeURLList.get(i).getKey());
         }

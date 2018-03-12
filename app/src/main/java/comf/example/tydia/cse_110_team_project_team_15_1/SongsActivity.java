@@ -261,7 +261,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
 
-    public ArrayList<File> findSong(File root) {
+    public static ArrayList<File> findSong(File root) {
 
         ArrayList<File> at = new ArrayList<File>();
         File[] files = root.listFiles();
