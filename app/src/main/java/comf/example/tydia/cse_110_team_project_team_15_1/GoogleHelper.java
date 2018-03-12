@@ -34,6 +34,9 @@ public class GoogleHelper {
                                         "Wasp", "Worm", "Yak", "Zebra", "Penguin",
                                         "Phoenix", "Python", "Possum", "Hamster", "Bear"};
 
+    /*
+     * Returns the name that needs to be displayed on the screen, whether friend or anonymous
+     */
     public static String getDisplayName(String id){
         Person foundFriend = null;
         Log.d("Song Username Info", id);
