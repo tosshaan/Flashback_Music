@@ -29,7 +29,7 @@ import static java.lang.Thread.sleep;
  * Opened when a particular album name is clicked from AlbumaActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements songObserver {
 
     public static database data;
     public static LocationService locationService;
@@ -252,8 +252,13 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
         }
-
+        myDownloadManager dm = new myDownloadManager(this, this, this);
+        dm.haveStoragePermission();
+        dm.checkExternalStorage();
     }
 
 
+    public void update() {
+
+    }
 }
