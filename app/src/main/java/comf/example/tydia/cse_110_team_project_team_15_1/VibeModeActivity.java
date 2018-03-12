@@ -2,10 +2,12 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +19,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class VibeModeActivity extends AppCompatActivity {
+import static java.lang.Thread.sleep;
+
+public class VibeModeActivity extends AppCompatActivity implements songObserver{
 
     VibeModeList VMList;
     FirebaseDB firebaseDB;
@@ -25,7 +29,10 @@ public class VibeModeActivity extends AppCompatActivity {
     database myData;
     private myMusicPlayer musicPlayer;
     MetadataGetter metadataGetter;
+    private int songIndex;
     ArrayList<String> songNames;
+    ArrayList<String> songURLs;
+    private String[] songsUri;
 
 
     @Override
@@ -37,6 +44,8 @@ public class VibeModeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vibe_mode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        musicPlayer = new myMusicPlayer();
+        musicPlayer.regObserver(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +73,17 @@ public class VibeModeActivity extends AppCompatActivity {
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
                 VMList.generateList(songNameList, songURLList);
                 songNames = VMList.getVibeModeSongs();
+                songURLs = VMList.getVibeModeURLs();
+                String[] songURLsarr= new String[songURLs.size()];
+                for( int i = 0; i < songURLs.size(); i++ ) {
+                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
+                                    songURLs.get(i);
+                    songURLsarr[i] = path;
+                }
+
+                musicPlayer.setMusic(songURLsarr, 0);
+                musicPlayer.play();
+
                 list = (ListView) findViewById(R.id.list_listofsongs);
                 // context, database structure, data
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1 ,songNames);
@@ -82,6 +102,13 @@ public class VibeModeActivity extends AppCompatActivity {
     //    list.setAdapter(adapter);
        // list.setOnItemClickListener(this);
     }
+
+    @Override
+    public void update() {
+        //TODO
+    }
+
+
 
     /*
     @Override
