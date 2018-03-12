@@ -39,7 +39,7 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
     private String songName;
     private String[] songsUri;
     private FirebaseDB firebaseDB;
-    private playerSubject subject;
+    //private playerSubject subject;
     //private boolean albumMode = true;
 
     database myData;
@@ -511,7 +511,7 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
         }
 
         Log.d("THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        firebaseDB.submit("User2", currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+        firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
 
     }
 }

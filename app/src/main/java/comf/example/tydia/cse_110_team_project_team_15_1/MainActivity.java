@@ -1,12 +1,16 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +21,28 @@ import android.content.Intent;
 import android.view.View;
 import android.Manifest;
 
+import com.google.api.services.people.v1.PeopleService;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.services.people.v1.PeopleServiceScopes;
+import com.google.api.services.people.v1.model.EmailAddress;
+import com.google.api.services.people.v1.model.ListConnectionsResponse;
+import com.google.api.services.people.v1.model.Person;
 
 import static java.lang.Thread.sleep;
 
@@ -29,13 +51,23 @@ import static java.lang.Thread.sleep;
  * Opened when a particular album name is clicked from AlbumaActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class MainActivity extends AppCompatActivity implements songObserver {
+
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, AsyncObserver, songObserver{
+    private static final String SIGN_IN_TAG = "X";
+    GoogleApiClient signInClient;
+
+
+    final int RET_CODE = 200;
+    final int CHECK_CODE = 100;
 
     public static database data;
     public static LocationService locationService;
     public static String PACKAGE_NAME;
     private boolean bound;
     static ArrayList<String> someList;
+    public static ArrayList<Person> friendsList = new ArrayList<Person>();
+    public static Person myPerson;
+    public static String myPersonalID;
 
     /**
      * This method runs when the activity is created
@@ -49,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements songObserver {
         PACKAGE_NAME = getPackageName();
 
         // TODO: DELETE THIS CRAP!!!
-
         /*
 
         FirebaseDB dbFunc = new FirebaseDB();
@@ -120,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements songObserver {
             Log.d("SONG IS: ", name);
         }
 */
-
         // TODO: END OF DELETABLE CRAP!!
+        googleSignIn();
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);
         String last = lastScreen.getString("Activity", "Main");
@@ -163,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements songObserver {
                 launchSongs();
             }
         });
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) this,
@@ -173,6 +205,34 @@ public class MainActivity extends AppCompatActivity implements songObserver {
 
         Intent intent2 = new Intent(this, LocationService.class);
         bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
+
+    }
+    public void googleSignIn() {
+        GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                // The serverClientId is an OAuth 2.0 web client ID
+                .requestServerAuthCode("781790350902-i1j0re1i0i8rc22mhugerv5p6okadnj9.apps.googleusercontent.com")
+                .requestEmail()
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN),
+                        new Scope(PeopleServiceScopes.CONTACTS_READONLY),
+                        new Scope(PeopleServiceScopes.USERINFO_PROFILE),
+                        new Scope(PeopleServiceScopes.USER_EMAILS_READ))
+                .build();
+
+
+        // Begin Sign In Code
+        signInClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleOptions)
+                .build();
+        signInClient.connect();
+
+        getGoogleToken();
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private ServiceConnection serviceChecker = new ServiceConnection(){
@@ -257,8 +317,76 @@ public class MainActivity extends AppCompatActivity implements songObserver {
         dm.checkExternalStorage();
     }
 
+    //Sign in screen
+    private void getGoogleToken() {
+        Intent signIn = Auth.GoogleSignInApi.getSignInIntent(signInClient);
+        startActivityForResult(signIn, RET_CODE);
+    }
+    @Override
+    protected void onActivityResult(int reqCode, int resCode, Intent retData) {
+        super.onActivityResult(reqCode, resCode, retData);
+
+        switch (reqCode) {
+            case RET_CODE:
+                Log.d(SIGN_IN_TAG, "sign in fromIntent");
+                GoogleSignInResult fromIntent = Auth.GoogleSignInApi.getSignInResultFromIntent(retData);
+
+                if (fromIntent.isSuccess()) {
+                    GoogleSignInAccount account = fromIntent.getSignInAccount();
+                    Log.d(SIGN_IN_TAG, "Sign in result: " + fromIntent.getStatus().isSuccess());
+                    Log.d(SIGN_IN_TAG, "Server Authorization Code: " + account.getServerAuthCode());
+
+                    new FriendAsync(this).execute(account.getServerAuthCode());
+
+
+                } else {
+
+                    Log.d(SIGN_IN_TAG, fromIntent.getStatus().toString() + " Error Message: " + fromIntent.getStatus().getStatusMessage());
+                }
+                break;
+        }
+
+    }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
+        Log.d("onConnectionFailed", "Error: " + result.getErrorMessage());
+
+        GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
+        Dialog d = availability.getErrorDialog(this, result.getErrorCode(), CHECK_CODE);
+        d.show();
 
     public void update() {
 
+    }
+
+    }
+    @Override
+    public void onConnected(Bundle bundle) {
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int x) {
+
+    }
+
+
+    @Override
+    public void callback() {
+        //Checking if we need to generate a unique anon name for the current user
+        SharedPreferences username = getSharedPreferences("Names", MODE_PRIVATE);
+        String storedName = username.getString("Username", null);
+        if(storedName == null){
+            myPersonalID = GoogleHelper.generateUserName(myPerson.getEmailAddresses().get(0).getValue());
+            SharedPreferences.Editor edit = username.edit();
+            edit.putString("Username",myPersonalID);
+            Log.d("Callback", "Username generated: " + myPersonalID);
+            edit.apply();
+        }
+        else{
+            Log.d("Callback", "Username found: " + storedName);
+            myPersonalID = storedName;
+        }
     }
 }

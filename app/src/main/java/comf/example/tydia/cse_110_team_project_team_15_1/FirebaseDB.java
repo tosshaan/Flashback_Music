@@ -45,7 +45,7 @@ public class FirebaseDB {
      */
     public void submit(String userName, String address, String songName, long date, Uri url ) {
         //songDatabaseRecord song = new songDatabaseRecord(userName, songName, time);
-        myFirebaseRef.child(address).child(userName).child(songName).child(convertURL(url)).setValue(date);
+        myFirebaseRef.child(address).child(convertEmail(userName)).child(songName).child(convertURL(url)).setValue(date);
     }
 
     /** Method to find all songs played at a particular location
@@ -249,9 +249,9 @@ public class FirebaseDB {
                         String currAddress = locationSnap.getKey();
                         // Looping through users in location
                         for( DataSnapshot userSnap: locationSnap.getChildren() ) {
-                            String currUser = userSnap.getKey();
+                            String currUser = unconvertEmail(userSnap.getKey());
                             // TODO: Figure out proper userName!
-                            if( !currUser.equals("User")) {
+                            if( !currUser.equals(MainActivity.myPersonalID)) {
                                     // Looping through songs for user
                                 for( DataSnapshot songSnap: userSnap.getChildren() ) {
                                     String currSong = songSnap.getKey();
@@ -277,7 +277,12 @@ public class FirebaseDB {
                                             }
                                         }
 
-                                        // TODO: Check for Google+ Friend
+                                        // Checking if user is a friend
+                                        if( GoogleHelper.getFriend(GoogleHelper.parseForEmail(currUser)) != null
+                                                && !songNamesFriend.contains(currSong)) {
+                                            songNames.add(currSong);
+                                            songNames.add(currURL);
+                                        }
 
                                     }
                                 }
@@ -363,6 +368,26 @@ public class FirebaseDB {
         url = url.replace("@",".");
         url = url.replace("^","/");
         return url;
+    }
+
+    /**
+     * Method to convert email addresses to remove forbidden characters
+     * @param email the email to be converted
+     * @return the email with forbidden characters replaced
+     */
+    private static String convertEmail(String email) {
+        email = email.replace(".","*");
+        return email;
+    }
+
+    /**
+     * Unconvert email back to original
+     * @param email the converted email
+     * @return the original email
+     */
+    private static String unconvertEmail(String email) {
+        email = email.replace("*",".");
+        return email;
     }
 
 }
