@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.google.api.services.people.v1.model.Person;
 
+import org.mortbay.jetty.Main;
+
 import java.util.Random;
 
 /**
@@ -35,12 +37,16 @@ public class GoogleHelper {
                                         "Phoenix", "Python", "Possum", "Hamster", "Bear"};
 
     /*
-     * Returns the name that needs to be displayed on the screen, whether friend or anonymous
+     * Returns the name that needs to be displayed on the screen, whether friend, you, or anonymous
      */
     public static String getDisplayName(String id){
         Log.d("Song Username Info", id);
 
         String email = parseForEmail(id);
+
+        if(MainActivity.myPerson.getEmailAddresses().get(0).equals(email)){
+            return "You";
+        }
 
         Person foundFriend = getFriend(email);
         if(foundFriend != null){
