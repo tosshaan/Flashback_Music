@@ -314,8 +314,9 @@ public class FirebaseDB {
     }
 
 
-    public void getLastSongPlayer(String userName, String songName, long time, FirebaseQueryObserver callBack ) {
+    public void getLastSongPlayer(String songName, long time, FirebaseQueryObserver callBack ) {
         long[] latestTime = new long[1];
+        latestTime[0] = 0;
        // String latestAddress = null;
        // String latestUser = null;
         StringBuilder latestAddress = new StringBuilder();
@@ -345,8 +346,8 @@ public class FirebaseDB {
                                         // Assigning current values to return values if song was played
                                         // more recently or if this is the first time
                                         if( latestTime[0] == 0 ) {
-                                            latestAddress.replace(0, latestAddress.length() -1, currAddress);
-                                            latestUser.replace(0, latestUser.length() -1, currUser);
+                                            latestAddress.replace(0, 0, currAddress);
+                                            latestUser.replace(0, 0, currUser);
                                             latestTime[0] = currTime;
                                         }
                                         else if( Math.abs(time - currTime) < latestTime[0] ) {
