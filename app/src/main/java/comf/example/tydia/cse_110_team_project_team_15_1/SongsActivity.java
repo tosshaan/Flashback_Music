@@ -53,7 +53,7 @@ import java.util.List;
  * Opened when "all songs" is clicked from MainActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, songObserver {
 
     private SortSongs sortSongs; //= new SortSongs(getApplicationContext());
 
@@ -78,6 +78,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     // yt tutorial to download songs
     long queueid;
     DownloadManager dm;
+    private myDownloadManager downloadManager;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 99;
 
@@ -120,12 +121,16 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         });
 
         list = (ListView) findViewById(R.id.list_allsongs);
+        downloadManager = new myDownloadManager(this, this, this);
+        downloadManager.regObserver(this);
 
+        downloadManager.checkExternalStorage();
+        /*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             checkStoragePermission();
         }
-        display();
+        display(); */
 
         // launch flashback (temp)
         final Button launchVibe = (Button) findViewById(R.id.b_vibe_song);
@@ -157,7 +162,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             editText.getText().toString();
 
             //"http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
-            Download(input);
+            if (downloadManager.haveStoragePermission()) {
+                downloadManager.Download(input);
+            }
 //            input = "http://www.hubharp.com/web_sound/WalloonLilliShort.mp3";
 //            Download(input);
 //
@@ -173,29 +180,6 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         });
 
 
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if(DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                    DownloadManager.Query req_query = new DownloadManager.Query();
-                    req_query.setFilterById(queueid);
-                    Cursor c = dm.query(req_query);
-
-                    if(c.moveToFirst()) {
-                        int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
-
-                        if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
-                            Toast.makeText(getApplicationContext(), "Download Sucessful", Toast.LENGTH_SHORT).show();
-                            mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
-                            display();
-                        }
-                    }
-                }
-            }
-        };
-
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         menuRed = (FloatingActionMenu) findViewById(R.id.menu_red);
 
@@ -215,36 +199,6 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
 
-    public void Download(String input) {
-        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, input);
-        //Log.d("DOWNLOADINGx", "Download path " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-
-        haveStoragePermission();
-
-        queueid = dm.enqueue(request);
-
-    }
-
-    public  boolean haveStoragePermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.e("Permission error","You have permission");
-                return true;
-            } else {
-
-                Log.e("Permission error","You have asked for permission");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //you dont need to worry about these stuff below api level 23
-            Log.e("Permission error","You already have the permission");
-            return true;
-        }
-    }
 
     public void View_Click(View view) {
         Intent intent = new Intent();
@@ -360,51 +314,6 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         });
     }
 
-    public void checkExternalStorage() {
-
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            mExternalStorageAvailable = true;
-        }
-        else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            mExternalStorageAvailable = true;
-        }
-        else {
-            mExternalStorageAvailable = false;
-        }
-
-        handleExternalStorageState();
-    }
-
-    public void handleExternalStorageState() {
-
-        if (mExternalStorageAvailable) {
-
-            display();
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "Please insert an SDcard", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private boolean checkStoragePermission() {
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }
-            else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }
-            return false;
-        }
-        else {
-
-            checkExternalStorage();
-            return true;
-        }
-    }
 
     // TODO sorting..
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -440,4 +349,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         }
     };
 
+    @Override
+    public void update() {
+        mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        display();
+    }
 }

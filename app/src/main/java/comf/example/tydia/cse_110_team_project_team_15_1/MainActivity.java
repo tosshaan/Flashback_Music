@@ -51,7 +51,8 @@ import static java.lang.Thread.sleep;
  * Opened when a particular album name is clicked from AlbumaActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, AsyncObserver{
+
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, AsyncObserver, songObserver{
     private static final String SIGN_IN_TAG = "X";
     GoogleApiClient signInClient;
 
@@ -311,7 +312,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     return;
                 }
         }
-
+        myDownloadManager dm = new myDownloadManager(this, this, this);
+        dm.haveStoragePermission();
+        dm.checkExternalStorage();
     }
 
     //Sign in screen
@@ -351,6 +354,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
         Dialog d = availability.getErrorDialog(this, result.getErrorCode(), CHECK_CODE);
         d.show();
+
+    public void update() {
+
+    }
 
     }
     @Override
