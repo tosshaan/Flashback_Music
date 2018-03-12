@@ -22,6 +22,10 @@ import android.widget.ToggleButton;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import static comf.example.tydia.cse_110_team_project_team_15_1.FirebaseDB.MILLISECODNS_IN_DAY;
 
 /**
  * Activity Class for the mediaPlayer functionality of the currently playing song.
@@ -401,9 +405,9 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
     private void updateLastPlayedInfo(){
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
         TextView lastLoc = (TextView) findViewById(R.id.textView4);
-        TextView username = (TextView) findViewById(R.id.usernameField);
+        TextView lastUsername = (TextView) findViewById(R.id.usernameField);
 
-        //TODO: change to get remote last played location and time instead of local
+        /*TODO: change to get remote last played location and time instead of local
 
         try {
             if(myData.getCurrentSongLastLocation(songName, this)!= null){
@@ -422,14 +426,28 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
             lastTime.setText("Song has not been played before");
         }
 
-        //end TODO
+        //end TODO*/
 
-        //TODO: get last username
-        String userID = null/*TODO: Carlos' Method*/;
-        if(userID != null) {
-            String name = GoogleHelper.getDisplayName(userID);
-            username.setText(name);
-        }
+        firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
+            @Override
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
+                if(latestTime == 0){
+                    lastLoc.setText("");
+                    lastTime.setText("Song has not been played before!");
+                    lastUsername.setText("");
+                }
+                else {
+                    long time = latestTime / MILLISECODNS_IN_DAY;
+                    LocalDate songDate = LocalDate.ofEpochDay(time);
+                    lastTime.setText(songDate.toString());
+
+                    lastLoc.setText(latestAddress);
+
+                    String userToPrint = GoogleHelper.getDisplayName(latestUser);
+                    lastUsername.setText(userToPrint);
+                }
+            }
+        });
     }
 
     /**
