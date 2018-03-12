@@ -396,11 +396,15 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
 
     /*
      * Call whenever a song changes within the same activity
-     * Updates the Last Play Location and Last Played Time
+     * Updates the Last Play Location, Last Played Time, and username
      */
     private void updateLastPlayedInfo(){
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
-        TextView lastLoc = (TextView) findViewById((R.id.textView4));
+        TextView lastLoc = (TextView) findViewById(R.id.textView4);
+        TextView username = (TextView) findViewById(R.id.usernameField);
+
+        //TODO: change to get remote last played location and time instead of local
+
         try {
             if(myData.getCurrentSongLastLocation(songName, this)!= null){
                 lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
@@ -416,6 +420,15 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
         }
         else{
             lastTime.setText("Song has not been played before");
+        }
+
+        //end TODO
+
+        //TODO: get last username
+        String userID = null/*TODO: Carlos' Method*/;
+        if(userID != null) {
+            String name = GoogleHelper.getDisplayName(userID);
+            username.setText(name);
         }
     }
 
@@ -501,7 +514,6 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
         updateDislikedButton();
         updateLikedButton();
         myData.finishSongInfoRequest(true, false);
-        // TODO: Figure out user name
         Location myLoc = MainActivity.getCurrLoc();
         String currSongAddress = "";
         try {
