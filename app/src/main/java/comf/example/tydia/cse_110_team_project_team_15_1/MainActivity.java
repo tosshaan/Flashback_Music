@@ -354,12 +354,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
         Dialog d = availability.getErrorDialog(this, result.getErrorCode(), CHECK_CODE);
         d.show();
+    }
 
     public void update() {
 
     }
 
-    }
+
     @Override
     public void onConnected(Bundle bundle) {
 
