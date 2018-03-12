@@ -281,7 +281,7 @@ public class FirebaseDB {
                                         if( GoogleHelper.getFriend(GoogleHelper.parseForEmail(currUser)) != null
                                                 && !songNamesFriend.contains(currSong)) {
                                             songNames.add(currSong);
-                                            songNames.add(currURL);
+                                            songURLs.add(currURL);
                                         }
 
                                     }

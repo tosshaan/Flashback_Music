@@ -359,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void update() {
 
     }
+
     @Override
     public void onConnected(Bundle bundle) {
 
