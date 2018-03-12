@@ -511,7 +511,7 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
         }
 
         Log.d("THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        firebaseDB.submit("User2", currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+        firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
 
     }
 }
