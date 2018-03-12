@@ -235,6 +235,7 @@ public class FirebaseDB {
         ArrayList<String> songURLsDate = new ArrayList<>();
         ArrayList<String> songNamesFriend = new ArrayList<>();
         ArrayList<String> songURLsFriend = new ArrayList<>();
+
         // Getting database records
         Query queryRef = myFirebaseRef.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -250,8 +251,7 @@ public class FirebaseDB {
                         // Looping through users in location
                         for( DataSnapshot userSnap: locationSnap.getChildren() ) {
                             String currUser = unconvertEmail(userSnap.getKey());
-                            // TODO: Figure out proper userName!
-                            if( !currUser.equals(MainActivity.myPersonalID)) {
+                            if( !currUser.equals(userName) ){
                                     // Looping through songs for user
                                 for( DataSnapshot songSnap: userSnap.getChildren() ) {
                                     String currSong = songSnap.getKey();
@@ -298,7 +298,7 @@ public class FirebaseDB {
                     songURLs.addAll( songURLsAdr );
                     songURLs.addAll( songURLsDate );
                     songURLs.addAll( songURLsFriend );
-                    callBack.update(songNames, songURLs);
+                    callBack.update(songNames, songURLs, null , null, 0);
 
                 }
             }
@@ -314,35 +314,67 @@ public class FirebaseDB {
     }
 
 
-
-    /*
-    private static void actuallyChangeList(DataSnapshot snapshot, ArrayList<String> songList) {
-
-        if (snapshot == null || snapshot.getValue() == null) {
-            Log.d("RESULT OF QUERY IS", "NO RECORD FOUND");
-        } else {
-            for (DataSnapshot snap : snapshot.getChildren()) {
-                //songDatabaseRecord song = snapshot.getValue(songDatabaseRecord.class);
-                for (DataSnapshot snapAgain : snap.getChildren()) {
-                    for (DataSnapshot snapYetAgain : snapAgain.getChildren()) {
-                        // At this level, get key has the songName whose value is time
-                        // Addings song 3 times to ensure higher prority in algorithm
-                        // based on repetittions
-                        Log.d("WHAT IS GOING ON??????", snapYetAgain.getKey());
-
-                        songList.add(snapYetAgain.getKey());
-                        songList.add(snapYetAgain.getKey());
-                        songList.add(snapYetAgain.getKey());
-                        songList.add(snapYetAgain.getKey());
-                        songList.add("YOYOYO");
-                        Log.d("TEMP SIZE ", songList.size() + "");
-                    }
+    public void getLastSongPlayer(String userName, String songName, long time, FirebaseQueryObserver callBack ) {
+        long[] latestTime = new long[1];
+       // String latestAddress = null;
+       // String latestUser = null;
+        StringBuilder latestAddress = new StringBuilder();
+        StringBuilder latestUser = new StringBuilder();
+        Query queryRef = myFirebaseRef.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot == null || snapshot.getValue() == null) {
+                    Log.d("RESULT OF QUERY IS", "NO RECORD FOUND");
                 }
+                else {
+                    // Looping through database records
+                    for( DataSnapshot locationSnap: snapshot.getChildren() ) {
+                        String currAddress = locationSnap.getKey();
+                        // Looping through users in location
+                        for( DataSnapshot userSnap: locationSnap.getChildren() ) {
+                            String currUser = unconvertEmail(userSnap.getKey());
+                            // Looping through songs for user
+                            for( DataSnapshot songSnap: userSnap.getChildren() ) {
+                                String currSong = songSnap.getKey();
+                                // Looking at who played this song if it is the appropriate song
+                                if( currSong.equals(songName)) {
+                                    // Looping through urls for user
+                                    for (DataSnapshot URLsnap : songSnap.getChildren()) {
+                                        long currTime = (long) URLsnap.getValue();
+                                        // Assigning current values to return values if song was played
+                                        // more recently or if this is the first time
+                                        if( latestTime[0] == 0 ) {
+                                            latestAddress.replace(0, latestAddress.length() -1, currAddress);
+                                            latestUser.replace(0, latestUser.length() -1, currUser);
+                                            latestTime[0] = currTime;
+                                        }
+                                        else if( Math.abs(time - currTime) < latestTime[0] ) {
+                                            latestAddress.replace(0, latestAddress.length() -1, currAddress);
+                                            latestUser.replace(0, latestUser.length() -1, currUser);
+                                            latestTime[0] = currTime;
+                                        }
+                                    }
+                                }
+                            }
 
+                        }
+
+                    }
+
+                    callBack.update(null, null, latestAddress.toString(), latestUser.toString(),
+                                                latestTime[0]);
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("TAG1", "failed to read value.", error.toException());
+            }
+        });
+
     }
-    */
 
     /**
      * Method to remove forbidden symbols from the URL and remove path

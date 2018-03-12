@@ -8,6 +8,5 @@ import java.util.HashMap;
  */
 
 public interface FirebaseQueryObserver {
-    public void update(ArrayList<String> songNameList, ArrayList<String> songURLList);
-
+    public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime);
 }

@@ -70,7 +70,7 @@ public class VibeModeActivity extends AppCompatActivity implements songObserver{
 
         firebaseDB.getAllSongsForVibe(currAddress, currDate, userName, new FirebaseQueryObserver() {
             @Override
-            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String adr, String usr, long time) {
                 VMList.generateList(songNameList, songURLList);
                 songNames = VMList.getVibeModeSongs();
                 songURLs = VMList.getVibeModeURLs();
