@@ -20,6 +20,8 @@ public class myMusicPlayer implements playerSubject {
     String[] songList;
     boolean playFlag = true;
     songObserver observer;
+    private String songName;
+
 
 
     public myMusicPlayer() {

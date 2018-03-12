@@ -39,7 +39,7 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
     private String songName;
     private String[] songsUri;
     private FirebaseDB firebaseDB;
-    private playerSubject subject;
+    //private playerSubject subject;
     //private boolean albumMode = true;
 
     database myData;

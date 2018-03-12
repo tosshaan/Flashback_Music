@@ -57,7 +57,7 @@ public class VibeModeList {
         ArrayList<Map.Entry<String, Integer>> vibeSongsList = new ArrayList<>(uniqueSongsCount.entrySet());
         vibeSongsList.sort( Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
 
-        ArrayList<Map.Entry<String, Integer>> vibeURLsList = new ArrayList<>(uniqueSongsCount.entrySet());
+        ArrayList<Map.Entry<String, Integer>> vibeURLsList = new ArrayList<>(uniqueURLsCount.entrySet());
         vibeSongsList.sort( Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
 
         breakTies( vibeSongsList, vibeURLsList );
