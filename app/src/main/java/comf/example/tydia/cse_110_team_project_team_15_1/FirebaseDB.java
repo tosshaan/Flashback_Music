@@ -277,7 +277,12 @@ public class FirebaseDB {
                                             }
                                         }
 
-                                        // TODO: Check for Google+ Friend
+                                        // Checking if user is a friend
+                                        if( GoogleHelper.getFriend(GoogleHelper.parseForEmail(currUser)) != null
+                                                && !songNamesFriend.contains(currSong)) {
+                                            songNames.add(currSong);
+                                            songNames.add(currURL);
+                                        }
 
                                     }
                                 }
