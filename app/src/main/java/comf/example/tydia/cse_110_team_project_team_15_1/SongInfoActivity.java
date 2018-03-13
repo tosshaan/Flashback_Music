@@ -2,14 +2,9 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
 import android.location.Location;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,7 +15,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
-import java.net.URI;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,7 +26,7 @@ import static comf.example.tydia.cse_110_team_project_team_15_1.FirebaseDB.MILLI
  * Opened when a particular song name is clicked from SongsActivity or AlbumSongsActivity
  * Redirects to FlashBackActivity
  */
-public class SongInfoActivity extends AppCompatActivity implements songObserver {
+public class SongInfoActivity extends AppCompatActivity implements Observer {
 
     //private MediaPlayer mediaPlayer;
     private myMusicPlayer musicPlayer;

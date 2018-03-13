@@ -1,6 +1,5 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
-import android.*;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -18,7 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import static comf.example.tydia.cse_110_team_project_team_15_1.ViewDLSongsActivity.findSong;
+import java.util.ArrayList;
 
 /**
  * Created by tosshaan on 3/11/2018.
@@ -31,12 +30,13 @@ public class myDownloadManager implements playerSubject {
     private Boolean mExternalStorageAvailable;
     private Context context;
     private Activity activity;
-    private songObserver observer;
+    private ArrayList<Observer> observers;
 
-    public myDownloadManager(Context c, Activity a, songObserver obs) {
+    public myDownloadManager(Context c, Activity a, Observer obs) {
         context = c;
         activity = a;
-        observer = obs;
+        observers = new ArrayList<>();
+        observers.add(obs);
 
         checkExternalStorage();
 
@@ -69,6 +69,9 @@ public class myDownloadManager implements playerSubject {
     public void Download(String input) {
         if (input.equals("")) {
             return;
+        }
+        if (input.charAt(0) == '/') {
+            input = input.substring(1);
         }
         dm = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
@@ -148,11 +151,19 @@ public class myDownloadManager implements playerSubject {
 
     @Override
     public void notifyObservers() {
-        observer.update();
+
+        for (Observer obs:  observers) {
+            obs.update();
+        }
     }
 
     @Override
-    public void regObserver(songObserver obs) {
-        observer = obs;
+    public void regObserver(Observer obs) {
+        observers.add(obs);
+    }
+
+    @Override
+    public void delObserver(Observer obs) {
+        observers.remove(obs);
     }
 }
