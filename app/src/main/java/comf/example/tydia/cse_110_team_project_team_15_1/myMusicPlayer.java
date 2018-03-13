@@ -2,25 +2,23 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.media.MediaPlayer;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 
 /**
  * Created by tosshaan on 3/10/2018.
  */
 
-public class myMusicPlayer implements playerSubject {
+public class myMusicPlayer implements playerSubject, Observer {
 
     MediaPlayer mp;
     int songIndex;
     String[] songList;
     boolean playFlag = true;
-    songObserver observer;
+    Observer observer;
     private String songName;
+    boolean firstSongPlayable = true;
 
 
 
@@ -31,6 +29,18 @@ public class myMusicPlayer implements playerSubject {
     public void setMusic(String[] list, int index) {
         songList = list;
         songIndex = index;
+
+        if (list == null) {
+            Log.d("CAN'T PLAY IN VIBE", "setMusic: nothing in list, let other users play some songs first");
+            return;
+        }
+        File x = new File("file://" +list[0]);
+        if (!x.exists()) {
+            Log.d("CAN'T PLAY IN VIBE", "none of the songs are downloaded, wait a bit for first song to download");
+            firstSongPlayable = false;
+            return;
+        }
+
         try {
             mp.setDataSource("file://" + songList[index]);
             mp.prepare();
@@ -150,7 +160,28 @@ public class myMusicPlayer implements playerSubject {
     }
 
     @Override
-    public void regObserver(songObserver obs) {
+    public void regObserver(Observer obs) {
         observer = obs;
+    }
+
+    @Override
+    public void delObserver(Observer obs) {
+        observer = null;
+    }
+
+    @Override
+    public void update() {
+        if (!firstSongPlayable) {
+            firstSongPlayable = true;
+            try {
+                mp.setDataSource("file://" + songList[0]);
+                mp.prepare();
+                finish();
+                play();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
