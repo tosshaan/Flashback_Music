@@ -318,7 +318,9 @@ public class FirebaseDB {
     }
 
 
+
     public void getLastSongPlayer(String songName, long time, FirebaseQueryObserver callBack) {
+
         long[] latestTime = new long[1];
         latestTime[0] = 0;
        // String latestAddress = null;
@@ -352,16 +354,16 @@ public class FirebaseDB {
                                         if( latestTime[0] == 0 ) {
                                             latestAddress.append(currAddress);
                                             latestUser.append(currUser);
+
                                             latestTime[0] = currTime;
                                             Log.d("THE ORIGINAL FIRST USER IS: ", "THE ORIGINAL FIRST USER IS " + latestUser.toString());
                                             Log.d("THE ORIGINAL FIRST ADDRESS: ", latestAddress.toString() );
                                             Log.d("ORIGINAL FIRST TIME IS", "FIND ME PLS " + latestTime[0]);
                                         }
+
                                         else if( Math.abs(time - currTime) < Math.abs(time -latestTime[0]) ) {
                                             latestAddress.replace(0, latestAddress.length(), currAddress);
                                             latestUser.replace(0, latestUser.length(), currUser);
-                                            Log.d("THE USER AFTER REPLACING IS: ", latestUser.toString());
-                                            Log.d("THE ADDRESS AFTER REPLACING IS: ", latestAddress.toString() );
                                             latestTime[0] = currTime;
                                         }
 

@@ -1,30 +1,12 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
-import android.Manifest;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.media.RemoteController;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.test.mock.MockContext;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,20 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.github.clans.fab.FloatingActionMenu;
 
-import org.w3c.dom.Text;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 /**
@@ -53,7 +27,7 @@ import java.util.List;
  * Opened when "all songs" is clicked from MainActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, songObserver {
+public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, Observer {
 
     private SortSongs sortSongs; //= new SortSongs(getApplicationContext());
 
@@ -261,7 +235,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
 
-    public ArrayList<File> findSong(File root) {
+    static public ArrayList<File> findSong(File root) {
 
         ArrayList<File> at = new ArrayList<File>();
         File[] files = root.listFiles();

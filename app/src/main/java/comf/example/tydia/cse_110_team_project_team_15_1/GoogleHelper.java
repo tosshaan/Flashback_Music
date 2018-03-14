@@ -44,10 +44,9 @@ public class GoogleHelper {
 
         String email = parseForEmail(id);
 
-        if(MainActivity.myPerson.getEmailAddresses().get(0).equals(email)){
+        if(GoogleHelper.parseForEmail(MainActivity.myPersonalID).equals(email)){
             return "You";
         }
-
         Person foundFriend = getFriend(email);
         if(foundFriend != null){
             return getFriendsName(foundFriend);
@@ -97,9 +96,9 @@ public class GoogleHelper {
      * Gets the anonymous name of someone who is not on your friends list
      */
     private static String getAnonName(String id){
-        int index = id.indexOf("!");
+        int index = id.lastIndexOf("!");
         if(index != -1){
-            return id.substring(index);
+            return id.substring(index + 1);
         }
         else{
             Log.d("GoogleHelper", "Error getting anon name of other user");
