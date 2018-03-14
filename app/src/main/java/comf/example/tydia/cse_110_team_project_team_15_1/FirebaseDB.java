@@ -10,7 +10,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -28,12 +27,16 @@ public class FirebaseDB {
     FirebaseDatabase database;
     DatabaseReference myFirebaseRef;
 
+
     /**
-     * Constrcutor for FirebaseDB class.
+     * Constructor for FirebaseDB. Parameters needed to allow for
+     * populating actual database and test database.
+     * @param db the database that this class will be modifying
+     * @param ref a reference of that database
      */
-    public FirebaseDB() {
-        database = FirebaseDatabase.getInstance();
-        myFirebaseRef = database.getReference();
+    public FirebaseDB(FirebaseDatabase db, DatabaseReference ref) {
+        database = db;
+        myFirebaseRef = ref;
     }
 
     /**
@@ -270,6 +273,7 @@ public class FirebaseDB {
                                         }
                                         // Checking for same week
                                         if ((Math.abs(songDate.getDayOfYear() - currDate.getDayOfYear()) <= DAYS_IN_A_WEEK) &&
+                                                (songDate.getYear() == currDate.getYear() ) &&
                                                 !songNamesDate.contains(currSong)) {
                                             for (int i = 0; i < SECOND_PRIORITY; i++) {
                                                 songNamesDate.add(currSong);
@@ -314,7 +318,9 @@ public class FirebaseDB {
     }
 
 
-    public void getLastSongPlayer(String songName, long time, FirebaseQueryObserver callBack ) {
+
+    public void getLastSongPlayer(String songName, long time, FirebaseQueryObserver callBack) {
+
         long[] latestTime = new long[1];
         latestTime[0] = 0;
        // String latestAddress = null;
@@ -346,15 +352,21 @@ public class FirebaseDB {
                                         // Assigning current values to return values if song was played
                                         // more recently or if this is the first time
                                         if( latestTime[0] == 0 ) {
-                                            latestAddress.replace(0, 0, currAddress);
-                                            latestUser.replace(0, 0, currUser);
+                                            latestAddress.append(currAddress);
+                                            latestUser.append(currUser);
+
                                             latestTime[0] = currTime;
+                                            Log.d("THE ORIGINAL FIRST USER IS: ", "THE ORIGINAL FIRST USER IS " + latestUser.toString());
+                                            Log.d("THE ORIGINAL FIRST ADDRESS: ", latestAddress.toString() );
+                                            Log.d("ORIGINAL FIRST TIME IS", "FIND ME PLS " + latestTime[0]);
                                         }
-                                        else if( Math.abs(time - currTime) < latestTime[0] ) {
+
+                                        else if( Math.abs(time - currTime) < Math.abs(time -latestTime[0]) ) {
                                             latestAddress.replace(0, latestAddress.length(), currAddress);
                                             latestUser.replace(0, latestUser.length(), currUser);
                                             latestTime[0] = currTime;
                                         }
+
                                     }
                                 }
                             }
