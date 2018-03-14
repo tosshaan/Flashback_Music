@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,7 +42,9 @@ public class VibeModeActivity extends AppCompatActivity implements songObserver{
     protected void onCreate(Bundle savedInstanceState) {
         myData = MainActivity.data;
         VMList = new VibeModeList(myData);
-        firebaseDB = new FirebaseDB();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myFireBaseRef = database.getReference();
+        firebaseDB = new FirebaseDB(database, myFireBaseRef);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vibe_mode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

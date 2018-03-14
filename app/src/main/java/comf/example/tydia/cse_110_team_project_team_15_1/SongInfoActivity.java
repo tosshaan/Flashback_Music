@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -55,7 +58,9 @@ public class SongInfoActivity extends AppCompatActivity implements songObserver 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        firebaseDB = new FirebaseDB();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myFireBaseRef = database.getReference();
+        firebaseDB = new FirebaseDB(database, myFireBaseRef);
         myData = MainActivity.data;
 
 
