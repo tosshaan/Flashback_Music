@@ -332,7 +332,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
      */
     private void updateLastPlayedInfo(){
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateFlashback);
-        TextView lastLoc = (TextView) findViewById((R.id.text_locationFlashback));
+        TextView lastLoc = (TextView) findViewById((R.id.text_locationVibe));
         try {
             if(myData.getCurrentSongLastLocation(songName, this)!= null){
                 lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
