@@ -351,8 +351,8 @@ public class FirebaseDB {
                                             latestTime[0] = currTime;
                                         }
                                         else if( Math.abs(time - currTime) < latestTime[0] ) {
-                                            latestAddress.replace(0, latestAddress.length() -1, currAddress);
-                                            latestUser.replace(0, latestUser.length() -1, currUser);
+                                            latestAddress.replace(0, latestAddress.length(), currAddress);
+                                            latestUser.replace(0, latestUser.length(), currUser);
                                             latestTime[0] = currTime;
                                         }
                                     }

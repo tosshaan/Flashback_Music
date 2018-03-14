@@ -46,18 +46,18 @@
         app:layout_constraintVertical_bias="0.386" />
 
     <TextView
-        android:id="@+id/text_timeAndDateFlashback"
+        android:id="@+id/text_usernameVibe"
         android:layout_width="252dp"
         android:layout_height="25dp"
         android:text="@string/time_and_date"
         android:textAlignment="center"
         android:textSize="15sp"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/text_locationFlashback"
+        app:layout_constraintStart_toStartOf="@+id/text_locationVibe"
         app:layout_constraintTop_toBottomOf="@+id/text_SongNameFlashback" />
 
     <TextView
-        android:id="@+id/text_locationFlashback"
+        android:id="@+id/text_timeAndDateVibe"
         android:layout_width="252dp"
         android:layout_height="49dp"
         android:layout_marginBottom="8dp"
@@ -68,7 +68,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_timeAndDateFlashback"
+        app:layout_constraintTop_toBottomOf="@+id/text_usernameVibe"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/text_locationVibe"
+        android:layout_width="252dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/location"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_timeAndDateVibe"
         app:layout_constraintVertical_bias="0.0" />
 
 
