@@ -34,8 +34,9 @@ public class myMusicPlayer implements playerSubject, Observer {
             Log.d("CAN'T PLAY IN VIBE", "setMusic: nothing in list, let other users play some songs first");
             return;
         }
-        File x = new File("file://" +list[0]);
-        if (!x.exists()) {
+        File file = new File("" +list[0]);
+        Log.d("", "THE FILE IS: " + file.toString() );
+        if (!file.exists()) {
             Log.d("CAN'T PLAY IN VIBE", "none of the songs are downloaded, wait a bit for first song to download");
             firstSongPlayable = false;
             return;
@@ -104,8 +105,10 @@ public class myMusicPlayer implements playerSubject, Observer {
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                skip();
                 notifyObservers();
+                skip();
+
+
             }
         });
     }
