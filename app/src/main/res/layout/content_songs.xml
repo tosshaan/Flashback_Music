@@ -119,7 +119,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        fab:menu_backgroundColor="#2ce53935"
+        fab:menu_backgroundColor="#6ec7c7c7"
         fab:menu_fab_label="sort songs by"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true">
