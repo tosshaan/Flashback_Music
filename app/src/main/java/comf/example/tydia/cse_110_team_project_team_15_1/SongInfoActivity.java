@@ -185,6 +185,7 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                musicPlayer.skip();
                 skipSong();
                 if (songIndex < (songsUri.length - 1)) {
                  //   songIndex++;
@@ -291,7 +292,7 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
 
 
                     skipSong();
-                    //musicPlayer.skip();
+                    musicPlayer.skip();
 
                     updateLastPlayedInfo();
                     updateDislikedButton();
@@ -485,7 +486,7 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
      * Method to skip a song
      */
     public void skipSong() {
-        musicPlayer.skip();
+        //musicPlayer.skip();
         if (songIndex < (songsUri.length - 1)) {
             songIndex++;
 
