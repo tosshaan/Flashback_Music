@@ -155,8 +155,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
         TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
 
-        String songName = metadataGetter.getName();
-
+//        String songName = metadataGetter.getName();
+/*
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
@@ -177,7 +177,9 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 }
             }
         });
+        */
     }
+
 
 
     /**
