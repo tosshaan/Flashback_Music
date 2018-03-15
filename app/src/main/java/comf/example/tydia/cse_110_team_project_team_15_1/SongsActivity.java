@@ -202,6 +202,11 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         intent.putExtra("songIndex", i);
         Bundle bundle = new Bundle();
         String[] list = getStringArray();
+        Log.d("", "THE i THAT WAS PASSED " + i);
+        Log.d("", "THE SONG THAT SHOULD BE PLAYED" + list[i]);
+        for( int j = 0; j < list.length; j++ ) {
+            Log.d("", "THE " + j + "th SONG IS " + list[j]);
+        }
 
         bundle.putStringArray("list", list);
         intent.putExtras(bundle);
@@ -214,7 +219,6 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         for (int i = 0; i < mySongs.size(); i++) {
             ret[i] = mySongs.get(i).toString();
         }
-
         return ret;
     }
 
