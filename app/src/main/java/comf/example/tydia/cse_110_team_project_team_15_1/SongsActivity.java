@@ -76,6 +76,33 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        list = (ListView) findViewById(R.id.list_allsongs);
+        downloadManager = new myDownloadManager(this, this, this);
+        downloadManager.regObserver(this);
+
+        downloadManager.checkExternalStorage();
+
+        //downloadManager.setDownloadedSongs();
+
+        Button b_dl = (Button) findViewById(R.id.b_download);
+        b_dl.setOnClickListener(view -> {
+            downloadManager.setDownloadedSongs();
+
+            EditText editText = (EditText) findViewById(R.id.URLeditText);
+            String input = editText.getText().toString();
+
+            Log.d("are u here?", "did u have that");
+            if (downloadManager.haveStoragePermission()) {
+                downloadManager.Download(input);
+            }
+
+            editText.setText("");
+
+
+        });
+
+        Log.d("are u here2", "did u have that");
+
         sortSongs = new SortSongs(getApplicationContext());
 
         // hide action bar
@@ -94,11 +121,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        list = (ListView) findViewById(R.id.list_allsongs);
-        downloadManager = new myDownloadManager(this, this, this);
-        downloadManager.regObserver(this);
 
-        downloadManager.checkExternalStorage();
         /*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -129,24 +152,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        Button b_dl = (Button) findViewById(R.id.b_download);
-        b_dl.setOnClickListener(view -> {
-            EditText editText = (EditText) findViewById(R.id.URLeditText);
-            String input = //"http://www.hubharp.com/web_sound/HarrisLilliburleroShort.mp3";
-            editText.getText().toString();
-
-            //"http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
-            if (downloadManager.haveStoragePermission()) {
-                downloadManager.Download(input);
-            }
-//            input = "http://www.hubharp.com/web_sound/WalloonLilliShort.mp3";
-//            Download(input);
-//
-//            input = "http://www.hubharp.com/web_sound/PurcellSongMusShort.mp3";
-//            Download(input);
 
 
-        });
 
         Button viewdl = (Button) findViewById(R.id.b_viewDownload);
         viewdl.setOnClickListener(view -> {

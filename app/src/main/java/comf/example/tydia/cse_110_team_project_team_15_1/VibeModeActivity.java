@@ -94,6 +94,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 Log.d("length of songNames", " "+songNames.size());
                 Log.d("length of songURLs", " "+songURLs.size());
 
+                downloadManager.setDownloadedSongs();
+
                 for(int j = 0; j < songNames.size(); j++){
                     Log.d("item in songNames ", j + " " + songNames.get(j));
                     String currDownloadedSong = songNames.get(j);
@@ -147,12 +149,12 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update() {
-        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
+        /*TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
         TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
         TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
 
-//        String songName = metadataGetter.getName();
-/*
+        String songName = metadataGetter.getName();
+
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
@@ -172,10 +174,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                     lastUsername.setText(userToPrint);
                 }
             }
-        });
-        */
+        });*/
     }
-
 
 
     /**
