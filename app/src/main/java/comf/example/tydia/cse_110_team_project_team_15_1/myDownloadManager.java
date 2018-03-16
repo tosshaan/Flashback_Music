@@ -17,8 +17,15 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by tosshaan on 3/11/2018.
@@ -33,6 +40,8 @@ public class myDownloadManager implements playerSubject {
     private Activity activity;
     private ArrayList<Observer> observers;
     private ArrayList<String> mySongs;
+    private boolean zip = false;
+    private String zipname;
 
 
     public myDownloadManager(Context c, Activity a, Observer obs) {
@@ -58,6 +67,17 @@ public class myDownloadManager implements playerSubject {
 
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
                             Toast.makeText(context, "Download Sucessful", Toast.LENGTH_SHORT).show();
+                            if (zip) {
+                                zip = false;
+                                Log.d("DownloadAlbum", "ENTERED DOWNLOADALBUM" + zipname);
+                                if (unpackZip(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString(), zipname.replaceAll("%20", " "))){
+                                    Log.d("DownloadAlbum", "Download successful");
+                                }
+                                else {
+                                    Log.d("UNZIP", "UNZIP FAILED");
+                                }
+                                return;
+                            }
                             //mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
                             notifyObservers();
                         }
@@ -88,11 +108,18 @@ public class myDownloadManager implements playerSubject {
             input = input.substring(1);
         }
 
+        if (input.contains(".zip?dl=1")) {
+            zip = true;
+            zipname = input.replace("?dl=1","");
+        }
+
         String inputfile = input.replace("//", "/");
         if (mySongs.contains(inputfile)) {
             Log.d("callingDownload", input + " ALREADY DOWNLOADED");
             return;
         }
+
+
         dm = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, input);
@@ -102,6 +129,45 @@ public class myDownloadManager implements playerSubject {
 
         queueid = dm.enqueue(request);
 
+    }
+
+    private boolean unpackZip(String path, String zipname) {
+        InputStream is;
+        ZipInputStream zis;
+        try{
+            String filename;
+            is = new FileInputStream(path + "/" + zipname);
+            zis = new ZipInputStream(new BufferedInputStream(is));
+            ZipEntry ze;
+            byte[] buffer = new byte[1024];
+            int count;
+            while ((ze = zis.getNextEntry()) != null) {
+                filename = ze.getName();
+                if (ze.isDirectory()) {
+                    File fmd = new File(path + "/" + filename);
+                    Log.d("DOWNLOADALBUM", fmd.getPath() + " name " + fmd.getName());
+                    fmd.mkdirs();
+                    continue;
+                }
+
+                FileOutputStream fout = new FileOutputStream(path + "/" + filename);
+                Log.d("DOWNLOADALBUM", path + "/" + filename);
+
+
+                while((count = zis.read(buffer)) != -1) {
+                    fout.write(buffer, 0, count);
+                }
+
+                fout.close();
+                zis.closeEntry();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public  boolean haveStoragePermission() {

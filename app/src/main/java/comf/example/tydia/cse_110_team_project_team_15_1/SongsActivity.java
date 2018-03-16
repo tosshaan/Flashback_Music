@@ -266,6 +266,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
                     at.add(singleFile);
                 }
+                else {
+                    Log.d("albumdownload", "album: found a file " + singleFile.getName());
+                }
             }
         }
 
