@@ -29,14 +29,18 @@ public class FriendsTester {
     @Before
     public void setup() {
         friendsList = new ArrayList<Person>();
-        mainActivity.getActivity().googleSignIn();
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     //friendsList should hold the right person objects
     @Test
     public void testEmails() {
-        assertEquals("gmosbruc.ucsd.edu",friendsList.get(0).getEmailAddresses().get(0).getValue());
-        assertEquals("chl550@ucsd.edu",friendsList.get(1).getEmailAddresses().get(1).getValue());
-        assertEquals("wcl011@ucsd.edu",friendsList.get(2).getEmailAddresses().get(2).getValue());
+        assertEquals("gmosbruc@ucsd.edu",friendsList.get(0).getEmailAddresses().get(0).getValue());
+        assertEquals("chl550@ucsd.edu",friendsList.get(1).getEmailAddresses().get(0).getValue());
+        assertEquals("wcl011@ucsd.edu",friendsList.get(2).getEmailAddresses().get(0).getValue());
     }
 }
