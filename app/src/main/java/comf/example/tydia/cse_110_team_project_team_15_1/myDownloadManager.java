@@ -77,10 +77,6 @@ public class myDownloadManager implements playerSubject {
         for (int i = 0; i < files.size(); i++) {
             mySongs.add(files.get(i).getPath().replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +"/", ""));
         }
-        for (int i = 0; i < files.size(); i++) {
-            Log.d("IN SET DOWNLOAD SONGS", mySongs.get(i));
-
-        }
 
     }
 
@@ -91,9 +87,10 @@ public class myDownloadManager implements playerSubject {
         if (input.charAt(0) == '/') {
             input = input.substring(1);
         }
-        Log.d("in download", input);
-        if (mySongs.contains(input)) {
-            Log.d("in Download", input + " ALREADY DOWNLOADED");
+
+        String inputfile = input.replace("//", "/");
+        if (mySongs.contains(inputfile)) {
+            Log.d("callingDownload", input + " ALREADY DOWNLOADED");
             return;
         }
         dm = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
