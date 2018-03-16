@@ -10,13 +10,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -31,10 +35,13 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     database myData;
     private myMusicPlayer musicPlayer;
     MetadataGetter metadataGetter;
-    private int songIndex;
+    private boolean playFlag = true;
+    private boolean songDisliked;
+    private String songName;
     ArrayList<String> songNames;
     ArrayList<String> songURLs;
-    private String[] songsUri;
+    String[] songURLsarr;
+    private int songIndex;
     private myDownloadManager downloadManager;
     ArrayList<File> downloadedSongFiles = new ArrayList<>();
     ArrayList<String> downloadedSongs = new ArrayList<>();
@@ -43,11 +50,13 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         myData = MainActivity.data;
+        songIndex = 0;
         metadataGetter = new MetadataGetter(this);
         VMList = new VibeModeList(myData);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myFireBaseRef = database.getReference();
         firebaseDB = new FirebaseDB(database, myFireBaseRef);
+        songDisliked = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vibe_mode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,6 +74,129 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         musicPlayer = new myMusicPlayer();
         musicPlayer.regObserver(this);
         downloadManager.regObserver(musicPlayer);
+
+        Button normalMode = (Button) findViewById(R.id.normal_mode);
+        normalMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicPlayer.release();
+                finish();
+            }
+        });
+
+        Button playButton = (Button) findViewById(R.id.button_play);
+        Button pauseButton = (Button) findViewById(R.id.button_pause);
+
+        playButton.setVisibility(View.GONE);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicPlayer.play();
+                if (playFlag == true) {
+                    pauseButton.setVisibility(View.GONE);
+                    playFlag = false;
+                } else {
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicPlayer.pause();
+                playFlag = true;
+                playButton.setVisibility(View.VISIBLE);
+                Log.d("songActivity", ""+playFlag);
+                if (playFlag == true) {
+                    pauseButton.setVisibility(View.GONE);
+                    playFlag = false;
+                } else {
+                    pauseButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        Button nextButton = (Button) findViewById(R.id.button_next);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicPlayer.skip();
+                playFlag = true;
+                skipSong();
+
+                updateDisplay();
+                pauseButton.setVisibility(View.VISIBLE);
+                playButton.setVisibility(View.GONE);
+            }
+        });
+
+        ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like);
+        ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike);
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(myData.getSongLikedStatus(songName)){
+                    myData.setLikedStatus(songName, false);
+                    // set button back to unhighlighted state
+                    likeButton.setChecked(false);
+                }
+                else{
+                    myData.setLikedStatus(songName, true);
+                    // change to highlighted state
+                    likeButton.setChecked(true);
+                    dislikeButton.setChecked(false);
+                }
+                Timestamp time = new Timestamp(System.currentTimeMillis());
+                //get current information to update song if needed
+                try {
+
+                    myData.startSongInfoRequest(songName, getApplicationContext(), new Timestamp(System.currentTimeMillis()));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myData.finishSongInfoRequest(false, false);
+            }
+        });
+
+        dislikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(myData.getSongDislikedStatus(songName)){
+                    myData.setDislikedStatus(songName, false);
+                    // set button back to unhighlighted version
+                    dislikeButton.setChecked(false);
+                }
+                else{
+                    myData.setDislikedStatus(songName, true);
+                    myData.setLikedStatus(songName, false);
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+
+                    //get current information to update song if needed
+                    try {
+
+                        myData.startSongInfoRequest(songName, getApplicationContext(),new Timestamp(System.currentTimeMillis()));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    myData.finishSongInfoRequest(false, true);
+
+
+
+                    skipSong();
+                    musicPlayer.skip();
+
+                    updateDisplay();
+
+                }
+                //setFinishListener();
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +226,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 songNames = VMList.getVibeModeSongs();
                 songURLs = VMList.getVibeModeURLs();
 
+
+
                 //index of the first already downloaded song
                 int index = -1;
                 boolean alreadyDownloaded = false;
@@ -119,15 +253,21 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
                 moveIndexToTop(index);
 
-                String[] songURLsarr= new String[songURLs.size()];
+                songURLsarr= new String[songURLs.size()];
                 for( int i = 0; i < songURLs.size(); i++ ) {
                     String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
                             songURLs.get(i);
                     songURLsarr[i] = path;
                 }
 
+                metadataGetter.setPath(songURLsarr[songIndex]);
+                songName = metadataGetter.getName();
+                Log.d("dataName", metadataGetter.getName());
+                Log.d("dataArtist", metadataGetter.getArtist());
+                Log.d("dataAlbum", metadataGetter.getAlbum());
 
-                musicPlayer.setMusic(songURLsarr, 0);
+
+                musicPlayer.setMusic(songURLsarr, songIndex);
                 musicPlayer.play();
 
                 list = (ListView) findViewById(R.id.list_listofsongs);
@@ -137,26 +277,38 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 if (songNames.size() == 0) {
                     Toast.makeText(getApplicationContext(), "Play some songs to use flashback mode.", Toast.LENGTH_SHORT).show();
                 }
-
-                //list.setOnItemClickListener(getApplicationContext());
             }
         });
+    }
 
-     //   list = (ListView) findViewById(R.id.list_listofsongs);
-        // context, database structure, data
-    //    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,songNames);
-    //    list.setAdapter(adapter);
-       // list.setOnItemClickListener(this);
+    private void skipSong(){
+        if(songURLsarr == null){
+            return;
+        }
+        if (songIndex < (songURLsarr.length - 1)) {
+            songIndex++;
+
+            metadataGetter.setPath(songURLsarr[songIndex]);
+            TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+            songName = metadataGetter.getName();
+            showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
+
+        }
     }
 
     @Override
     public void update() {
+        skipSong();
+        updateDisplay();
+
+        //TODO: push song to firebase?
+    }
+
+    private void updateDisplay(){
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
         TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
         TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
 
-//        String songName = metadataGetter.getName();
-/*
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
@@ -177,10 +329,16 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 }
             }
         });
-        */
+
+        ToggleButton likeButton = (ToggleButton) findViewById(R.id.button_like);
+        if(myData.isSongHere(songName)) {
+            if (myData.getSongLikedStatus(songName)) {
+                likeButton.setChecked(true);
+            } else {
+                likeButton.setChecked(false);
+            }
+        }
     }
-
-
 
     /**
      * convert the arraylist of files to songNames
