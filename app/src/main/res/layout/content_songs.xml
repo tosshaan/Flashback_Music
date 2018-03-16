@@ -24,23 +24,28 @@
 
     <Button
         android:id="@+id/b_viewDownload"
-        android:layout_width="87dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="240dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="192dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/light_transparent"
         android:text="view DL"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/DeleteAll"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="136dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="192dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/light_transparent"
         android:text="Delete All"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/b_viewDownload"
+        app:layout_constraintTop_toBottomOf="@+id/b_viewDownload" />
 
     <Button
         android:id="@+id/b_vibe_song"
@@ -108,17 +113,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/list_allsongs"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.622"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814"
         fab:menu_backgroundColor="#6ec7c7c7"
         fab:menu_fab_label="sort songs by"
         fab:menu_labels_ellipsize="end"
