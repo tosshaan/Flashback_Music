@@ -2,6 +2,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -64,6 +65,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     String[] items;
 
 
+
+
     /**
      * This method runs when the activity is created
      * Contains all functionality for the activity
@@ -100,6 +103,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
         });
+
+        findSongatDownload();
 
         Log.d("are u here2", "did u have that");
 
@@ -243,7 +248,33 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
+    public ArrayList<File> findSongatDownload() {
+        Log.d("findSong", "findSong: entered findSongatdownload");
 
+        ArrayList<File> at = new ArrayList<File>();
+        File[] files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+
+        for(File singleFile : files) {
+
+            if(singleFile.isDirectory() && !singleFile.isHidden()) {
+            }
+            else {
+                if(singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")) {
+
+                    at.add(singleFile);
+                    String url = "";
+                    SharedPreferences albumPref = getSharedPreferences("albumSongs", MODE_PRIVATE);
+                    url = albumPref.getString(singleFile.getName(), url);
+                    Log.d("checking download at download directory", url + " url of the song for " +singleFile.getName());
+                }
+                else {
+                    Log.d("albumdownload", "album: found a file " + singleFile.getName());
+                }
+            }
+        }
+
+        return at;
+    }
 
 
     static public ArrayList<File> findSong(File root) {
@@ -265,6 +296,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                     Log.d("absolutepath", "path = " +singleFile.getAbsolutePath());
 
                     at.add(singleFile);
+
                 }
                 else {
                     Log.d("albumdownload", "album: found a file " + singleFile.getName());

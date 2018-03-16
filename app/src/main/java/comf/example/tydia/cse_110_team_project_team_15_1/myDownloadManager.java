@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -95,7 +96,10 @@ public class myDownloadManager implements playerSubject {
 
         mySongs = new ArrayList<>();
         for (int i = 0; i < files.size(); i++) {
-            mySongs.add(files.get(i).getPath().replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +"/", ""));
+            mySongs.add(files.get(i).getName()); //.getPath().replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +"/", ""));
+        }
+        for (int i = 0; i < files.size(); i++) {
+            Log.d("whatisinmysongs", mySongs.get(i));
         }
 
     }
@@ -109,12 +113,23 @@ public class myDownloadManager implements playerSubject {
         }
 
         if (input.contains(".zip?dl=1")) {
+            zipname = input.replace("?dl=1","");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
+            Log.d("what is zipname", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
+            if (file.exists()) {
+                Log.d("CALLING DOWNLOAD", "ALBUM already downloaded");
+                return;
+            }
             zip = true;
             zipname = input.replace("?dl=1","");
         }
 
         String inputfile = input.replace("//", "/");
-        if (mySongs.contains(inputfile)) {
+        inputfile = inputfile.replace(".mp3?dl=1", ".mp3");
+        int index = inputfile.lastIndexOf('/');
+        String inputfilename = inputfile.substring(index+1);
+        Log.d("downloadcheck", inputfilename);
+        if (mySongs.contains(inputfilename)) {
             Log.d("callingDownload", input + " ALREADY DOWNLOADED");
             return;
         }
@@ -149,6 +164,16 @@ public class myDownloadManager implements playerSubject {
                     fmd.mkdirs();
                     continue;
                 }
+
+                if (mySongs.contains(filename)) {
+                    Log.d("downloading an album", filename +" has already been downloaded");
+                    continue;
+                }
+
+                SharedPreferences albumPref = context.getSharedPreferences("albumSongs", context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = albumPref.edit();
+                edit.putString(filename, zipname);
+                edit.apply();
 
                 FileOutputStream fout = new FileOutputStream(path + "/" + filename);
                 Log.d("DOWNLOADALBUM", path + "/" + filename);
