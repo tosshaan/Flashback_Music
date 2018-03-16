@@ -336,7 +336,9 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 likeButton.setChecked(false);
             }
         }
-        likeButton.setChecked(false);
+        else{
+            likeButton.setChecked(false);
+        }
 
         ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike);
         dislikeButton.setChecked(false);
