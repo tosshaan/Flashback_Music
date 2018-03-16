@@ -93,6 +93,15 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
 
 
         updateLastPlayedInfo();
+        Location loc = MainActivity.getCurrLoc();
+        String currAddress = "";
+        try {
+            currAddress = myData.getAddress(loc, getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        firebaseDB.submit(MainActivity.myPersonalID, currAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+
         Timestamp time = new Timestamp(System.currentTimeMillis());
         // Storing info from song to database
         try {
@@ -102,7 +111,7 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //myData.finishSongInfoRequest(true, false);
+
 
 
 
@@ -409,13 +418,14 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
         TextView lastLoc = (TextView) findViewById(R.id.textView4);
         TextView lastUsername = (TextView) findViewById(R.id.usernameField);
-
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
                 if(latestTime == 0){
                     lastLoc.setText("");
                     lastTime.setText("Song has not been played before!");
+
+
                     lastUsername.setText("");
                 }
                 else {
@@ -537,9 +547,8 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Log.d("THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
 
+            firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
     }
 }
