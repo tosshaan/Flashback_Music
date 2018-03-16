@@ -36,7 +36,6 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     private myMusicPlayer musicPlayer;
     MetadataGetter metadataGetter;
     private boolean playFlag = true;
-    private boolean songDisliked;
     private String songName;
     ArrayList<String> songNames;
     ArrayList<String> songURLs;
@@ -56,7 +55,6 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myFireBaseRef = database.getReference();
         firebaseDB = new FirebaseDB(database, myFireBaseRef);
-        songDisliked = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vibe_mode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -338,6 +336,10 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 likeButton.setChecked(false);
             }
         }
+        likeButton.setChecked(false);
+
+        ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike);
+        dislikeButton.setChecked(false);
     }
 
     /**
