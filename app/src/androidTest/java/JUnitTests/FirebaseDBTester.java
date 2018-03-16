@@ -6,6 +6,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -33,6 +34,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.FirebaseDB;
@@ -42,6 +44,7 @@ import comf.example.tydia.cse_110_team_project_team_15_1.LocationService;
 import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.R;
 
+import static comf.example.tydia.cse_110_team_project_team_15_1.FirebaseDB.MILLISECODNS_IN_DAY;
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -50,6 +53,8 @@ import static junit.framework.Assert.assertEquals;
  */
 
 public class FirebaseDBTester {
+
+    private final static long MORE_MILLISECONDS_THAN_A_WEEK = 8 * MILLISECODNS_IN_DAY;
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
@@ -62,6 +67,8 @@ public class FirebaseDBTester {
     FirebaseDB  dbFunc;
     private static boolean setUpDone = false;
     private static int count = 0;
+    private static final long someTime = 709010000;
+    long moreThanOneWeekAgo = someTime - MORE_MILLISECONDS_THAN_A_WEEK;
 
 
     @Before
@@ -82,38 +89,6 @@ public class FirebaseDBTester {
     }
 
 
-
-    @Test
-    public void testGetAllSongsForVibe() {
-            dbFunc.getAllSongsForVibe("I-House", LocalDate.now(), "user", new FirebaseQueryObserver() {
-            @Override
-            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String adr, String usr, long time) {
-               assertEquals(songNameList.size(), 8);
-                assertEquals(songURLList.size(), 8);
-                assertEquals(songNameList.contains("Beautiful Pain"), true);
-                assertEquals(songNameList.contains("America Religious"), true);
-                assertEquals(songNameList.contains("Blood on your boothells"),false);
-                assertEquals(songNameList.contains("mangalam"),false);
-                assertEquals(songURLList.contains("TestURL3"), true);
-                assertEquals(songURLList.contains("TestURL"), true);
-                assertEquals(songURLList.contains("TestURL4"), false);
-            }
-        });
-
-    }
-
-    @Test
-    public void testGetLastSongPlayer() {
-       dbFunc.getLastSongPlayer("Beautiful Pain", 5, new FirebaseQueryObserver() {
-           @Override
-           public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String adr, String usr, long time) {
-               assertEquals(adr, "Sixth");
-               assertEquals(usr, "Wei");
-               assertEquals(time, 4);
-           }
-       });
-    }
-
     @Test
     public void testSubmit() {
         Uri.Builder builder = new Uri.Builder();
@@ -126,10 +101,10 @@ public class FirebaseDBTester {
         builder.path("TestURL4");
         Uri uri4 = builder.build();
 
-        dbFunc.submit("Tosh and I", "I-House", "Beautiful Pain", 1, uri);
-        dbFunc.submit("Cory and Graham", "Off-campus", "Blood on your boothells", 2, uri2);
-        dbFunc.submit("Tong", "I-House", "America Religious", 3, uri3);
-        dbFunc.submit("Wei", "Sixth", "Beautiful Pain", 4, uri4);
+        dbFunc.submit("Tosh and I", "I-House", "Beautiful Pain", someTime - 100, uri);
+        dbFunc.submit("Cory and Graham", "Off-campus", "Blood on your bootheels", someTime - 150, uri2);
+        dbFunc.submit("Tong", "I-House", "America Religious", moreThanOneWeekAgo, uri3);
+        dbFunc.submit("Wei", "Sixth", "Beautiful Pain", someTime - 10, uri4);
 
         // Querying database to check if values were populated appropriately
         Query queryRef = myRef.orderByKey();
@@ -180,7 +155,7 @@ public class FirebaseDBTester {
                     assertEquals(expectedSongList.size(), 4);
                     assertEquals(expectedSongList.get(0), "America Religious");
                     assertEquals(expectedSongList.get(1), "Beautiful Pain");
-                    assertEquals(expectedSongList.get(2), "Blood on your boothells");
+                    assertEquals(expectedSongList.get(2), "Blood on your bootheels");
                     assertEquals(expectedSongList.get(3), "Beautiful Pain");
 
                     assertEquals(expectedURLList.size(), 4);
@@ -190,10 +165,10 @@ public class FirebaseDBTester {
                     assertEquals(expectedURLList.get(3), "TestURL4");
 
                     assertEquals(expectedLongs.size(), 4);
-                    assertEquals((long) expectedLongs.get(0), 3);
-                    assertEquals((long )expectedLongs.get(1), 1);
-                    assertEquals((long) expectedLongs.get(2), 2);
-                    assertEquals((long )expectedLongs.get(3), 4);
+                    assertEquals((long) expectedLongs.get(0), moreThanOneWeekAgo);
+                    assertEquals((long )expectedLongs.get(1), someTime - 100);
+                    assertEquals((long) expectedLongs.get(2), someTime - 150);
+                    assertEquals((long )expectedLongs.get(3), someTime -10 );
                 }
             }
 
@@ -205,5 +180,99 @@ public class FirebaseDBTester {
             }
         });
     }
+
+
+    @Test
+    public void testGetAllSongsForVibe() {
+            long time = someTime / MILLISECODNS_IN_DAY;
+            LocalDate songDate = LocalDate.ofEpochDay(time);
+            LocalDate weekAgo = LocalDate.ofEpochDay(moreThanOneWeekAgo / MILLISECODNS_IN_DAY);
+            Log.d("", "SONG YEAR IS " + songDate.getYear() + "DAY OF YEAR IS " + songDate.getDayOfYear());
+            LocalDate currDate = LocalDate.ofEpochDay(someTime / MILLISECODNS_IN_DAY);
+            Log.d("", "WEEK AGO YEAR " + currDate.getYear() + "DAY OF WEEK AGO" + currDate.getDayOfYear() );
+
+            dbFunc.getAllSongsForVibe("I-House", songDate, "user", new FirebaseQueryObserver() {
+            @Override
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String adr, String usr, long time) {
+                assertEquals(songNameList.size(), 12);
+                assertEquals(songURLList.size(), 12);
+                assertEquals(songNameList.contains("Beautiful Pain"), true);
+                assertEquals(songNameList.contains("America Religious"), true);
+                assertEquals(songNameList.contains("Blood on your bootheels"),true);
+
+                // Removing all songs once
+                songNameList.remove("Beautiful Pain");
+                songNameList.remove("America Religious");
+                songNameList.remove("Blood on your bootheels");
+                assertEquals(songNameList.size(), 9);
+
+
+                // Checking which ones are still there
+                assertEquals(songNameList.contains("Beautiful Pain"), true);
+                assertEquals(songNameList.contains("America Religious"), true);
+                assertEquals(songNameList.contains("Blood on your bootheels"),true);
+
+
+                // Remove again
+                songNameList.remove("Beautiful Pain");
+                songNameList.remove("America Religious");
+                songNameList.remove("Blood on your bootheels");
+              //  assertEquals(songNameList.size(), 6);
+
+                // Now only locations based ones should be present
+                assertEquals(songNameList.contains("Beautiful Pain"), true);
+                assertEquals(songNameList.contains("America Religious"), true);
+                assertEquals(songNameList.contains("Blood on your bootheels"),false);
+
+                // Remove again twice
+                songNameList.remove("Beautiful Pain");
+                songNameList.remove("America Religious");
+                songNameList.remove("Blood on your bootheels");
+                songNameList.remove("Beautiful Pain");
+                songNameList.remove("America Religious");
+                songNameList.remove("Blood on your bootheels");
+                assertEquals(songNameList.size(), 2);
+
+                // Now only Beautiful Pain should be there
+                assertEquals(songNameList.contains("Beautiful Pain"), true);
+                assertEquals(songNameList.contains("America Religious"), false);
+                assertEquals(songNameList.contains("Blood on your bootheels"),false);
+
+                // Remove again twice
+                songNameList.remove("Beautiful Pain");
+                songNameList.remove("America Religious");
+                songNameList.remove("Blood on your bootheels");
+                songNameList.remove("Beautiful Pain");
+                songNameList.remove("America Religious");
+                songNameList.remove("Blood on your bootheels");
+
+                // Should be empty
+                assertEquals(songNameList.contains("Beautiful Pain"), false);
+                assertEquals(songNameList.contains("America Religious"), false);
+                assertEquals(songNameList.contains("Blood on your bootheels"),false);
+                assertEquals(songNameList.size(), 0);
+
+                assertEquals(songURLList.contains("TestURL3"), true);
+                assertEquals(songURLList.contains("TestURL"), true);
+                assertEquals(songURLList.contains("TestURL4"), false);
+            }
+        });
+
+    }
+
+    @Test
+    public void testGetLastSongPlayer() {
+       dbFunc.getLastSongPlayer("Beautiful Pain", someTime, new FirebaseQueryObserver() {
+           @Override
+           public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String adr, String usr, long time) {
+               assertEquals(adr, "Sixth");
+               assertEquals(usr, "Wei");
+               assertEquals(time, someTime - 10);
+           }
+       });
+    }
+
+
+
 }
 
