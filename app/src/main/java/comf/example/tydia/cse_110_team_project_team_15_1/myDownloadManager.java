@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +32,8 @@ public class myDownloadManager implements playerSubject {
     private Context context;
     private Activity activity;
     private ArrayList<Observer> observers;
+    private ArrayList<String> mySongs;
+
 
     public myDownloadManager(Context c, Activity a, Observer obs) {
         context = c;
@@ -66,12 +69,32 @@ public class myDownloadManager implements playerSubject {
         activity.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
+    public void setDownloadedSongs() {
+        ArrayList<File> files = SongsActivity.findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        //Log.d("IN SET DOWNLOAD SONGS", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
+
+        mySongs = new ArrayList<>();
+        for (int i = 0; i < files.size(); i++) {
+            mySongs.add(files.get(i).getPath().replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +"/", ""));
+        }
+        for (int i = 0; i < files.size(); i++) {
+            Log.d("IN SET DOWNLOAD SONGS", mySongs.get(i));
+
+        }
+
+    }
+
     public void Download(String input) {
         if (input.equals("")) {
             return;
         }
         if (input.charAt(0) == '/') {
             input = input.substring(1);
+        }
+        Log.d("in download", input);
+        if (mySongs.contains(input)) {
+            Log.d("in Download", input + " ALREADY DOWNLOADED");
+            return;
         }
         dm = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
