@@ -82,20 +82,21 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
         downloadManager.checkExternalStorage();
 
-        downloadManager.setDownloadedSongs();
+        //downloadManager.setDownloadedSongs();
 
         Button b_dl = (Button) findViewById(R.id.b_download);
         b_dl.setOnClickListener(view -> {
+            downloadManager.setDownloadedSongs();
+
             EditText editText = (EditText) findViewById(R.id.URLeditText);
-            String input = //"http://www.hubharp.com/web_sound/HarrisLilliburleroShort.mp3";
-                    editText.getText().toString();
+            String input = editText.getText().toString();
 
             Log.d("are u here?", "did u have that");
-            //"http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
             if (downloadManager.haveStoragePermission()) {
                 downloadManager.Download(input);
             }
-            downloadManager.setDownloadedSongs();
+
+            editText.setText("");
 
 
         });
