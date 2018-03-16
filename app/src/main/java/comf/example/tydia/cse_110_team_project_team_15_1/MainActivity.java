@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +34,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.services.people.v1.PeopleServiceScopes;
 import com.google.api.services.people.v1.model.Person;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static java.lang.Thread.sleep;
 
@@ -69,78 +75,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         database db = new database();
         PACKAGE_NAME = getPackageName();
 
-        // TODO: DELETE THIS CRAP!!!
-        /*
 
-        FirebaseDB dbFunc = new FirebaseDB();
-        URI testURL = null;
-        try {
-            testURL = new URI("Test");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            Log.d("OH NO ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "");
-        }
-        long date = System.currentTimeMillis();
-        String address = "Decentralized Unpark";;
-        String userName = "Tosh and I";
-        String songName = "Ugly Pleasure";
-        dbFunc.submit(userName, address, songName, date,testURL);
-        userName = "Graham and Cory";
-        songName = "Water on your splitends";
-        date = System.currentTimeMillis();
-        dbFunc.submit(userName, address, songName, date, testURL);
-        userName = "Tong and Wei";
-        songName = "malagnam";
-        date = System.currentTimeMillis();
-        dbFunc.submit(userName, address, songName, date, testURL);
-        userName = "Tosh and I";
-        songName = "Old Song";
-        address = "Central Park";
-        date = date - (FirebaseDB.MILLISECODNS_IN_DAY * 10);
-        dbFunc.submit(userName, address, songName, date, testURL);
-
-        LocalDate whenDis = LocalDate.now();
-        dbFunc.getAllSongsForVibe("Central Park", whenDis, "someUser", new FirebaseQueryObserver() {
-            @Override
-            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
-                //call generateList method here
-                Log.d("THE WHOLE LIST OF SONGS IS: ", songNameList.toString());
-                Log.d("THE WHOLE LIST OF URLS IS: ", songURLList.toString() );
-            }
-        });
-
-
-/*
-        someList = new ArrayList<>();
-        dbFunc.getSongNamesAtLocation("Central Park", new FirebaseQueryObserver() {
-            @Override
-            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
-                 Log.d("WHERE SONG_NAME_LIST IS: ", songNameList.toString());
-                Log.d("WHERE SONG_URL_LIST IS: ", songURLList.toString());
-            }
-        });
-
-
-        Log.d("FIRST LIST SIZE: ", "" +someList.size() );
-        for( String name: someList ) {
-            Log.d("SONG IS: ", name);
-        }
-
-        LocalDate whenDis = LocalDate.now();
-        dbFunc.getSongsLastWeek(whenDis, new FirebaseQueryObserver() {
-            @Override
-            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList) {
-                Log.d("WHEN SONG_NAME_LIST IS: ", songNameList.toString());
-                Log.d("WHEN SONG_URL_LIST IS: ", songURLList.toString());
-            }
-        });
-
-        Log.d("SECOND LIST SIZE: ", ""+ someList.size() );
-        for( String name: someList ) {
-            Log.d("SONG IS: ", name);
-        }
-*/
-        // TODO: END OF DELETABLE CRAP!!
         googleSignIn();
 
         SharedPreferences lastScreen = getSharedPreferences("Screen", MODE_PRIVATE);

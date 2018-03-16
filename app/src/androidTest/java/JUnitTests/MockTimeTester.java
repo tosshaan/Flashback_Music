@@ -38,6 +38,7 @@ public class MockTimeTester {
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
+    /*
     @Before
     public void setup () throws IOException {
         idsTest = SongsActivity.getSongIDs();
@@ -122,6 +123,6 @@ public class MockTimeTester {
         Log.d("day: ", satList.toString());
         assertEquals(satList.contains("I Fell In Love"), true);
     }
-
+*/
 
 }

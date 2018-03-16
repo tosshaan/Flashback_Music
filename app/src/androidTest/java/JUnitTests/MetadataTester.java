@@ -29,6 +29,8 @@ public class MetadataTester {
     int[] idsTest;
     MetadataGetter metadataGetter;
 
+    /*
+
     @Before
     public void setup() {
         idsTest = SongsActivity.getSongIDs();
@@ -99,5 +101,7 @@ public class MetadataTester {
         assertEquals(R.raw.whenyougo, testSongArr[testSongArr.length - 1]);
 
     }
+
+    */
 
 }

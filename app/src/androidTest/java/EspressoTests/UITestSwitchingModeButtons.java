@@ -37,6 +37,7 @@ public class UITestSwitchingModeButtons {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+    /*
     @Test
     public void testSwitchingModes() {
         ViewInteraction button = onView(
@@ -104,4 +105,5 @@ public class UITestSwitchingModeButtons {
             }
         };
     }
+    */
 }

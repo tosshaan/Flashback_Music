@@ -26,6 +26,7 @@ import static junit.framework.Assert.assertEquals;
  */
 
 public class FlashBackListTester {
+    /*
     FlashbackList fbList;
     Timestamp mockTime;
     Timestamp tempMockTime;
@@ -121,4 +122,5 @@ public class FlashBackListTester {
         assertEquals(flashBackListIDs[3], R.raw.aaaaonetwothreego);
         assertEquals(flashBackListIDs[4], R.raw.bloodonyourbootheels);
     }
+    */
 }

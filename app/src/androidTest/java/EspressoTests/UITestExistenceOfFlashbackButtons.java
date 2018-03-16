@@ -36,7 +36,7 @@ public class UITestExistenceOfFlashbackButtons {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
+/*
     @Test
     public void testExistenceOfFlashbackButtons() {
         ViewInteraction button = onView(
@@ -159,4 +159,5 @@ public class UITestExistenceOfFlashbackButtons {
             }
         };
     }
+    */
 }

@@ -35,6 +35,7 @@ public class UITestFlashbackButtons {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+    /*
     @Test
     public void testFlashbackButtons() {
         ViewInteraction appCompatButton = onView(
@@ -92,4 +93,5 @@ public class UITestFlashbackButtons {
             }
         };
     }
+    */
 }

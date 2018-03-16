@@ -13,13 +13,16 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static comf.example.tydia.cse_110_team_project_team_15_1.FirebaseDB.MILLISECODNS_IN_DAY;
 import static java.lang.Thread.sleep;
 
 public class VibeModeActivity extends AppCompatActivity implements Observer {
@@ -42,8 +45,11 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         myData = MainActivity.data;
+        metadataGetter = new MetadataGetter(this);
         VMList = new VibeModeList(myData);
-        firebaseDB = new FirebaseDB();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myFireBaseRef = database.getReference();
+        firebaseDB = new FirebaseDB(database, myFireBaseRef);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vibe_mode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -141,8 +147,35 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update() {
-        //TODO
+        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
+        TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
+        TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
+
+//        String songName = metadataGetter.getName();
+/*
+        firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
+            @Override
+            public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
+                if(latestTime == 0){
+                    lastLoc.setText("");
+                    lastTime.setText("Song has not been played before!");
+                    lastUsername.setText("");
+                }
+                else {
+                    long time = latestTime / MILLISECODNS_IN_DAY;
+                    LocalDate songDate = LocalDate.ofEpochDay(time);
+                    lastTime.setText(songDate.toString());
+
+                    lastLoc.setText(latestAddress);
+
+                    String userToPrint = GoogleHelper.getDisplayName(latestUser);
+                    lastUsername.setText(userToPrint);
+                }
+            }
+        });
+        */
     }
+
 
 
     /**

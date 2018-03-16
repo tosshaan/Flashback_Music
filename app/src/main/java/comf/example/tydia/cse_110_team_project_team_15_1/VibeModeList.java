@@ -134,8 +134,10 @@ public class VibeModeList {
       //  Log.d("SIZE OF THE URLS: ", "" + vibeModeURLList.size() );
         for( int i = 0; i < vibeModeSongList.size(); i++ ) {
             String songName= vibeModeSongList.get(i).getKey();
-            vibeModeSongs.add(songName);
-            vibeModeURLs.add(map.get(songName));
+            if( !db.getSongDislikedStatus(songName) ) {
+                vibeModeSongs.add(songName);
+                vibeModeURLs.add(map.get(songName));
+            }
         }
 
     }

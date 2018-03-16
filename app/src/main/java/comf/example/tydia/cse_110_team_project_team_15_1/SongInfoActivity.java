@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -37,10 +40,11 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
     private String songName;
     private String[] songsUri;
     private FirebaseDB firebaseDB;
-    //private playerSubject subject;
+    private database myData;
+        //private playerSubject subject;
     //private boolean albumMode = true;
 
-    database myData;
+
 
     /**
      * This method runs when the activity is created
@@ -53,7 +57,9 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        firebaseDB = new FirebaseDB();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myFireBaseRef = database.getReference();
+        firebaseDB = new FirebaseDB(database, myFireBaseRef);
         myData = MainActivity.data;
 
 
@@ -61,12 +67,14 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        // = getIntent().getIntExtra("songID", 0);
-
-        //songName = getIntent().getStringExtra("songName");
         Bundle bundle = getIntent().getExtras();
         songsUri = bundle.getStringArray("list");
+        for( int j = 0; j < songsUri.length; j++ ) {
+            Log.d("", "THE " + j + "th SONG IS " + songsUri[j]);
+        }
+
         songIndex = getIntent().getIntExtra("songIndex", 0);
+        Log.d("", "THE GRABBED INDEX IS " + songIndex);
         // Creating metadatagetter
         metadataGetter = new MetadataGetter(this);
         metadataGetter.setPath(songsUri[songIndex]);
@@ -177,19 +185,19 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                musicPlayer.skip();
                 skipSong();
-                //musicPlayer.skip();
                 if (songIndex < (songsUri.length - 1)) {
-                    songIndex++;
+                 //   songIndex++;
 
                     //reset the visibility of pause button
                     pauseButton.setVisibility(View.VISIBLE);
                     playButton.setVisibility(View.GONE);
 
 
-                    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
-                    songName = metadataGetter.getName();
-                    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
+                //    TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
+                //    songName = metadataGetter.getName();
+                //    showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
                     updateLastPlayedInfo();
                     updateDislikedButton();
@@ -209,13 +217,13 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
                     }
 
                     //myData.finishSongInfoRequest(true, false);
-                    setFinishListener(true);
+                  //  setFinishListener(true);
                     playFlag = true;
 
                 } else {
                     Toast.makeText(getApplicationContext(), "End of song list", Toast.LENGTH_SHORT).show();
 
-                    setFinishListener(false);
+                  //  setFinishListener(false);
                 }
             }
         });
@@ -284,7 +292,7 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
 
 
                     skipSong();
-                    //musicPlayer.skip();
+                    musicPlayer.skip();
 
                     updateLastPlayedInfo();
                     updateDislikedButton();
@@ -401,27 +409,6 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         TextView lastLoc = (TextView) findViewById(R.id.textView4);
         TextView lastUsername = (TextView) findViewById(R.id.usernameField);
 
-        /*TODO: change to get remote last played location and time instead of local
-
-        try {
-            if(myData.getCurrentSongLastLocation(songName, this)!= null){
-                lastLoc.setText(myData.getCurrentSongLastLocation(songName, this));
-            }
-            else{
-                lastLoc.setText("");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(myData.getCurrentSongTimestamp(songName) != null){
-            lastTime.setText(myData.getCurrentSongTimestamp(songName).toString());
-        }
-        else{
-            lastTime.setText("Song has not been played before");
-        }
-
-        //end TODO*/
-
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
@@ -499,12 +486,9 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
      * Method to skip a song
      */
     public void skipSong() {
-        musicPlayer.skip();
+        //musicPlayer.skip();
         if (songIndex < (songsUri.length - 1)) {
             songIndex++;
-
-
-            //loadMedia(albumSongsIDs[songIndex]);
 
             metadataGetter.setPath(songsUri[songIndex]);
             TextView showMetadata2 = (TextView) findViewById(R.id.text_SongName);
@@ -521,7 +505,26 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update() {
+
+        /*
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
+                if (request) {
+                    myData.finishSongInfoRequest(true, false);
+                }
+                skipSong();
+                //setFinishListener(true);
+                updateLastPlayedInfo();
+                updateDislikedButton();
+                updateLikedButton();
+            }
+        });
+        */
+
         //TODO: Figure some stuff out
+        skipSong();
         updateLastPlayedInfo();
         updateDislikedButton();
         updateLikedButton();
