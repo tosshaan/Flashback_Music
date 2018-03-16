@@ -112,13 +112,19 @@ public class myDownloadManager implements playerSubject {
             input = input.substring(1);
         }
 
-        if (input.contains(".zip?dl=1")) {
+        if (input.contains(".zip")) {
             zipname = input.replace("?dl=1","");
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
             Log.d("what is zipname", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
             if (file.exists()) {
                 Log.d("CALLING DOWNLOAD", "ALBUM already downloaded");
                 return;
+            }
+            if (mySongs.contains(zipname)) {
+                Log.d("CALLING DOWNLOAD", "album being downloaded right now");
+                return;
+            } else {
+                mySongs.add(zipname);
             }
             zip = true;
             zipname = input.replace("?dl=1","");
@@ -132,10 +138,15 @@ public class myDownloadManager implements playerSubject {
         if (mySongs.contains(inputfilename)) {
             Log.d("callingDownload", input + " ALREADY DOWNLOADED");
             return;
+        } else {
+            mySongs.add(inputfilename);
         }
 
 
         dm = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
+        if(!input.contains("?dl=1")) {
+            input = input + "?dl=1";
+        }
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, input);
         //Log.d("DOWNLOADINGx", "Download path " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
@@ -165,10 +176,6 @@ public class myDownloadManager implements playerSubject {
                     continue;
                 }
 
-                if (mySongs.contains(filename)) {
-                    Log.d("downloading an album", filename +" has already been downloaded");
-                    continue;
-                }
 
                 SharedPreferences albumPref = context.getSharedPreferences("albumSongs", context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = albumPref.edit();
@@ -179,12 +186,20 @@ public class myDownloadManager implements playerSubject {
                 Log.d("DOWNLOADALBUM", path + "/" + filename);
 
 
+
                 while((count = zis.read(buffer)) != -1) {
                     fout.write(buffer, 0, count);
                 }
 
                 fout.close();
                 zis.closeEntry();
+
+                if (mySongs.contains(filename)) {
+                    File f = new File(path + "/" + filename);
+                    if (f.delete()) {
+                        Log.d("dup", "ALREADY DWONLOADED, delete");
+                    }
+                }
             }
 
         } catch (IOException e) {

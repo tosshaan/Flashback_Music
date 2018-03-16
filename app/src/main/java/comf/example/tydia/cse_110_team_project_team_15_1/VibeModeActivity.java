@@ -101,6 +101,10 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 Log.d("length of songNames", " "+songNames.size());
                 Log.d("length of songURLs", " "+songURLs.size());
 
+                Log.d("songName array", songNames.toString());
+                Log.d("songUrls", songURLs.toString());
+
+
                 downloadManager.setDownloadedSongs();
 
                 for(int j = 0; j < songNames.size(); j++){
@@ -129,8 +133,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 }
 
 
-                musicPlayer.setMusic(songURLsarr, 0);
-                musicPlayer.play();
+                //musicPlayer.setMusic(songURLsarr, 0);
+                //musicPlayer.play();
 
                 list = (ListView) findViewById(R.id.list_listofsongs);
                 // context, database structure, data

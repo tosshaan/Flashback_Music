@@ -2,14 +2,9 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.File;
-import java.time.LocalTime;
-
-import comf.example.tydia.cse_110_team_project_team_15_1.MainActivity;
 
 /**
  * Created by Cadu on 15-Feb-18.
@@ -33,6 +28,10 @@ public class MetadataGetter {
         path = Uri.parse("file://" + pathx);
         retriever.setDataSource(context, path);
 
+    }
+
+    public Uri getPath() {
+        return path;
     }
 
     // Get song name based on ID

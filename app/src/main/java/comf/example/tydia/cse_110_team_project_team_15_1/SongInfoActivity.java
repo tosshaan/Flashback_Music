@@ -525,6 +525,7 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         */
 
         //TODO: Figure some stuff out
+        Uri path = metadataGetter.getPath();
         skipSong();
         updateLastPlayedInfo();
         updateDislikedButton();
@@ -539,7 +540,19 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         }
 
         Log.d("THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+        if (songsUri[songIndex].contains("https:")) {
+            firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+        }
+        else {
+            int index = path.toString().lastIndexOf('/');
+            songName = path.toString().substring(index + 1);
+            Log.d("what are u, songName in songInfo", songName);
+            SharedPreferences albumPref = getSharedPreferences("albumSongs", MODE_PRIVATE);
+            String url = "";
+            url = albumPref.getString(songName, url);
+            Log.d("what are u, url in songInfo", url.replace("//", "/"));
 
+            firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName.replace(".mp3", ""), System.currentTimeMillis(), Uri.parse(url.replace("//", "/")));
+        }
     }
 }
