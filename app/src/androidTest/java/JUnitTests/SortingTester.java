@@ -21,6 +21,7 @@ public class SortingTester {
     //@Rule
     //public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
 
+    /*
     @Rule
     public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
 
@@ -97,5 +98,6 @@ public class SortingTester {
         assertEquals(R.raw.whenyougo, testSongArr[testSongArr.length - 1]);
 
     }
+    */
 }
 
