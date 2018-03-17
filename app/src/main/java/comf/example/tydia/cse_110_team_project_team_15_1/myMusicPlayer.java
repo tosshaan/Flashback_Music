@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by tosshaan on 3/10/2018.
@@ -19,8 +20,6 @@ public class myMusicPlayer implements playerSubject, Observer {
     Observer observer;
     private String songName;
     boolean firstSongPlayable = true;
-
-
 
     public myMusicPlayer() {
         mp = new MediaPlayer();
@@ -127,10 +126,6 @@ public class myMusicPlayer implements playerSubject, Observer {
 
             mp.start();
 
-
-            //updateLastPlayedInfo();
-            //updateDislikedButton();
-            //updateLikedButton();
             playFlag = true;
             finish();
 
