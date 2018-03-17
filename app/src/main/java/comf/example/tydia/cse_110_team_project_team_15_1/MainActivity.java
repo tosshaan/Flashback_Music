@@ -336,4 +336,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
     }
+
+    @Override
+    public void finishDownload() {
+
+    }
 }
