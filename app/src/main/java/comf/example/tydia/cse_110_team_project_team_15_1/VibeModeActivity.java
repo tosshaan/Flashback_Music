@@ -330,29 +330,12 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
         //TODO: push song to firebase?
     }
 
-    private void updateDisplay(){}
-
-        /*
-
+    private void updateDisplay(){
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
         TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
         TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
 
-
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
-
-        String songName = metadataGetter.getName();
-        long time;
-
-        if( MainActivity.isTimeSet) {
-            time = MainActivity.appTime;
-        }
-        else {
-            time = System.currentTimeMillis();
-        }
-
-        firebaseDB.getLastSongPlayer(songName, time,new FirebaseQueryObserver() {
-
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
                 if(latestTime == 0){
@@ -388,6 +371,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
         ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike);
         dislikeButton.setChecked(false);
     }
+
 
 
     /**
