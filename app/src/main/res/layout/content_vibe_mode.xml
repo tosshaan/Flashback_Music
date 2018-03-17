@@ -39,8 +39,11 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_next"
-        app:layout_constraintEnd_toEndOf="@+id/text_timeAndDateFlashback"
-        app:layout_constraintStart_toStartOf="@+id/text_timeAndDateFlashback"
+
+        app:layout_constraintEnd_toEndOf="@+id/text_timeAndDateVibe"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/text_timeAndDateVibe"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.277" />
 

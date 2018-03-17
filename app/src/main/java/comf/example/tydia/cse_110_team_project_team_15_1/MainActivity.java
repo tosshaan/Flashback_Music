@@ -302,7 +302,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Checking if we need to generate a unique anon name for the current user
         SharedPreferences username = getSharedPreferences("Names", MODE_PRIVATE);
         String storedName = username.getString("Username", null);
+        Log.d("Callback Main", "I'm in the callback of mainactivity");
         if(storedName == null){
+            Log.d("Main Activity", "Email Address should be: " + myPerson.getEmailAddresses().get(0).getValue());
             myPersonalID = GoogleHelper.generateUserName(myPerson.getEmailAddresses().get(0).getValue());
             SharedPreferences.Editor edit = username.edit();
             edit.putString("Username",myPersonalID);

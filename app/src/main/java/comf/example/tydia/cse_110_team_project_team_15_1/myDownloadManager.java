@@ -68,6 +68,7 @@ public class myDownloadManager implements downloadSubject, playerSubject {
                         int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+
                             Toast.makeText(context, "Download Sucessful", Toast.LENGTH_SHORT).show();
                             if (zip) {
                                 zip = false;
@@ -79,6 +80,7 @@ public class myDownloadManager implements downloadSubject, playerSubject {
                                     Log.d("UNZIP", "UNZIP FAILED");
                                 }
                             }
+
                             //mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
                             notifyDownDone();
                             notifyObservers();

@@ -74,6 +74,7 @@ public class myMusicPlayer implements playerSubject, Observer {
 
     public void skip() {
         if (songIndex < (songList.length - 1)) {
+            Log.d("index", "Inner musicplayer skip songIndex" + songIndex);
             songIndex++;
             mp.reset();
 
@@ -98,6 +99,7 @@ public class myMusicPlayer implements playerSubject, Observer {
             }
             finish();
         }
+        Log.d("index", "inner musicplayer skip songIndex finished" + songIndex);
     }
 
     public void finish() {
@@ -152,6 +154,9 @@ public class myMusicPlayer implements playerSubject, Observer {
         mp.release();
     }
 
+    public int indexGetter() {
+        return this.songIndex;
+    }
     @Override
     public void notifyObservers() {
         observer.update();
