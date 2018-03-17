@@ -261,6 +261,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
                 }
                 downIndex++;
 
+
                 songURLsarr= new String[songURLs.size()];
 
 
