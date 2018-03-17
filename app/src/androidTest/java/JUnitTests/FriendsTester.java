@@ -28,6 +28,11 @@ public class FriendsTester {
     //Password tombate12345
     @Before
     public void setup() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         friendsList = new ArrayList<Person>();
         mainActivity.getActivity().googleSignIn();
     }
