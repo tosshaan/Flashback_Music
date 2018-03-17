@@ -13,32 +13,10 @@
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/flashback"
         android:background="@color/dark_transparent"
+        android:text="@string/flashback"
         android:textColor="?attr/colorButtonNormal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_albums"
-        android:layout_width="300dp"
-        android:layout_height="94dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="210dp"
-        android:background="@color/true_transparent"
-        android:fontFamily="sans-serif-condensed"
-        android:text="albums"
-        android:textAlignment="viewStart"
-        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-        android:textColor="?attr/colorButtonNormal"
-        android:textSize="72sp"
-        android:textStyle="bold"
-        android:typeface="serif"
-        app:layout_constraintBottom_toTopOf="@+id/button_songs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -46,6 +24,7 @@
         android:layout_width="300dp"
         android:layout_height="94dp"
         android:layout_marginBottom="199dp"
+        android:layout_marginEnd="56dp"
         android:background="@color/true_transparent"
         android:fontFamily="sans-serif-condensed"
         android:text="all songs"
@@ -57,11 +36,10 @@
         android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button_albums"
-        app:layout_constraintTop_toBottomOf="@+id/button_albums"
-        app:layout_constraintVertical_bias="0
-" />
+        app:layout_constraintHorizontal_bias="0.654"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.71" />
 
     <EditText
         android:id="@+id/mock_time"
@@ -78,7 +56,8 @@
         android:textColor="@color/biased_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_songs" />
+        app:layout_constraintTop_toBottomOf="@+id/button_songs"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/resetTime"
