@@ -174,7 +174,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         fab1 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab3);
-        fab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab4);
+        fab4 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab4);
 
 
 
