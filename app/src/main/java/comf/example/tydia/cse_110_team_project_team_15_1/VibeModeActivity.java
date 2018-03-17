@@ -261,7 +261,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
                 }
                 downIndex++;
 
-                String[] songURLsarr= new String[songURLs.size()];
+                 songURLsarr= new String[songURLs.size()];
 
                 for( int i = 0; i < songURLs.size(); i++ ) {
                     String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +

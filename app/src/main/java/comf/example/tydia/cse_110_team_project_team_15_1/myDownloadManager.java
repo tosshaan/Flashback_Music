@@ -298,7 +298,9 @@ public class myDownloadManager implements downloadSubject, playerSubject {
 
     @Override
     public void notifyObservers() {
-        musicObs.update();
+        if (musicObs != null) {
+            musicObs.update();
+        }
     }
 
     @Override
