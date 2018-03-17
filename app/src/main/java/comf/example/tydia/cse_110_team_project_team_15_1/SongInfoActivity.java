@@ -480,23 +480,6 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
      * Method to give a toast message when song finishes
      */
     private void setFinishListener(boolean request) {
-        /*
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
-                if (request) {
-                    myData.finishSongInfoRequest(true, false);
-                }
-                skipSong();
-                //setFinishListener(true);
-                updateLastPlayedInfo();
-                updateDislikedButton();
-                updateLikedButton();
-            }
-        });
-        */
-
 
     }
 
@@ -523,23 +506,6 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update() {
-
-        /*
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                Toast.makeText(getApplicationContext(), "FINISHED PLAYING A SONG", Toast.LENGTH_SHORT).show();
-                if (request) {
-                    myData.finishSongInfoRequest(true, false);
-                }
-                skipSong();
-                //setFinishListener(true);
-                updateLastPlayedInfo();
-                updateDislikedButton();
-                updateLikedButton();
-            }
-        });
-        */
 
         Uri path = metadataGetter.getPath();
         skipSong();
