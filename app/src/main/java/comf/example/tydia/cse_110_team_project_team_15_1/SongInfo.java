@@ -95,8 +95,8 @@ public class SongInfo implements Serializable{
     }
 
     //setter for disliking a song
-    public void dislikeSong(boolean l) {
-        if (l == true) {
+    public void dislikeSong(boolean isDisliked) {
+        if (isDisliked == true) {
             this.disliked = true;
             this.liked = false;
         }

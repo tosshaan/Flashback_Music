@@ -1,5 +1,6 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,15 +68,6 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
         musicPlayer = new myMusicPlayer();
         musicPlayer.regObserver(this);
         downloadManager.regObserver(musicPlayer);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
 
         Location myLoc = MainActivity.getCurrLoc();
@@ -151,11 +144,14 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
             }
         });
 
-     //   list = (ListView) findViewById(R.id.list_listofsongs);
-        // context, database structure, data
-    //    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 ,songNames);
-    //    list.setAdapter(adapter);
-       // list.setOnItemClickListener(this);
+        Button switchScreen = (Button) findViewById(R.id.normal_mode);
+
+        switchScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -223,6 +219,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
         songURLs.set(0, tempURL);
     }
 
+
     @Override
     public void finishDownload() {
         downloadNextSong();
@@ -247,4 +244,6 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
     }
     */
 
+
 }
+
