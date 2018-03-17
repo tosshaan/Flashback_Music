@@ -51,7 +51,7 @@ public class SortSongs {
     }
 
     public void sortByLikedStatus() {
-        Log.d("", "sorting by liked status");
+        Log.d("", "Test: sorting by liked status");
         makeStrList();
         makeTuples();
         Collections.sort(tuples,likeStatusComparator);
@@ -120,8 +120,8 @@ public class SortSongs {
     Comparator<Pair<String, File>> likeStatusComparator = new Comparator<Pair<String, File>>() {
         @Override
         public int compare(Pair<String, File> o1, Pair<String, File> o2) {
-            Log.d("", "liked comparator is used");
-            Log.d("","o1 liked status: " + MainActivity.data.getSongLikedStatus(o1.first) +" o2 liked status: "+ MainActivity.data.getSongLikedStatus(o2.first));
+            Log.d("", "Test:liked comparator is used");
+            Log.d("","Test:o1 liked status: " + MainActivity.data.getSongLikedStatus(o1.first) +" Test:o2 liked status: "+ MainActivity.data.getSongLikedStatus(o2.first));
             if (MainActivity.data.getSongLikedStatus(o1.first) && ! MainActivity.data.getSongLikedStatus(o2.first)) {
                 return 1;
             } else if (! MainActivity.data.getSongLikedStatus(o1.first) &&  MainActivity.data.getSongLikedStatus(o2.first)) {
