@@ -102,7 +102,7 @@ public class SortSongs {
             if (o1.first == null || o2.first == null) {
                 return -1;
             }
-            return o1.first.compareTo(o2.first);
+            return o1.first.toLowerCase().compareTo(o2.first.toLowerCase());
         }
     };
 }

@@ -49,6 +49,10 @@ public class VibeModeList {
      */
     public void generateList(ArrayList<String> songNameList, ArrayList<String> URLlist) {
 
+        // Clearing lists
+        vibeModeSongs.clear();
+        vibeModeURLs.clear();
+
         // Create a HashMap that maps Strings to URLs
         HashMap<String, String> songToUrlMap = new HashMap<>();
         for( int i = 0; i < songNameList.size(); i++ ) {
@@ -159,6 +163,10 @@ public class VibeModeList {
             }
         }
         return hashMap;
+    }
+
+    public void setDatabase(database db ) {
+        this.db = db;
     }
 
 }

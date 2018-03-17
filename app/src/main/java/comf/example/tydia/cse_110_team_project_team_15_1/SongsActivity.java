@@ -2,6 +2,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -27,7 +28,7 @@ import java.util.List;
  * Opened when "all songs" is clicked from MainActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, Observer {
+public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, downloadObserver {
 
     private SortSongs sortSongs; //= new SortSongs(getApplicationContext());
 
@@ -64,6 +65,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     String[] items;
 
 
+
+
     /**
      * This method runs when the activity is created
      * Contains all functionality for the activity
@@ -75,6 +78,36 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_songs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        list = (ListView) findViewById(R.id.list_allsongs);
+        downloadManager = new myDownloadManager(this, this, this);
+        downloadManager.regDownObs(this);
+
+        downloadManager.checkExternalStorage();
+        finishDownload();
+
+        //downloadManager.setDownloadedSongs();
+
+        Button b_dl = (Button) findViewById(R.id.b_download);
+        b_dl.setOnClickListener(view -> {
+            downloadManager.setDownloadedSongs();
+
+            EditText editText = (EditText) findViewById(R.id.URLeditText);
+            String input = editText.getText().toString();
+
+            Log.d("are u here?", "did u have that");
+            if (downloadManager.haveStoragePermission()) {
+                downloadManager.Download(input);
+            }
+
+            editText.setText("");
+
+
+        });
+
+        findSongatDownload();
+
+        Log.d("are u here2", "did u have that");
 
         sortSongs = new SortSongs(getApplicationContext());
 
@@ -94,11 +127,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        list = (ListView) findViewById(R.id.list_allsongs);
-        downloadManager = new myDownloadManager(this, this, this);
-        downloadManager.regObserver(this);
 
-        downloadManager.checkExternalStorage();
         /*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -129,24 +158,8 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        Button b_dl = (Button) findViewById(R.id.b_download);
-        b_dl.setOnClickListener(view -> {
-            EditText editText = (EditText) findViewById(R.id.URLeditText);
-            String input = //"http://www.hubharp.com/web_sound/HarrisLilliburleroShort.mp3";
-            editText.getText().toString();
-
-            //"http://www.sakisgouzonis.com/files/mp3s/Sakis_Gouzonis_-_Quest_For_Peace_And_Progress.mp3";
-            if (downloadManager.haveStoragePermission()) {
-                downloadManager.Download(input);
-            }
-//            input = "http://www.hubharp.com/web_sound/WalloonLilliShort.mp3";
-//            Download(input);
-//
-//            input = "http://www.hubharp.com/web_sound/PurcellSongMusShort.mp3";
-//            Download(input);
 
 
-        });
 
         Button viewdl = (Button) findViewById(R.id.b_viewDownload);
         viewdl.setOnClickListener(view -> {
@@ -236,7 +249,33 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
+    public ArrayList<File> findSongatDownload() {
+        Log.d("findSong", "findSong: entered findSongatdownload");
 
+        ArrayList<File> at = new ArrayList<File>();
+        File[] files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+
+        for(File singleFile : files) {
+
+            if(singleFile.isDirectory() && !singleFile.isHidden()) {
+            }
+            else {
+                if(singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")) {
+
+                    at.add(singleFile);
+                    String url = "";
+                    SharedPreferences albumPref = getSharedPreferences("albumSongs", MODE_PRIVATE);
+                    url = albumPref.getString(singleFile.getName(), url);
+                    Log.d("checking download at download directory", url + " url of the song for " +singleFile.getName());
+                }
+                else {
+                    Log.d("albumdownload", "album: found a file " + singleFile.getName());
+                }
+            }
+        }
+
+        return at;
+    }
 
 
     static public ArrayList<File> findSong(File root) {
@@ -258,6 +297,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                     Log.d("absolutepath", "path = " +singleFile.getAbsolutePath());
 
                     at.add(singleFile);
+
+                }
+                else {
+                    Log.d("albumdownload", "album: found a file " + singleFile.getName());
                 }
             }
         }
@@ -327,8 +370,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         }
     };
 
+
     @Override
-    public void update() {
+    public void finishDownload() {
         mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
         display();
     }

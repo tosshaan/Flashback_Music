@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="comf.example.tydia.cse_110_team_project_team_15_1.FlashbackActivity"
-    tools:showIn="@layout/activity_flashback">
+    >
 
     <Button
         android:id="@+id/normal_mode"
@@ -31,7 +31,7 @@
     <TextView
         android:id="@+id/text_SongNameFlashback"
         android:layout_width="252dp"
-        android:layout_height="83dp"
+        android:layout_height="35dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/song_name"
@@ -39,28 +39,32 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_next"
+
         app:layout_constraintEnd_toEndOf="@+id/text_timeAndDateVibe"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/text_timeAndDateVibe"
+
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.386" />
+        app:layout_constraintVertical_bias="0.277" />
 
     <TextView
         android:id="@+id/text_usernameVibe"
         android:layout_width="252dp"
         android:layout_height="25dp"
+        android:layout_marginTop="8dp"
         android:text="@string/time_and_date"
         android:textAlignment="center"
         android:textSize="15sp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/text_locationVibe"
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/text_SongNameFlashback" />
 
     <TextView
         android:id="@+id/text_timeAndDateVibe"
         android:layout_width="252dp"
         android:layout_height="49dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="88dp"
+        android:layout_marginTop="8dp"
         android:text="@string/location"
         android:textAlignment="center"
         android:textSize="15sp"
@@ -68,8 +72,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_usernameVibe"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/username"
+        app:layout_constraintVertical_bias="0.111" />
 
     <TextView
         android:id="@+id/text_locationVibe"
@@ -85,6 +89,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_timeAndDateVibe"
         app:layout_constraintVertical_bias="0.0" />
+
 
 
     <Button
@@ -153,5 +158,17 @@
         android:background="@color/true_transparent"
         app:layout_constraintBottom_toTopOf="@+id/list_listofsongs"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="252dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="User Name"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/text_locationFlashback"
+        app:layout_constraintStart_toStartOf="@+id/text_locationFlashback"
+        app:layout_constraintTop_toBottomOf="@+id/text_timeAndDateFlashback" />
 
 </android.support.constraint.ConstraintLayout>

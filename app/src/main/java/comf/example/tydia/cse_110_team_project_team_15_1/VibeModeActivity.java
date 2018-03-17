@@ -3,8 +3,6 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 import static comf.example.tydia.cse_110_team_project_team_15_1.FirebaseDB.MILLISECODNS_IN_DAY;
 import static java.lang.Thread.sleep;
 
-public class VibeModeActivity extends AppCompatActivity implements Observer {
+public class VibeModeActivity extends AppCompatActivity implements Observer, downloadObserver {
 
     VibeModeList VMList;
     FirebaseDB firebaseDB;
@@ -44,6 +42,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     private myDownloadManager downloadManager;
     ArrayList<File> downloadedSongFiles = new ArrayList<>();
     ArrayList<String> downloadedSongs = new ArrayList<>();
+    private int downIndex = 0;
 
 
     @Override
@@ -62,7 +61,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
         //initialise downloadmanager object
         downloadManager = new myDownloadManager(this, this, this);
-        downloadManager.regObserver(this);
+        downloadManager.regDownObs(this);
         downloadManager.checkExternalStorage();
 
         //arraylist of files; convert this to arraylist of downloaded song names
@@ -72,6 +71,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         musicPlayer = new myMusicPlayer();
         musicPlayer.regObserver(this);
         downloadManager.regObserver(musicPlayer);
+
 
         Button normalMode = (Button) findViewById(R.id.normal_mode);
         normalMode.setOnClickListener(new View.OnClickListener() {
@@ -216,8 +216,16 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
             e.printStackTrace();
         }
 
-        LocalDate currDate = LocalDate.now();
+        LocalDate currDate;
         String userName = MainActivity.myPersonalID;
+
+        if( MainActivity.isTimeSet) {
+            long numDays = MainActivity.appTime / MILLISECODNS_IN_DAY;
+            currDate = LocalDate.ofEpochDay(numDays);
+        }
+        else {
+            currDate = LocalDate.now();
+        }
 
         firebaseDB.getAllSongsForVibe(currAddress, currDate, userName, new FirebaseQueryObserver() {
             @Override
@@ -232,16 +240,19 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 int index = -1;
                 boolean alreadyDownloaded = false;
                 //auto download songs not already downloaded
-                Log.d("length of songNames", " "+songNames.size());
-                Log.d("length of songURLs", " "+songURLs.size());
+                Log.d("length of songNames", " " + songNames.size());
+                Log.d("length of songURLs", " " + songURLs.size());
+
+                Log.d("songName array", songNames.toString());
+                Log.d("songUrls", songURLs.toString());
+
+
+                downloadManager.setDownloadedSongs();
 
                 for(int j = 0; j < songNames.size(); j++){
                     Log.d("index", j + " and songName " + songNames.get(j));
                     String currDownloadedSong = songNames.get(j);
                     if(!downloadedSongs.contains(currDownloadedSong)) {
-                        if (downloadManager.haveStoragePermission()) {
-                            downloadManager.Download(songURLs.get(j));
-                        }
                     }
                     else{
                         if(!alreadyDownloaded){
@@ -253,7 +264,13 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
                 moveIndexToTop(index);
 
-                songURLsarr= new String[songURLs.size()];
+                if (downloadManager.haveStoragePermission()) {
+                    downloadManager.Download(songURLs.get(downIndex));
+                }
+                downIndex++;
+
+                String[] songURLsarr= new String[songURLs.size()];
+
                 for( int i = 0; i < songURLs.size(); i++ ) {
                     String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
                             songURLs.get(i);
@@ -267,8 +284,10 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 Log.d("dataAlbum", metadataGetter.getAlbum());
 
 
+
                 musicPlayer.setMusic(songURLsarr, songIndex);
                 musicPlayer.play();
+
 
                 list = (ListView) findViewById(R.id.list_listofsongs);
                 // context, database structure, data
@@ -294,10 +313,21 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
             showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
         }
+
+        Button switchScreen = (Button) findViewById(R.id.normal_mode);
+
+        switchScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     @Override
     public void update() {
+
         Log.d("index", "Letting song finish index " + songIndex);
         if (songIndex != 0) {
             songIndex = musicPlayer.indexGetter();
@@ -309,11 +339,28 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     }
 
     private void updateDisplay(){
+
+        /*
+
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
         TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
         TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
 
+
         firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
+
+        String songName = metadataGetter.getName();
+        long time;
+
+        if( MainActivity.isTimeSet) {
+            time = MainActivity.appTime;
+        }
+        else {
+            time = System.currentTimeMillis();
+        }
+
+        firebaseDB.getLastSongPlayer(songName, time,new FirebaseQueryObserver() {
+
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
                 if(latestTime == 0){
@@ -350,6 +397,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         dislikeButton.setChecked(false);
     }
 
+
     /**
      * convert the arraylist of files to songNames
      * @param downloadedSongFiles arraylist of files
@@ -382,6 +430,23 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         songURLs.set(0, tempURL);
     }
 
+
+    @Override
+    public void finishDownload() {
+        downloadNextSong();
+    }
+
+    public void downloadNextSong() {
+        Log.d("CALLING DOWNLOAD", "Index is " + downIndex);
+        if (downIndex < songURLs.size()) {
+            if (downloadManager.haveStoragePermission()) {
+                downloadManager.Download(songURLs.get(downIndex++));
+            }
+            //downIndex++;
+            Log.d("CALLING DOWNLOAD", ""+ downIndex);
+        }
+    }
+
     /*
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -390,4 +455,6 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
     }
     */
 
+
 }
+
