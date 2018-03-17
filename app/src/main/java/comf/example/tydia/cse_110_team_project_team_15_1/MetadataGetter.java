@@ -3,6 +3,7 @@ package comf.example.tydia.cse_110_team_project_team_15_1;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.File;
 
@@ -25,6 +26,7 @@ public class MetadataGetter {
     }
 
     public void setPath(String pathx) {
+        Log.d("path", pathx);
         path = Uri.parse("file://" + pathx);
         retriever.setDataSource(context, path);
 

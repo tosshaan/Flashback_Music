@@ -110,6 +110,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         Log.d("are u here2", "did u have that");
 
         sortSongs = new SortSongs(getApplicationContext());
+        sortSongs = new SortSongs(getApplicationContext());
 
         // hide action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();

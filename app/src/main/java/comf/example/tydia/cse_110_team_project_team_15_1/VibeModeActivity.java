@@ -256,18 +256,20 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
 
                 moveIndexToTop(index);
 
-                if (downloadManager.haveStoragePermission()) {
-                    downloadManager.Download(songURLs.get(downIndex));
-                }
-                downIndex++;
-
-                String[] songURLsarr= new String[songURLs.size()];
+                songURLsarr= new String[songURLs.size()];
 
                 for( int i = 0; i < songURLs.size(); i++ ) {
                     String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
                             songURLs.get(i);
                     songURLsarr[i] = path;
                 }
+
+                if (downloadManager.haveStoragePermission()) {
+                    downloadManager.Download(songURLs.get(downIndex));
+                }
+                downIndex++;
+
+
 
                 metadataGetter.setPath(songURLsarr[songIndex]);
                 songName = metadataGetter.getName();
@@ -409,14 +411,41 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
 
     @Override
     public void finishDownload() {
+        if (downIndex >0) {
+            if (songURLsarr[downIndex-1].contains(".zip")) {
+                songURLsarr[downIndex-1] = findSongPath();
+            }
+        }
         downloadNextSong();
+    }
+
+    public String findSongPath() {
+        String songName = songNames.get(downIndex - 1);
+        String path = "";
+
+        path = findSongsInDownLoad(songName);
+
+        return path;
+    }
+
+    public String findSongsInDownLoad(String songName) {
+        Log.d("findSongsInDownload", songName);
+        ArrayList<File> arrayFiles = SongsActivity.findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        for (File file: arrayFiles) {
+            Log.d("findSongsInDownload", file.getName());
+            if (file.getName().contains(songName)) {
+                return file.getPath();
+            }
+        }
+        return null;
     }
 
     public void downloadNextSong() {
         Log.d("CALLING DOWNLOAD", "Index is " + downIndex);
-        if (downIndex < songURLs.size()) {
+        if (downIndex < songURLsarr.length) {
             if (downloadManager.haveStoragePermission()) {
                 downloadManager.Download(songURLs.get(downIndex++));
+
             }
             //downIndex++;
             Log.d("CALLING DOWNLOAD", ""+ downIndex);
