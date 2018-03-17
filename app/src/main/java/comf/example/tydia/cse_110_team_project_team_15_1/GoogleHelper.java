@@ -45,7 +45,7 @@ public class GoogleHelper {
         String email = parseForEmail(id);
 
         if(GoogleHelper.parseForEmail(MainActivity.myPersonalID).equals(email)){
-            return "You";
+            return "\033[3mYou\033[0m";
         }
         Person foundFriend = getFriend(email);
         if(foundFriend != null){
@@ -75,6 +75,7 @@ public class GoogleHelper {
      * Fetches just the email portion of the user ID stored in firebase, scrapping the anon name
      */
     public static String parseForEmail(String id){
+        Log.d("Google Helper", "String parsing for email: " + id);
         int index = id.lastIndexOf("!");
         if(index != -1){
             return id.substring(0, index);

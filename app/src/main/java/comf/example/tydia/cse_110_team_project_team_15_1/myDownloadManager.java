@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,29 +18,39 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by tosshaan on 3/11/2018.
  */
 
-public class myDownloadManager implements playerSubject {
+
+public class myDownloadManager implements downloadSubject, playerSubject {
     private long queueid;
     private DownloadManager dm;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 99;
     private Boolean mExternalStorageAvailable;
     private Context context;
     private Activity activity;
-    private ArrayList<Observer> observers;
+    private downloadObserver observer;
+    private Observer musicObs;
     private ArrayList<String> mySongs;
+    private boolean zip = false;
+    private String zipname;
 
 
-    public myDownloadManager(Context c, Activity a, Observer obs) {
+    public myDownloadManager(Context c, Activity a, downloadObserver obs) {
         context = c;
         activity = a;
-        observers = new ArrayList<>();
-        observers.add(obs);
+        regDownObs(obs);
 
         checkExternalStorage();
 
@@ -57,8 +68,21 @@ public class myDownloadManager implements playerSubject {
                         int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+
                             Toast.makeText(context, "Download Sucessful", Toast.LENGTH_SHORT).show();
+                            if (zip) {
+                                zip = false;
+                                Log.d("DownloadAlbum", "ENTERED DOWNLOADALBUM" + zipname);
+                                if (unpackZip(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString(), zipname.replaceAll("%20", " "))){
+                                    Log.d("DownloadAlbum", "Download successful");
+                                }
+                                else {
+                                    Log.d("UNZIP", "UNZIP FAILED");
+                                }
+                            }
+
                             //mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+                            notifyDownDone();
                             notifyObservers();
                         }
                     }
@@ -75,7 +99,10 @@ public class myDownloadManager implements playerSubject {
 
         mySongs = new ArrayList<>();
         for (int i = 0; i < files.size(); i++) {
-            mySongs.add(files.get(i).getPath().replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +"/", ""));
+            mySongs.add(files.get(i).getName()); //.getPath().replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() +"/", ""));
+        }
+        for (int i = 0; i < files.size(); i++) {
+            Log.d("whatisinmysongs", mySongs.get(i));
         }
 
     }
@@ -88,12 +115,44 @@ public class myDownloadManager implements playerSubject {
             input = input.substring(1);
         }
 
-        String inputfile = input.replace("//", "/");
-        if (mySongs.contains(inputfile)) {
-            Log.d("callingDownload", input + " ALREADY DOWNLOADED");
-            return;
+        if (input.contains(".zip")) {
+            zipname = input.replace("?dl=1","");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
+            Log.d("what is zipname", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
+            if (file.exists()) {
+                Log.d("CALLING DOWNLOAD", "ALBUM already downloaded");
+                notifyDownDone();
+                return;
+            }
+            if (mySongs.contains(zipname)) {
+                Log.d("CALLING DOWNLOAD", "album being downloaded right now");
+                notifyDownDone();
+                return;
+            } else {
+                mySongs.add(zipname);
+            }
+            zip = true;
+            zipname = input.replace("?dl=1","");
         }
+
+        String inputfile = input.replace("//", "/");
+        inputfile = inputfile.replace(".mp3?dl=1", ".mp3");
+        int index = inputfile.lastIndexOf('/');
+        String inputfilename = inputfile.substring(index+1);
+        Log.d("downloadcheck", inputfilename);
+        if (mySongs.contains(inputfilename)) {
+            Log.d("callingDownload", input + " ALREADY DOWNLOADED");
+            notifyDownDone();
+            return;
+        } else {
+            mySongs.add(inputfilename);
+        }
+
+
         dm = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
+        if(!input.contains("?dl=1")) {
+            input = input + "?dl=1";
+        }
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(input));
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, input);
         //Log.d("DOWNLOADINGx", "Download path " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
@@ -102,6 +161,59 @@ public class myDownloadManager implements playerSubject {
 
         queueid = dm.enqueue(request);
 
+    }
+
+    private boolean unpackZip(String path, String zipname) {
+        InputStream is;
+        ZipInputStream zis;
+        try{
+            String filename;
+            is = new FileInputStream(path + "/" + zipname);
+            zis = new ZipInputStream(new BufferedInputStream(is));
+            ZipEntry ze;
+            byte[] buffer = new byte[1024];
+            int count;
+            while ((ze = zis.getNextEntry()) != null) {
+                filename = ze.getName();
+                if (ze.isDirectory()) {
+                    File fmd = new File(path + "/" + filename);
+                    Log.d("DOWNLOADALBUM", fmd.getPath() + " name " + fmd.getName());
+                    fmd.mkdirs();
+                    continue;
+                }
+
+
+                SharedPreferences albumPref = context.getSharedPreferences("albumSongs", context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = albumPref.edit();
+                edit.putString(filename, zipname);
+                edit.apply();
+
+                FileOutputStream fout = new FileOutputStream(path + "/" + filename);
+                Log.d("DOWNLOADALBUM", path + "/" + filename);
+
+
+
+                while((count = zis.read(buffer)) != -1) {
+                    fout.write(buffer, 0, count);
+                }
+
+                fout.close();
+                zis.closeEntry();
+
+                if (mySongs.contains(filename)) {
+                    File f = new File(path + "/" + filename);
+                    if (f.delete()) {
+                        Log.d("dup", "ALREADY DWONLOADED, delete");
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public  boolean haveStoragePermission() {
@@ -143,7 +255,7 @@ public class myDownloadManager implements playerSubject {
 
         if (mExternalStorageAvailable) {
 
-            notifyObservers();
+            //notifyObservers();
         }
         else {
             Toast.makeText(context, "Please insert an SDcard", Toast.LENGTH_LONG).show();
@@ -170,20 +282,32 @@ public class myDownloadManager implements playerSubject {
     }
 
     @Override
-    public void notifyObservers() {
+    public void notifyDownDone() {
+        observer.finishDownload();
+    }
 
-        for (Observer obs:  observers) {
-            obs.update();
-        }
+    @Override
+    public void regDownObs(downloadObserver obs) {
+        observer = obs;
+    }
+
+    @Override
+    public void delDownObs(downloadObserver obs) {
+        observer = null;
+    }
+
+    @Override
+    public void notifyObservers() {
+        musicObs.update();
     }
 
     @Override
     public void regObserver(Observer obs) {
-        observers.add(obs);
+        musicObs = obs;
     }
 
     @Override
     public void delObserver(Observer obs) {
-        observers.remove(obs);
+        musicObs = null;
     }
 }

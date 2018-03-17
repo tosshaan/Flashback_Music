@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by tosshaan on 3/10/2018.
@@ -19,8 +20,6 @@ public class myMusicPlayer implements playerSubject, Observer {
     Observer observer;
     private String songName;
     boolean firstSongPlayable = true;
-
-
 
     public myMusicPlayer() {
         mp = new MediaPlayer();
@@ -75,6 +74,7 @@ public class myMusicPlayer implements playerSubject, Observer {
 
     public void skip() {
         if (songIndex < (songList.length - 1)) {
+            Log.d("index", "Inner musicplayer skip songIndex" + songIndex);
             songIndex++;
             mp.reset();
 
@@ -99,6 +99,7 @@ public class myMusicPlayer implements playerSubject, Observer {
             }
             finish();
         }
+        Log.d("index", "inner musicplayer skip songIndex finished" + songIndex);
     }
 
     public void finish() {
@@ -127,10 +128,6 @@ public class myMusicPlayer implements playerSubject, Observer {
 
             mp.start();
 
-
-            //updateLastPlayedInfo();
-            //updateDislikedButton();
-            //updateLikedButton();
             playFlag = true;
             finish();
 
@@ -157,6 +154,9 @@ public class myMusicPlayer implements playerSubject, Observer {
         mp.release();
     }
 
+    public int indexGetter() {
+        return this.songIndex;
+    }
     @Override
     public void notifyObservers() {
         observer.update();

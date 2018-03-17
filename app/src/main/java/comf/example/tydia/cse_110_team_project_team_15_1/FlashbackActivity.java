@@ -39,6 +39,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
     private int i  = 0;
     private boolean playFlag = true;
 
+
     //currently playing song
     // Need to get list of song names from the database
 
@@ -331,7 +332,7 @@ public class FlashbackActivity extends AppCompatActivity implements AdapterView.
      * Updates the Last Play Location and Last Played Time
      */
     private void updateLastPlayedInfo(){
-        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateFlashback);
+        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
         TextView lastLoc = (TextView) findViewById((R.id.text_locationVibe));
         try {
             if(myData.getCurrentSongLastLocation(songName, this)!= null){
