@@ -38,6 +38,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     private com.github.clans.fab.FloatingActionButton fab1;
     private com.github.clans.fab.FloatingActionButton fab2;
     private com.github.clans.fab.FloatingActionButton fab3;
+    private com.github.clans.fab.FloatingActionButton fab4;
 
 
     private List<FloatingActionMenu> menus = new ArrayList<>();
@@ -173,6 +174,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         fab1 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab3);
+        fab3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab4);
 
 
 
@@ -181,6 +183,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         fab1.setOnClickListener(clickListener);
         fab2.setOnClickListener(clickListener);
         fab3.setOnClickListener(clickListener);
+        fab4.setOnClickListener(clickListener);
 
     }
 
@@ -346,26 +349,26 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                 case R.id.fab1:
                     sortSongs.sortByTitle();
                     mySongs = sortSongs.returnlist();
-                    Log.d("sorted list", mySongs.toString());
+                    Log.d("Test: sorted list", mySongs.toString());
                     display();
                     break;
                 // by Artist
                 case R.id.fab2:
                     sortSongs.sortByArtist();
                     mySongs = sortSongs.returnlist();
-                    Log.d("","artists list"+ mySongs.toString());
+                    Log.d("","Test: artists list"+ mySongs.toString());
                     display();
                     break;
                 // by Album
                 case R.id.fab3:
                     sortSongs.sortByAlbum();
                     mySongs = sortSongs.returnlist();
-                    Log.d("sorted list", mySongs.toString());
+                    Log.d("Test: sorted list", mySongs.toString());
                     display();
                     break;
                 // by Liked status
                 case R.id.fab4:
-                    Log.d("","Like Sort");
+                    Log.d("","Test: Like Sort");
                     sortSongs.sortByLikedStatus();
                     mySongs = sortSongs.returnlist();
                     display();
