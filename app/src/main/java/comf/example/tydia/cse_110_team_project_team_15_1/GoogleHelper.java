@@ -45,7 +45,7 @@ public class GoogleHelper {
         String email = parseForEmail(id);
 
         if(GoogleHelper.parseForEmail(MainActivity.myPersonalID).equals(email)){
-            return "\033[3mYou\033[0m";
+            return "You";
         }
         Person foundFriend = getFriend(email);
         if(foundFriend != null){
