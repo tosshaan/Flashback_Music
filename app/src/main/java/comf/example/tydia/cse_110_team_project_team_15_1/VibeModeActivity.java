@@ -261,14 +261,17 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
                 }
                 downIndex++;
 
-                 songURLsarr= new String[songURLs.size()];
+
+                songURLsarr= new String[songURLs.size()];
+
 
                 for( int i = 0; i < songURLs.size(); i++ ) {
                     String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
                             songURLs.get(i);
+                    Log.d("path", "path is " + path);
                     songURLsarr[i] = path;
                 }
-
+                Log.d("sizeis", "songURLsarr size is " + songURLsarr.length);
                 metadataGetter.setPath(songURLsarr[songIndex]);
                 songName = metadataGetter.getName();
                 Log.d("dataName", metadataGetter.getName());
@@ -279,7 +282,10 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
 
                 musicPlayer.setMusic(songURLsarr, songIndex);
                 musicPlayer.play();
-
+                updateDisplay();
+                TextView showMetadata2 = (TextView) findViewById(R.id.text_SongNameFlashback);
+                songName = metadataGetter.getName();
+                showMetadata2.setText("Title: " + songName + "\nArtist: " + metadataGetter.getArtist() + "\nAlbum: " + metadataGetter.getAlbum());
 
                 list = (ListView) findViewById(R.id.list_listofsongs);
                 // context, database structure, data
@@ -289,11 +295,16 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
                     Toast.makeText(getApplicationContext(), "Play some songs to use flashback mode.", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        }
+
+
+        );
+
     }
 
     private void skipSong(){
         if(songURLsarr == null){
+
             return;
         }
         if (songIndex < (songURLsarr.length - 1)) {
@@ -327,7 +338,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
         skipSong();
         updateDisplay();
 
-        //TODO: push song to firebase?
+
     }
 
     private void updateDisplay(){
@@ -370,6 +381,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer, dow
 
         ToggleButton dislikeButton = (ToggleButton) findViewById(R.id.button_dislike);
         dislikeButton.setChecked(false);
+
+
     }
 
 
