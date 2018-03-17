@@ -339,7 +339,6 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
-    // TODO sorting..
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

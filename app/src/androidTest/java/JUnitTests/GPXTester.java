@@ -37,7 +37,6 @@ public class GPXTester {
 
     database db;
 
-
     @Before
     public void setup() {
         //sets up database and location manager
