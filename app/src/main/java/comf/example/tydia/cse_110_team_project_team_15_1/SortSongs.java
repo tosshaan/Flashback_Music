@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.util.Pair;
 
+import org.mortbay.jetty.Main;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -48,6 +50,14 @@ public class SortSongs {
         fileList = sortedList();
     }
 
+    public void sortByLikedStatus() {
+        Log.d("", "sorting by liked status");
+        makeStrList();
+        makeTuples();
+        Collections.sort(tuples,likeStatusComparator);
+        fileList = sortedList();
+    }
+
     public ArrayList<File> sortedList () {
         ArrayList<File> temp = new ArrayList<File>();
         for (int i=0; i<fileList.size(); i++) {
@@ -70,6 +80,7 @@ public class SortSongs {
             metadataGetter.setPath(fileList.get(i).getPath());
             songNames[i] = metadataGetter.getArtist();
         }
+
     }
 
     public void makeAlbumList () {
@@ -105,4 +116,20 @@ public class SortSongs {
             return o1.first.toLowerCase().compareTo(o2.first.toLowerCase());
         }
     };
+
+    Comparator<Pair<String, File>> likeStatusComparator = new Comparator<Pair<String, File>>() {
+        @Override
+        public int compare(Pair<String, File> o1, Pair<String, File> o2) {
+            Log.d("", "liked comparator is used");
+            Log.d("","o1 liked status: " + MainActivity.data.getSongLikedStatus(o1.first) +" o2 liked status: "+ MainActivity.data.getSongLikedStatus(o2.first));
+            if (MainActivity.data.getSongLikedStatus(o1.first) && ! MainActivity.data.getSongLikedStatus(o2.first)) {
+                return 1;
+            } else if (! MainActivity.data.getSongLikedStatus(o1.first) &&  MainActivity.data.getSongLikedStatus(o2.first)) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    };
+
 }

@@ -103,13 +103,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         data = DatabaseStorageFunctions.retreiveDatabase(this);
 
-        final Button launchAlbums = (Button) findViewById(R.id.button_albums);
-        launchAlbums.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchAlbums();
-            }
-        });
+
         final Button launchSongs = (Button) findViewById(R.id.button_songs);
         launchSongs.setOnClickListener(new View.OnClickListener() {
             @Override
