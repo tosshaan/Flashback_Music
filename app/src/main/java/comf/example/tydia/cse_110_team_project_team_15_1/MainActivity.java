@@ -42,7 +42,7 @@ import static java.lang.Thread.sleep;
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, AsyncObserver, Observer {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, AsyncObserver, downloadObserver {
     private static final String SIGN_IN_TAG = "X";
     GoogleApiClient signInClient;
 
@@ -315,6 +315,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+
     public static void resetTime(View view) {
         Log.d("", "TIME WAS RESET!");
         appTime = 0;
@@ -333,5 +334,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Log.d("", "THE EDIT TEXT HAS BEEN EDITED!");
             setTime( Long.parseLong(mockTime.getText().toString()));
         }
+
     }
 }
