@@ -50,7 +50,7 @@ public class MetadataGetter {
     public String getArtist() {
         String artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         if( artist == null ) {
-            return " Unknown";
+            return "Unknown";
         }
         return artist;
     }
@@ -59,7 +59,7 @@ public class MetadataGetter {
     public String getAlbum() {
         String album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         if( album == null ) {
-            return " Unknown";
+            return "Unknown";
         }
         return album;
     }

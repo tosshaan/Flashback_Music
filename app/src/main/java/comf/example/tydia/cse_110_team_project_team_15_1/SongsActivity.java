@@ -317,7 +317,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                 case R.id.fab2:
                     sortSongs.sortByArtist();
                     mySongs = sortSongs.returnlist();
-                    Log.d("sorted list", mySongs.toString());
+                    Log.d("","artists list"+ mySongs.toString());
                     display();
                     break;
                 // by Album
@@ -329,6 +329,7 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                     break;
                 // by Liked status
                 case R.id.fab4:
+                    Log.d("","Like Sort");
                     sortSongs.sortByLikedStatus();
                     mySongs = sortSongs.returnlist();
                     display();
