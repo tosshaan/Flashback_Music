@@ -54,7 +54,7 @@ public class myDownloadManager implements playerSubject {
                         int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
-                            Toast.makeText(context, "Download Sucessful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Download Successful", Toast.LENGTH_SHORT).show();
                             //mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
                             notifyObservers();
                         }

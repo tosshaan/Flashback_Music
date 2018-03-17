@@ -121,10 +121,12 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                songIndex = musicPlayer.indexGetter();
+                Log.d("index", "Next button is clicked, index is " + songIndex);
                 musicPlayer.skip();
                 playFlag = true;
                 skipSong();
-
+                Log.d("index", "Current index after skip" + songIndex);
                 updateDisplay();
                 pauseButton.setVisibility(View.VISIBLE);
                 playButton.setVisibility(View.GONE);
@@ -234,7 +236,7 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                 Log.d("length of songURLs", " "+songURLs.size());
 
                 for(int j = 0; j < songNames.size(); j++){
-                    Log.d("item in songNames ", j + " " + songNames.get(j));
+                    Log.d("index", j + " and songName " + songNames.get(j));
                     String currDownloadedSong = songNames.get(j);
                     if(!downloadedSongs.contains(currDownloadedSong)) {
                         if (downloadManager.haveStoragePermission()) {
@@ -296,6 +298,10 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update() {
+        Log.d("index", "Letting song finish index " + songIndex);
+        if (songIndex != 0) {
+            songIndex = musicPlayer.indexGetter();
+        }
         skipSong();
         updateDisplay();
 
