@@ -8,8 +8,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +18,7 @@ import android.widget.Button;
 import android.content.Intent;
 import android.view.View;
 import android.Manifest;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -34,10 +33,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.services.people.v1.PeopleServiceScopes;
 import com.google.api.services.people.v1.model.Person;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import static java.lang.Thread.sleep;
 
@@ -63,6 +58,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public static ArrayList<Person> friendsList = new ArrayList<Person>();
     public static Person myPerson;
     public static String myPersonalID;
+    public static long appTime;
+    public static boolean isTimeSet = false;
+    EditText mockTime;
+
 
     /**
      * This method runs when the activity is created
@@ -129,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         Intent intent2 = new Intent(this, LocationService.class);
         bindService(intent2, serviceChecker, Context.BIND_AUTO_CREATE);
+
+
 
     }
     public void googleSignIn() {
@@ -314,8 +315,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    @Override
-    public void finishDownload() {
+
+    public static void resetTime(View view) {
+        Log.d("", "TIME WAS RESET!");
+        appTime = 0;
+        isTimeSet = false;
+    }
+
+    public static void setTime(long time) {
+        Log.d("", "TIME WAS SET!");
+        appTime = time;
+        isTimeSet = true;
+    }
+
+    public void getEditText(View view) {
+        mockTime = (EditText) findViewById(R.id.mock_time);
+        if( !mockTime.getText().toString().equals("") ) {
+            Log.d("", "THE EDIT TEXT HAS BEEN EDITED!");
+            setTime( Long.parseLong(mockTime.getText().toString()));
+        }
 
     }
 }
