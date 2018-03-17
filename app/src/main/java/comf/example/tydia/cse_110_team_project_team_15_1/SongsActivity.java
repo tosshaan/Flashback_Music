@@ -28,7 +28,7 @@ import java.util.List;
  * Opened when "all songs" is clicked from MainActivity
  * Redirects to SongsInfoActivity, and FlashBackActivity
  */
-public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, Observer {
+public class SongsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, downloadObserver {
 
     private SortSongs sortSongs; //= new SortSongs(getApplicationContext());
 
@@ -81,9 +81,10 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
 
         list = (ListView) findViewById(R.id.list_allsongs);
         downloadManager = new myDownloadManager(this, this, this);
-        downloadManager.regObserver(this);
+        downloadManager.regDownObs(this);
 
         downloadManager.checkExternalStorage();
+        finishDownload();
 
         //downloadManager.setDownloadedSongs();
 
@@ -369,8 +370,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
         }
     };
 
+
     @Override
-    public void update() {
+    public void finishDownload() {
         mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
         display();
     }

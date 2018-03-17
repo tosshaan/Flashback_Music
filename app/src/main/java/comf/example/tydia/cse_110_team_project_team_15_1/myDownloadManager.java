@@ -32,24 +32,25 @@ import java.util.zip.ZipInputStream;
  * Created by tosshaan on 3/11/2018.
  */
 
-public class myDownloadManager implements playerSubject {
+
+public class myDownloadManager implements downloadSubject, playerSubject {
     private long queueid;
     private DownloadManager dm;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 99;
     private Boolean mExternalStorageAvailable;
     private Context context;
     private Activity activity;
-    private ArrayList<Observer> observers;
+    private downloadObserver observer;
+    private Observer musicObs;
     private ArrayList<String> mySongs;
     private boolean zip = false;
     private String zipname;
 
 
-    public myDownloadManager(Context c, Activity a, Observer obs) {
+    public myDownloadManager(Context c, Activity a, downloadObserver obs) {
         context = c;
         activity = a;
-        observers = new ArrayList<>();
-        observers.add(obs);
+        regDownObs(obs);
 
         checkExternalStorage();
 
@@ -77,9 +78,9 @@ public class myDownloadManager implements playerSubject {
                                 else {
                                     Log.d("UNZIP", "UNZIP FAILED");
                                 }
-                                return;
                             }
                             //mySongs = findSong(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+                            notifyDownDone();
                             notifyObservers();
                         }
                     }
@@ -118,10 +119,12 @@ public class myDownloadManager implements playerSubject {
             Log.d("what is zipname", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + zipname);
             if (file.exists()) {
                 Log.d("CALLING DOWNLOAD", "ALBUM already downloaded");
+                notifyDownDone();
                 return;
             }
             if (mySongs.contains(zipname)) {
                 Log.d("CALLING DOWNLOAD", "album being downloaded right now");
+                notifyDownDone();
                 return;
             } else {
                 mySongs.add(zipname);
@@ -137,6 +140,7 @@ public class myDownloadManager implements playerSubject {
         Log.d("downloadcheck", inputfilename);
         if (mySongs.contains(inputfilename)) {
             Log.d("callingDownload", input + " ALREADY DOWNLOADED");
+            notifyDownDone();
             return;
         } else {
             mySongs.add(inputfilename);
@@ -249,7 +253,7 @@ public class myDownloadManager implements playerSubject {
 
         if (mExternalStorageAvailable) {
 
-            notifyObservers();
+            //notifyObservers();
         }
         else {
             Toast.makeText(context, "Please insert an SDcard", Toast.LENGTH_LONG).show();
@@ -276,20 +280,32 @@ public class myDownloadManager implements playerSubject {
     }
 
     @Override
-    public void notifyObservers() {
+    public void notifyDownDone() {
+        observer.finishDownload();
+    }
 
-        for (Observer obs:  observers) {
-            obs.update();
-        }
+    @Override
+    public void regDownObs(downloadObserver obs) {
+        observer = obs;
+    }
+
+    @Override
+    public void delDownObs(downloadObserver obs) {
+        observer = null;
+    }
+
+    @Override
+    public void notifyObservers() {
+        musicObs.update();
     }
 
     @Override
     public void regObserver(Observer obs) {
-        observers.add(obs);
+        musicObs = obs;
     }
 
     @Override
     public void delObserver(Observer obs) {
-        observers.remove(obs);
+        musicObs = null;
     }
 }
