@@ -48,6 +48,13 @@ public class SortSongs {
         fileList = sortedList();
     }
 
+    public void sortByLikedStatus() {
+        makeAlbumList();
+        makeTuples();
+        Collections.sort(tuples,likeStatusComparator);
+        fileList = sortedList();
+    }
+
     public ArrayList<File> sortedList () {
         ArrayList<File> temp = new ArrayList<File>();
         for (int i=0; i<fileList.size(); i++) {
@@ -105,4 +112,16 @@ public class SortSongs {
             return o1.first.toLowerCase().compareTo(o2.first.toLowerCase());
         }
     };
+
+    Comparator<Pair<String, File>> likeStatusComparator = new Comparator<Pair<String, File>>() {
+        @Override
+        public int compare(Pair<String, File> o1, Pair<String, File> o2) {
+            if (MainActivity.data.getSongDislikedStatus(o1.first)) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    };
+
 }

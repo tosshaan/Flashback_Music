@@ -1,10 +1,14 @@
 package JUnitTests;
 
 import android.support.test.rule.ActivityTestRule;
+import android.util.Pair;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import comf.example.tydia.cse_110_team_project_team_15_1.AlbumsActivity;
 import comf.example.tydia.cse_110_team_project_team_15_1.MetadataGetter;
@@ -24,8 +28,10 @@ public class SortingTester {
     @Rule
     public ActivityTestRule<SongsActivity> songsActivity = new ActivityTestRule<>(SongsActivity.class);
 
-    int[] idsTest;
-    MetadataGetter metadataGetter;
+    private ArrayList<File> fileList = new ArrayList<File>();
+    private String[] songNames;
+    private ArrayList<Pair<String, File>> tuples;
+    private MetadataGetter metadataGetter;
 
     @Before
     public void setup() {
@@ -35,26 +41,14 @@ public class SortingTester {
 
     @Test
     public void testGetSongIDs(){
-        // Checking that indexes match expected values
-        assertEquals(R.raw.afterthestorm, idsTest[1]);
-        assertEquals(R.raw.windowsaretheeyestothehouse, idsTest[idsTest.length -1 ]);
-        // Checking if length is correct
-        assertEquals(45, idsTest.length );
     }
 
     @Test
     public void tesGetSongName() {
-        assertEquals(metadataGetter.getName(idsTest[1]), "After The Storm");
-        assertEquals(metadataGetter.getName(idsTest[5]), "Beautiful-Pain");
-        assertEquals(metadataGetter.getName(idsTest[11]), "Dead Dove Do Not Eat");
-        assertEquals(metadataGetter.getName(idsTest[12]), "Dreamatorium");
     }
 
     @Test
     public void testGetAlbum() {
-        assertEquals(metadataGetter.getAlbum(idsTest[5]), "New & Best of Keaton Simons");
-        assertEquals(metadataGetter.getAlbum(idsTest[2]), "I Will Not Be Afraid (A Sampler)");
-        assertEquals(metadataGetter.getAlbum(idsTest[idsTest.length -1 ]), "Take Yourself Too Seriously");
     }
 
     @Test

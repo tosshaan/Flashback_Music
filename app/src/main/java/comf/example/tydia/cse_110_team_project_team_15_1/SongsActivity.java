@@ -329,6 +329,9 @@ public class SongsActivity extends AppCompatActivity implements AdapterView.OnIt
                     break;
                 // by Liked status
                 case R.id.fab4:
+                    sortSongs.sortByLikedStatus();
+                    mySongs = sortSongs.returnlist();
+                    display();
                     break;
             }
         }
