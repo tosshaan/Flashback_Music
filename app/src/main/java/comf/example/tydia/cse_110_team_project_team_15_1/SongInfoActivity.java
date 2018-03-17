@@ -17,7 +17,6 @@ import android.widget.ToggleButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -418,7 +417,15 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         TextView lastTime = (TextView) findViewById(R.id.text_timeAndDate);
         TextView lastLoc = (TextView) findViewById(R.id.textView4);
         TextView lastUsername = (TextView) findViewById(R.id.usernameField);
-        firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
+        long time;
+        if( MainActivity.isTimeSet) {
+            time = MainActivity.appTime;
+        }
+        else {
+            time = System.currentTimeMillis();
+        }
+
+        firebaseDB.getLastSongPlayer(songName, time,new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
                 if(latestTime == 0){
@@ -534,7 +541,6 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         });
         */
 
-        //TODO: Figure some stuff out
         skipSong();
         updateLastPlayedInfo();
         updateDislikedButton();
@@ -549,6 +555,15 @@ public class SongInfoActivity extends AppCompatActivity implements Observer {
         }
         Log.d("THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","THIS HAS HAPPeNED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
+        // Submitting based on system time or personalized time
+        if( MainActivity.isTimeSet) {
+            Log.d("", "SUBMITTING WITH PERSONAL TIME");
+            Log.d("", "PERSONALIZED TIME IS: " + MainActivity.appTime);
+            firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, MainActivity.appTime, Uri.parse(songsUri[songIndex]));
+        }
+        else {
+            Log.d("", "SUBMITTING WITH SYSTEM TIME");
             firebaseDB.submit(MainActivity.myPersonalID, currSongAddress, songName, System.currentTimeMillis(), Uri.parse(songsUri[songIndex]));
+        }
     }
 }

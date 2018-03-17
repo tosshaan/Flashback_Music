@@ -1,11 +1,8 @@
 package comf.example.tydia.cse_110_team_project_team_15_1;
 
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -77,8 +74,16 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
             e.printStackTrace();
         }
 
-        LocalDate currDate = LocalDate.now();
+        LocalDate currDate;
         String userName = MainActivity.myPersonalID;
+
+        if( MainActivity.isTimeSet) {
+            long numDays = MainActivity.appTime / MILLISECODNS_IN_DAY;
+            currDate = LocalDate.ofEpochDay(numDays);
+        }
+        else {
+            currDate = LocalDate.now();
+        }
 
         firebaseDB.getAllSongsForVibe(currAddress, currDate, userName, new FirebaseQueryObserver() {
             @Override
@@ -149,13 +154,22 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update() {
-        /*TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
+        /*
+        TextView lastTime = (TextView) findViewById(R.id.text_timeAndDateVibe);
         TextView lastLoc = (TextView) findViewById(R.id.text_locationVibe);
         TextView lastUsername = (TextView) findViewById(R.id.text_usernameVibe);
 
         String songName = metadataGetter.getName();
+        long time;
 
-        firebaseDB.getLastSongPlayer(songName, System.currentTimeMillis(),new FirebaseQueryObserver() {
+        if( MainActivity.isTimeSet) {
+            time = MainActivity.appTime;
+        }
+        else {
+            time = System.currentTimeMillis();
+        }
+
+        firebaseDB.getLastSongPlayer(songName, time,new FirebaseQueryObserver() {
             @Override
             public void update(ArrayList<String> songNameList, ArrayList<String> songURLList, String latestAddress, String latestUser, long latestTime) {
                 if(latestTime == 0){
@@ -174,7 +188,8 @@ public class VibeModeActivity extends AppCompatActivity implements Observer {
                     lastUsername.setText(userToPrint);
                 }
             }
-        });*/
+        });
+        */
     }
 
 

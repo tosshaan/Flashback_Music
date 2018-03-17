@@ -80,6 +80,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_songs" />
 
+    <Button
+        android:id="@+id/resetTime"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:onClick="resetTime"
+        android:text="Reset"
+        android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.596"
+        app:layout_constraintStart_toEndOf="@+id/mock_time" />
+
+    <Button
+        android:id="@+id/setTime"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="getEditText"
+        android:text="set"
+        android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/resetTime"
+        app:layout_constraintStart_toStartOf="@+id/resetTime"
+        app:layout_constraintTop_toBottomOf="@+id/resetTime" />
+
 </android.support.constraint.ConstraintLayout>
 
     <!--android:background="@drawable/background"-->
